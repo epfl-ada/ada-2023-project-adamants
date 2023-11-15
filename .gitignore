@@ -2,3 +2,5 @@ data/*
 .ipynb_checkpoints/wikipedia_graph_viz copy-checkpoint.ipynb
 *.pkl
 *.pyc
+
+!data/*.pkl
