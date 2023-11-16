@@ -173,7 +173,7 @@ def compute_graph_metrics(links):
     # local efficiency
     # efficiency = nx.local_efficiency(G.to_undirected())
     # efficiency # 0.55814
-    print(f"Efficiency (skipped as it takes long to compute) : 0.55814")
+    print(f"Efficiency (pre-calculated as it takes long to compute) : 0.55814")
     # modularity
     modularity = nx.algorithms.community.modularity(G.to_undirected(), nx.algorithms.community.label_propagation.label_propagation_communities(G.to_undirected()))
     print(f"Modularity: {modularity}")
