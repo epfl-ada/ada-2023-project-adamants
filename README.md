@@ -4,11 +4,11 @@
 The Wikispeedia dataset provides a rich set of player navigation paths within Wikipedia’s graph. 
 By leveraging those paths, it has been proposed to use these player-created features to derive semantic distance between articles. 
 In the following, we aim to validate this approach by finding how player behaviors in-game can be described quantitatively by newly derived features, and assessing how these variables relate to semantic content.
-To achieve this, we will :
-Extract several features that aim to quantify player behavior
-Create a ranking based on these, perform clustering to validate that we achieve a meaningful set of latent variables for player paths 
-Iteratively select and refine features based on their contribution to the clustering
-Compare them to BERT scores of articles pairs to see whether they correlate with semantic content and if better players retain this semantic content in their paths or overfit Wikipedia’s underlying structure instead.
+To achieve this, we will :  
+- Extract several features that aim to quantify player behavior
+- Create a ranking based on these, perform clustering to validate that we achieve a meaningful set of latent variables for player paths 
+- Iteratively select and refine features based on their contribution to the clustering
+- Compare them to BERT scores of articles pairs to see whether they correlate with semantic content and if better players retain this semantic content in their paths or overfit Wikipedia’s underlying structure instead.
 
 ### Research questions
 The goal of this project is to unravel and analyze the different strategies used by the players of Wikispeedia by extracting features from player path data. By doing so we want and expect to find strategies that do not only rely on the semantic distances between words but are more tightly dependent on the Wikipedia graph and on the player strategies. Additionally, after having clustered the players and unraveling the strategies explaining these clusters, we want to verify if these strategies have an impact on the mean BERT score of these clusters.
