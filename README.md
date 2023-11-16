@@ -1,6 +1,6 @@
-## Analyzing player strategies in the Wikispeedia game and assessing correlations with semantic content
+# Analyzing player strategies in the Wikispeedia game and assessing correlations with semantic content
 
-### Abstract
+## Abstract
 The Wikispeedia dataset provides a rich set of player navigation paths within Wikipedia’s graph. 
 By leveraging those paths, it has been proposed to use these player-created features to derive semantic distance between articles. 
 In the following, we aim to validate this approach by finding how player behaviors in-game can be described quantitatively by newly derived features, and assessing how these variables relate to semantic content.
@@ -10,10 +10,10 @@ To achieve this, we will :
 - Iteratively select and refine features based on their contribution to the clustering
 - Compare them to BERT scores of articles pairs to see whether they correlate with semantic content and if better players retain this semantic content in their paths or overfit Wikipedia’s underlying structure instead.
 
-### Research questions
+## Research questions
 The goal of this project is to unravel and analyze the different strategies used by the players of Wikispeedia by extracting features from player path data. By doing so we want and expect to find strategies that do not only rely on the semantic distances between words but are more tightly dependent on the Wikipedia graph and on the player strategies. Additionally, after having clustered the players and unraveling the strategies explaining these clusters, we want to verify if these strategies have an impact on the mean BERT score of these clusters.
 
-### Methods
+## Methods
 To achieve this goal we came up with 10 different metrics that can either tell us about the entire path followed by the player, each choice of pages done by the players or the players themselves. Then we want to run clustering algorithms to discuss the different strategies used by these groups. Here is a list and a description of the different metrics used:  
 - The number of backtracks per path: this metric can be used to inform us on how the player navigated its way from the starting page. Was it straightforward or more meandering ? As expected it is positively correlated with the rate given by the player and with the time taken to complete the path.  
 - The number of paths attempted by the player before the one played: this metric can inform us on how much training the player had before he played the path recorded. It is negatively correlated with the time taken to finish the path recorded, even though ~50% of the IP addresses appear only 1 time (heavily right skewed distribution).  
@@ -28,7 +28,7 @@ To achieve this goal we came up with 10 different metrics that can either tell u
 - BERTscore semantic similarity metric: Apply the BERTscore semantic similarity metric to evaluate path difficulties, and compare this to player ratings. What sort of link is there between the two? Comparison of per-edge and per-path values may give different insights (although per path is more relevant).
 These metrics will be selected and improved based on their contribution to the clustering.  
 
-### Proposed timeline
+## Proposed timeline
 
 |         Title        | Description                                                                                                                                                                | Estimated time | Start date | Due date |
 |:--------------------:|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------|:--------------:|:----------:|:--------:|
@@ -48,5 +48,5 @@ These metrics will be selected and improved based on their contribution to the c
 |   Data story check   | Check for spelling mistakes, formatting,...                                                                                                                                |      1 day     |   20 dec   |  22 dec  |
 | Final notebook check | Check for spelling mistakes, formatting,...                                                                                                                                |      1 day     |   20 dec   |  22 dec  |
 
-### Organization within the team
+## Organization within the team
 See the milestones above
