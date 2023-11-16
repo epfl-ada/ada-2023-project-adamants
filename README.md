@@ -25,7 +25,9 @@ This lets us see how much a player increases or decreases certain measures along
 - The path length: this metric would allow us to know whether a longer optimal path distance between the start article and target article makes a game more difficult (leading the players to rate the game as difficult, or leading them to restart or even give up!).  
 - Path length and player persistence: Investigate if longer or more difficult paths prompt players to abandon the game.  
 - Distribution of average time per edge: Explore the distribution of average time spent per edge during navigation. Seeing if this data has particular outliers may give indicators of any trouble they might have had.  
-- BERTscore semantic similarity metric: Apply the BERTscore semantic similarity metric to evaluate path difficulties, and compare this to player ratings. What sort of link is there between the two? Comparison of per-edge and per-path values may give different insights (although per path is more relevant). These metrics will be selected and improved based on their contribution to the clustering.  
+- BERTscore semantic similarity metric: Apply the BERTscore semantic similarity metric to evaluate path difficulties, and compare this to player ratings. What sort of link is there between the two? Comparison of per-edge and per-path values may give different insights (although per path is more relevant).
+
+These metrics will be selected and improved based on their contribution to the clustering.  
 
 ## Proposed timeline
 
