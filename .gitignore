@@ -6,4 +6,5 @@ wikipedia_graph_viz.ipynb
 wikipedia_graph_viz graph-tool.ipynb
 *.pkl
 *.pyc
+/book/_build/*
 !data/*.pkl

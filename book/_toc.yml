@@ -1,0 +1,8 @@
+format: jb-book
+root: README
+chapters:
+- file: graph_measures_notebook
+- file: viz_Mathilde
+- file: viz_david
+- file: viz_yves
+- file: viz_laurent
