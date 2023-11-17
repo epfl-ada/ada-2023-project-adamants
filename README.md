@@ -3,7 +3,7 @@
 **Analyzing player strategies in the Wikispeedia game and assessing correlations with semantic content**
 
 > [!IMPORTANT]
-> Please see our rendered assignment notebook (which includes this README) [here](https://epfl-ada.github.io/ada-2023-project-adamants/README.html).
+> For a more organized view of our milestone, please see our [Jupyter Book website](https://epfl-ada.github.io/ada-2023-project-adamants/README.html) (which includes this README).
 
 ## Abstract
 
