@@ -6,7 +6,7 @@
 
 ```{note}
 This README and the notebook containing all our analysis in one place are on the [GitHub repository](https://github.com/epfl-ada/ada-2023-project-adamants) of our project.
-We still suggest you use this website for a more pleasant reading experience.
+We still suggest you use this website for a more pleasant reading experience; contents have been checked to be identical.
 ```
 
 ---
