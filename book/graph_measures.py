@@ -208,7 +208,7 @@ def compute_graph_metrics(links):
         ),
     )
     print(f"Modularity: {modularity}")
-    
+
     print("Computing metrics...")
     links["degree"] = links["from"].map(degree)
     # compute local clustering coefficient for each node
@@ -237,7 +237,9 @@ def compute_graph_metrics(links):
     return links
 
 
-def load_and_prepare_paths_dfs_for_metrics(path_finished=PATHS_FINISHED, path_unfinished=PATHS_UNFINISHED):
+def load_and_prepare_paths_dfs_for_metrics(
+    path_finished=PATHS_FINISHED, path_unfinished=PATHS_UNFINISHED
+):
     """Loads and creates a path list in the path column of the paths_finished and paths_unfinished dataframes."""
     # data exploration
     path_finished = Path(path_finished).resolve()
