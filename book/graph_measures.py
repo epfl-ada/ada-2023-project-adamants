@@ -8,13 +8,13 @@ import seaborn as sns
 import pickle
 from functools import partial
 
-DATA_PATH = Path.cwd() / "data/wikispeedia_paths-and-graph/"
+DATA_PATH = Path.cwd() / "../data/wikispeedia_paths-and-graph/"
 SHORTEST_PATH = (DATA_PATH / "shortest-path-distance-matrix.txt").resolve()
 PATHS_FINISHED = (DATA_PATH / "paths_finished.tsv").resolve()
 PATHS_UNFINISHED = (DATA_PATH / "paths_unfinished.tsv").resolve()
 
 # pickle with metrics per path
-PATH_METRICS_PICKLE_PATH = Path.cwd() / "data/path_metrics.pkl"
+PATH_METRICS_PICKLE_PATH = (DATA_PATH / "../path_metrics.pkl").resolve()
 
 ####################
 # STATS AND UTILS  #
@@ -275,10 +275,14 @@ def load_and_prepare_paths_dfs_for_metrics():
 
 
 def compute_path_metrics(links, paths, pickle_path=PATH_METRICS_PICKLE_PATH):
+    pickle_path = Path(pickle_path).resolve()
+    print(f"Attemping to load metrics from {pickle_path}")
     if Path(pickle_path).is_file():
         with open(pickle_path, "rb") as f:
             pickle_dict = pickle.load(f)
+        print(f"Loaded metrics successfully from {pickle_path}")
     else:
+        print(f"Pickle file not found at {pickle_path}. Computing metrics...")
         # pre-compute metrics for paths to avoid costly np.isin in the plots
         path_degree = pd.Series(dtype=object)
         path_clustering = pd.Series(dtype=object)
