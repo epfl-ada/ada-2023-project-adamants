@@ -2,7 +2,7 @@
 
 ## Analyzing player strategies in the Wikispeedia game and assessing correlations with semantic content
 
-### Website
+### Deliverables
 
 ```{important}
 This README and the notebook containing all our analysis in one place are on the [GitHub repository](https://github.com/epfl-ada/ada-2023-project-adamants) of our project.
