@@ -7,13 +7,13 @@
 
 ## Abstract
 
-The Wikispeedia dataset provides a rich set of player navigation paths within Wikipedia’s graph. 
-By leveraging those paths, it has been proposed to use these player-created features to derive semantic distance between articles. 
+The Wikispeedia dataset provides a rich set of player navigation paths within Wikipedia’s graph.
+By leveraging those paths, it has been proposed to use these player-created features to derive semantic distance between articles.
 In the following, we aim to validate this approach by finding how player behaviors in-game can be described quantitatively by newly derived features, and assessing how these variables relate to semantic content.
-To achieve this, we will :  
+To achieve this, we will :
 
 - Extract several features that aim to quantify player behavior
-- Create a ranking based on these, perform clustering to validate that we achieve a meaningful set of latent variables for player paths 
+- Create a ranking based on these and perform clustering to validate that we achieve a meaningful set of latent variables for player paths
 - Iteratively select and refine features based on their contribution to the clustering
 - Compare them to BERT scores of articles pairs to see whether they correlate with semantic content and if better players retain this semantic content in their paths or overfit Wikipedia’s underlying structure instead.
 
@@ -26,16 +26,15 @@ The goal of this project is to unravel and analyze the different strategies used
 To achieve this goal we came up with 10 different features that can either tell us about the entire path followed by the player, each choice of pages done by the players or the players themselves. Then we want to run clustering algorithms to discuss the different strategies used by these groups. Here is a list and a description of the different features used:  
 
 1. The number of backtracks per path: this feature can be used to inform us on how the player navigated its way from the starting page. Was it straightforward or more meandering? As expected it is positively correlated with the rating given by the player and with the time taken to complete the path.  
-1. The number of paths attempted by the player before the one played: this feature can inform us how much training the player had before he played the path recorded. It is negatively correlated with the time taken to finish the path recorded, even though ~50% of the IP addresses appear only 1 time (heavily right-skewed distribution).  
-1. Next, we look at the graph properties of the articles within Wikipedia: using well-known measures such as degree, local clustering, and centrality, we can assess the properties of a given article within the graph. We can then relate these to player paths directly and use them as features for the clustering.  
-1. In addition, in an attempt to quantify the strategy of the users, we look at the degree distribution within a path, take the maximum and fit a line (max. not included) before and after said maximum to one of the graph measures mentioned previously within the path.  
+2. Path length and player persistence: Investigate if longer or more difficult paths prompt players to abandon the game.  
+3. The number of paths attempted by the player before the one played: this feature can inform us how much training the player had before he played the path recorded. It is negatively correlated with the time taken to finish the path recorded, even though ~50% of the IP addresses appear only 1 time (heavily right-skewed distribution).  
+4. Distribution of average time per edge: Explore the distribution of average time spent per edge during navigation. Seeing if this data has particular outliers may give indicators of any trouble they might have had.  
+5. The player performance feature: it integrates several key factors: the average ratio between the user's path and the shortest path to the goal, the proportion of completed versus incomplete paths, and the average duration spent on a page. Additionally, it considers the average time taken before a player decides to abandon the path. This feature aims to determine which of these elements are most indicative of a player's skill and effectiveness.  
+6. The position of the clicked link on the article: the position of the next Wikipedia link could allow insight into the answer to know whether players scroll to find a word that popped into their heads, or let their search be guided by the options under your sight, aka the first links visible on the article. We could then characterize the players’ rationality or influenceability. 
+7. Next, we look at the graph properties of the articles within Wikipedia: using well-known measures such as degree, local clustering, and centrality, we can assess the properties of a given article within the graph. We can then relate these to player paths directly and use them as features for the clustering.  
+8. In addition, in an attempt to quantify the strategy of the users, we look at the degree distribution within a path, take the maximum and fit a line (max. not included) before and after said maximum to one of the graph measures mentioned previously within the path.  
 This lets us see how much a player increases or decreases certain measures along the path; it would for example be expected that a good player would have a sharply positive slope in page degree before the maximum (finding a hub from the start) and then a sharply negative slope once they hone into their target.  
-1. The player performance feature: it integrates several key factors: the average ratio between the user's path and the shortest path to the goal, the proportion of completed versus incomplete paths, and the average duration spent on a page. Additionally, it considers the average time taken before a player decides to abandon the path. This feature aims to determine which of these elements are most indicative of a player's skill and effectiveness.  
-1. The position of the clicked link on the article: the position of the next Wikipedia link could allow insight into the answer to know whether players scroll to find a word that popped into their heads, or let their search be guided by the options under your sight, aka the first links visible on the article. We could then characterize the players’ rationality or influenceability.
-1. The path length: this feature would allow us to know whether a longer optimal path distance between the start article and target article makes a game more difficult (leading the players to rate the game as difficult, or leading them to restart or even give up!).  
-1. Path length and player persistence: Investigate if longer or more difficult paths prompt players to abandon the game.  
-1. Distribution of average time per edge: Explore the distribution of average time spent per edge during navigation. Seeing if this data has particular outliers may give indicators of any trouble they might have had.  
-1. BERTscore semantic similarity metric: Apply the BERTscore semantic similarity metric to evaluate path difficulties, and compare this to player ratings. What sort of link is there between the two? Comparison of per-edge and per-path values may give different insights (although per path is more relevant).
+9. BERTscore semantic similarity metric: Apply the BERTscore semantic similarity metric to evaluate path difficulties, and compare this to player ratings. What sort of link is there between the two? Comparison of per-edge and per-path values may give different insights (although per path is more relevant).
 
 These features will be selected and improved based on their contribution to the clustering.  
 
