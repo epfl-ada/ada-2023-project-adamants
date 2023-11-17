@@ -123,7 +123,7 @@ def compute_path_metric_around_max(metric_array, max_array):
 #############################
 
 
-def load_data_graph_metrics(shortest_path=SHORTEST_PATH):
+def load_data_graph_metrics(data_path=DATA_PATH):
     """Loads the Wikispeedia data for graph metrics analysis.
 
     Returns:
@@ -131,10 +131,11 @@ def load_data_graph_metrics(shortest_path=SHORTEST_PATH):
         links (pd.DataFrame): a dataframe with the links between articles
         articles (pd.DataFrame): a dataframe with the article names
     """
+    shortest_path = (data_path / "shortest-path-distance-matrix.txt").resolve()
     assert shortest_path.is_file()
     shortest_path = np.loadtxt(shortest_path, dtype=str)
 
-    links_path = (DATA_PATH / "links.tsv").resolve()
+    links_path = (data_path / "links.tsv").resolve()
     assert links_path.is_file()
     links = pd.read_csv(
         links_path,
@@ -145,7 +146,7 @@ def load_data_graph_metrics(shortest_path=SHORTEST_PATH):
         skip_blank_lines=True,
     )
 
-    articles_path = (DATA_PATH / "articles.tsv").resolve()
+    articles_path = (data_path / "articles.tsv").resolve()
     assert articles_path.is_file()
     articles = pd.read_csv(
         articles_path,
@@ -192,12 +193,9 @@ def compute_graph_metrics(links):
     # create a directed graph
     links = links.copy()
     G = build_links_graph(links)
+    print("Computing degree...")
     degree = dict(G.degree(G.nodes()))
     nx.set_node_attributes(G, degree, "degree")
-    links["degree"] = links["from"].map(degree)
-    # compute local clustering coefficient for each node
-    clustering = nx.clustering(G)
-    links["clustering"] = links["from"].map(clustering)
     # local efficiency
     # efficiency = nx.local_efficiency(G.to_undirected())
     # efficiency # 0.55814
@@ -210,18 +208,28 @@ def compute_graph_metrics(links):
         ),
     )
     print(f"Modularity: {modularity}")
+    
+    print("Computing metrics...")
+    links["degree"] = links["from"].map(degree)
+    # compute local clustering coefficient for each node
+    print("Local clustering coefficient...")
+    clustering = nx.clustering(G)
+    links["clustering"] = links["from"].map(clustering)
     # centrality
     # closeness centrality
+    print("Closeness centrality...")
     closeness = nx.closeness_centrality(G)
     links["closeness"] = links["from"].map(
         closeness
     )  # represents the average distance to all other nodes
     # betweenness centrality
+    print("Betweenness centrality...")
     betweenness = nx.betweenness_centrality(G)
     links["betweenness"] = links["from"].map(
         betweenness
     )  # represents the number of shortest paths that pass through a node
-    # centrality
+    # degree centrality
+    print("Degree centrality...")
     centrality = nx.degree_centrality(G)
     links["degree_centrality"] = links["from"].map(
         centrality
@@ -229,11 +237,13 @@ def compute_graph_metrics(links):
     return links
 
 
-def load_and_prepare_paths_dfs_for_metrics():
+def load_and_prepare_paths_dfs_for_metrics(path_finished=PATHS_FINISHED, path_unfinished=PATHS_UNFINISHED):
     """Loads and creates a path list in the path column of the paths_finished and paths_unfinished dataframes."""
     # data exploration
+    path_finished = Path(path_finished).resolve()
+    assert path_finished.is_file()
     paths_finished = pd.read_csv(
-        PATHS_FINISHED,
+        path_finished,
         sep="\t",
         header=None,
         names=["hashedIpAddress", "timestamp", "durationInSec", "path", "rating"],
@@ -247,8 +257,10 @@ def load_and_prepare_paths_dfs_for_metrics():
         lambda x: [unquote(i) for i in x]
     )
 
+    path_unfinished = Path(path_unfinished).resolve()
+    assert path_unfinished.is_file()
     paths_unfinished = pd.read_csv(
-        PATHS_UNFINISHED,
+        path_unfinished,
         sep="\t",
         header=None,
         names=[
@@ -275,6 +287,7 @@ def load_and_prepare_paths_dfs_for_metrics():
 
 
 def compute_path_metrics(links, paths, pickle_path=PATH_METRICS_PICKLE_PATH):
+    """Computes the metrics for each path."""
     pickle_path = Path(pickle_path).resolve()
     print(f"Attemping to load metrics from {pickle_path}")
     if Path(pickle_path).is_file():
@@ -344,6 +357,7 @@ def compute_path_metrics(links, paths, pickle_path=PATH_METRICS_PICKLE_PATH):
 
 
 def get_metrics_around_max(metrics_dict):
+    """Extracts the metrics before and after the maximum of the degree."""
     path_degree = metrics_dict["path_degree"]
     path_clustering = metrics_dict["path_clustering"]
     path_degree_centrality = metrics_dict["path_degree_centrality"]
@@ -391,6 +405,7 @@ def get_metrics_around_max(metrics_dict):
 
 
 def plot_histograms_of_metrics_before_and_after(metrics_dict):
+    """Plotting helper for the metrics before and after the maximum of the degree."""
     fig, axs = plt.subplots(3, 2, figsize=(10, 15))
     fig.suptitle("Metrics before and after the maximum of the degree")
 
@@ -419,6 +434,7 @@ def plot_histograms_of_metrics_before_and_after(metrics_dict):
 
 
 def compute_metric_slope_before_and_after(metrics, drop_na=True):
+    """Computes the slope of the metric before and after the maximum of the degree."""
     path_slopes = pd.Series(dtype=object)
     path_slopes = metrics.map(compute_slope)
     path_slopes = pd.DataFrame(
