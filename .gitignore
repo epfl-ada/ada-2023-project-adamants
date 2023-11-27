@@ -8,3 +8,4 @@ wikipedia_graph_viz graph-tool.ipynb
 *.pyc
 /book/_build/*
 !data/*.pkl
+!data/*_pairs.csv
