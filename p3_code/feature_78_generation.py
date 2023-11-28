@@ -1,23 +1,28 @@
 import sys
 import pandas as pd
 from pathlib import Path
-
+import numpy as np
 sys.path.append("../book")
 from graph_measures import *
 from utils import load_data, load_paths_pairs
 
-GRAPH_METRICS_PATH = Path("../data/links_w_graph_metrics.csv")
+GRAPH_METRICS_PATH = Path("../data/links_w_graph_metrics.csv").resolve()
 
-def get_paths_pairs_metrics(paths_pairs, links):
+def get_paths_pairs_metrics(paths_pairs, links_path=GRAPH_METRICS_PATH):
     """Adds the graph metrics to path pairs as extra columns.
     
     Makes a deep copy of the data, the modified copy is returned."""
-    print("Computing graph metrics...")
-    links_w_graph_metrics = compute_graph_metrics(links)
     paths_pairs_metrics = paths_pairs.copy(deep=True)
+    print("Computing graph metrics...")
+    if Path(links_path).is_file():
+        links_w_graph_metrics = pd.read_csv(GRAPH_METRICS_PATH)
+        print("Succesfully loaded")
+    else:
+        _, links, _ = load_data()
+        links_w_graph_metrics = compute_graph_metrics(links)
     metrics_dict = {
         "degree": [],
-        "clusering": [],
+        "clustering": [],
         "closeness": [],
         "betweenness": [],
         "degree_centrality": [],
@@ -25,21 +30,26 @@ def get_paths_pairs_metrics(paths_pairs, links):
     degree_diff = []
     print("_"*20)
     print("Adding graph metrics to path pairs...")
-    for row in paths_pairs_metrics.iterrow():
+    for row in paths_pairs_metrics.itertuples():
         # locate matching from/to columns in the links
         # and copy the graph metrics to the paths_pairs_metrics dataframe
+        # print(row)
+        if row[1] == "<" or row.to == "<":
+            for k, v in metrics_dict.items():
+                v.append(np.nan)
+            continue
         metrics_row = links_w_graph_metrics.loc[
-            (links_w_graph_metrics["from"] == row["from"]) &
-            (links_w_graph_metrics["to"] == row["to"])
+            (links_w_graph_metrics["from"] == row[1]) &
+            (links_w_graph_metrics["to"] == row.to)
         ]
         for k, v in metrics_dict.items():
             v.append(metrics_row[k].values[0])
         
         degree_from = links_w_graph_metrics.loc[
-            links_w_graph_metrics["from"] == row["from"]
+            links_w_graph_metrics["from"] == row[1]
         ]["degree"].values[0]
         degree_to = links_w_graph_metrics.loc[
-            links_w_graph_metrics["to"] == row["to"]
+            links_w_graph_metrics["to"] == row.to
         ]["degree"].values[0]
         degree_diff.append(degree_from - degree_to)
     print("_"*20)
