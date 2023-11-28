@@ -1,134 +1,60 @@
 import sys
 import pandas as pd
 from pathlib import Path
-import numpy as np
+
 sys.path.append("../book")
 from graph_measures import *
-from utils import load_data, load_paths_pairs, load_paths
-import logging
-logger = logging.getLogger(__name__)
-logging.basicConfig(level=logging.DEBUG)
+from utils import load_data, load_paths_pairs
 
-GRAPH_METRICS_PATH = Path("../data/p3_extra_data/nodes_w_graph_metrics.csv").resolve()
+GRAPH_METRICS_PATH = Path("../data/links_w_graph_metrics.csv")
 
-def append_nan_to_dict(d):
-    """Adds nan values to a dict for the given keys."""
-    for k, v in d.items():
-        d[k].append(np.nan)
-
-def get_paths_pairs_metrics(paths_pairs, nodes_path=GRAPH_METRICS_PATH):
+def get_paths_pairs_metrics(paths_pairs, links):
     """Adds the graph metrics to path pairs as extra columns.
     
     Makes a deep copy of the data, the modified copy is returned."""
-    paths_pairs_metrics = paths_pairs.copy(deep=True)
     print("Computing graph metrics...")
-    if Path(nodes_path).is_file():
-        nodes_w_graph_metrics = pd.read_csv(GRAPH_METRICS_PATH)
-        print("Succesfully loaded")
-    else:
-        _, links, _ = load_data(unquote_names=False)
-        nodes_w_graph_metrics = compute_node_metrics(links, save_csv=True)
-    
-    page_degree_dict= dict(zip(nodes_w_graph_metrics["node_name"], nodes_w_graph_metrics["degree"]))
-    page_clustering_dict = dict(zip(nodes_w_graph_metrics["node_name"], nodes_w_graph_metrics["clustering"]))
-    page_degree_centrality_dict= dict(
-        zip(nodes_w_graph_metrics["node_name"], nodes_w_graph_metrics["degree_centrality"])
-    )
-    page_betweenness_dict = dict(zip(nodes_w_graph_metrics["node_name"], nodes_w_graph_metrics["betweenness"]))
-    page_closeness_dict = dict(zip(nodes_w_graph_metrics["node_name"], nodes_w_graph_metrics["closeness"]))
-    
-    
-    mapping = {
-        "degree": page_degree_dict,
-        "clustering": page_clustering_dict,
-        "degree_centrality": page_degree_centrality_dict,
-        "betweenness": page_betweenness_dict,
-        "closeness": page_closeness_dict,
+    links_w_graph_metrics = compute_graph_metrics(links)
+    paths_pairs_metrics = paths_pairs.copy(deep=True)
+    metrics_dict = {
+        "degree": [],
+        "clusering": [],
+        "closeness": [],
+        "betweenness": [],
+        "degree_centrality": [],
     }
-    
-    metrics_dict_from = {
-        "degree_from": [],
-        "clustering_from": [],
-        "closeness_from": [],
-        "betweenness_from": [],
-        "degree_centrality_from": [],
-    }
-    metrics_dict_to = {
-        "degree_to": [],
-        "clustering_to": [],
-        "closeness_to": [],
-        "betweenness_to": [],
-        "degree_centrality_to": [],
-    }
+    degree_diff = []
     print("_"*20)
     print("Adding graph metrics to path pairs...")
-    total = len(paths_pairs_metrics)
-    current = 0
-    for row in paths_pairs_metrics.itertuples():
-        page_from = str(row[1])
-        page_to = str(row.to)
+    for row in paths_pairs_metrics.iterrow():
+        # locate matching from/to columns in the links
+        # and copy the graph metrics to the paths_pairs_metrics dataframe
+        metrics_row = links_w_graph_metrics.loc[
+            (links_w_graph_metrics["from"] == row["from"]) &
+            (links_w_graph_metrics["to"] == row["to"])
+        ]
+        for k, v in metrics_dict.items():
+            v.append(metrics_row[k].values[0])
         
-        if page_from != "<":
-            for k,v in mapping.items():
-                try:
-                    k += "_from"
-                    metrics_dict_from[k].append(v[page_from])
-                except KeyError:
-                    print(f"Key error: {page_from} not found in nodes in metric {k}")
-                    metrics_dict_from[k].append(np.nan)
-        else:
-            append_nan_to_dict(metrics_dict_from)
-        
-        if page_to != "<":
-            for k,v in mapping.items():
-                try:
-                    k += "_to"
-                    metrics_dict_to[k].append(v[page_to])
-                except KeyError:
-                    print(f"Key error: {page_to} not found in nodes in metric {k}")
-                    metrics_dict_to[k].append(np.nan)
-        else:
-            append_nan_to_dict(metrics_dict_to)
-        
-        current += 1
-        print(f"{current}/{total}", end="\r")
+        degree_from = links_w_graph_metrics.loc[
+            links_w_graph_metrics["from"] == row["from"]
+        ]["degree"].values[0]
+        degree_to = links_w_graph_metrics.loc[
+            links_w_graph_metrics["to"] == row["to"]
+        ]["degree"].values[0]
+        degree_diff.append(degree_from - degree_to)
     print("_"*20)
     print("Adding columns to dataframe...")
-    for k, v in metrics_dict_from.items():
-        paths_pairs_metrics[k] = v
-    for k, v in metrics_dict_to.items():
+    metrics_dict["degree_diff"] = degree_diff
+    for k, v in metrics_dict.items():
         paths_pairs_metrics[k] = v
         
     return paths_pairs_metrics
 
 
 if __name__ == "__main__":
-    
-    finished_metrics_pairs_csv_path = Path("../data/p3_extra_data/finished_paths_pairs_metrics.csv").resolve()
-    unfinished_metrics_pairs_csv_path = Path("../data/p3_extra_data/unfinished_paths_pairs_metrics.csv").resolve()
-    
     finished_paths, unfinished_paths = load_paths_pairs()
-    if not finished_metrics_pairs_csv_path.is_file():
-        print("Computing finished paths pairs metrics...")
-        finished_paths_metrics = get_paths_pairs_metrics(finished_paths)
-        finished_paths_metrics.to_csv(finished_metrics_pairs_csv_path)
-    if not unfinished_metrics_pairs_csv_path.is_file():
-        print("Computing unfinished paths pairs metrics...")
-        unfinished_paths_metrics = get_paths_pairs_metrics(unfinished_paths)
-        unfinished_paths_metrics.to_csv(unfinished_metrics_pairs_csv_path)
-
-    finished_paths_appended_metrics_path = Path("../data/p3_extra_data/finished_paths_appended_metrics.csv").resolve()
-    unfinished_paths_appended_metrics_path = Path("../data/p3_extra_data/unfinished_paths_appended_metrics.csv").resolve()
-    
-    finished_paths, unfinished_paths = load_paths(unquote_names=False)
-    nodes = pd.read_csv(GRAPH_METRICS_PATH)
-    if not finished_paths_appended_metrics_path.is_file():
-        print("Computing finished paths metrics...")
-        finished_paths_appended_metrics = append_features_to_paths(finished_paths, nodes)
-        finished_paths_appended_metrics.to_csv(finished_paths_appended_metrics_path)
-    if not unfinished_paths_appended_metrics_path.is_file():
-        print("Computing unfinished paths metrics...")
-        unfinished_paths_appended_metrics = append_features_to_paths(unfinished_paths, nodes)
-        unfinished_paths_appended_metrics.to_csv(unfinished_paths_appended_metrics_path)
-    print("Done")
-    
+    _, links, _ = load_data()
+    finished_paths_metrics = get_paths_pairs_metrics(finished_paths, links)
+    unfinished_paths_metrics = get_paths_pairs_metrics(unfinished_paths, links)
+    # finished_paths_metrics.to_csv("../data/finished_paths_pairs_metrics.csv")
+    # unfinished_paths_metrics.to_csv("../data/unfinished_paths_pairs_metrics.csv")
