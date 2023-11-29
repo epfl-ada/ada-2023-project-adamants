@@ -6,7 +6,7 @@ sys.path.append("../book")
 from graph_measures import *
 from utils import load_data, load_paths_pairs
 
-GRAPH_METRICS_PATH = Path("../data/links_w_graph_metrics.csv").resolve()
+GRAPH_METRICS_PATH = Path("../data/p3_extra_data/links_w_graph_metrics.csv").resolve()
 
 def get_paths_pairs_metrics(paths_pairs, links_path=GRAPH_METRICS_PATH):
     """Adds the graph metrics to path pairs as extra columns.
@@ -30,10 +30,9 @@ def get_paths_pairs_metrics(paths_pairs, links_path=GRAPH_METRICS_PATH):
     degree_diff = []
     print("_"*20)
     print("Adding graph metrics to path pairs...")
+    total = len(paths_pairs_metrics)
+    current = 0
     for row in paths_pairs_metrics.itertuples():
-        # locate matching from/to columns in the links
-        # and copy the graph metrics to the paths_pairs_metrics dataframe
-        # print(row)
         if row[1] == "<" or row.to == "<":
             for k, v in metrics_dict.items():
                 v.append(np.nan)
@@ -43,15 +42,24 @@ def get_paths_pairs_metrics(paths_pairs, links_path=GRAPH_METRICS_PATH):
             (links_w_graph_metrics["to"] == row.to)
         ]
         for k, v in metrics_dict.items():
-            v.append(metrics_row[k].values[0])
-        
-        degree_from = links_w_graph_metrics.loc[
-            links_w_graph_metrics["from"] == row[1]
-        ]["degree"].values[0]
-        degree_to = links_w_graph_metrics.loc[
-            links_w_graph_metrics["to"] == row.to
-        ]["degree"].values[0]
-        degree_diff.append(degree_from - degree_to)
+            try:
+                v.append(metrics_row[k].values)
+            except:
+                print("Error in metrics:", metrics_row[k].values)
+                v.append(np.nan)
+        try:
+            degree_from = links_w_graph_metrics.loc[
+                links_w_graph_metrics["from"] == row[1]
+            ]["degree"].values[0]
+            degree_to = links_w_graph_metrics.loc[
+                links_w_graph_metrics["to"] == row.to
+            ]["degree"].values[0]
+            degree_diff.append(degree_from - degree_to)
+        except:
+            print("Error in degree diff:", row[1], row.to)
+            degree_diff.append(np.nan)
+        current += 1
+        print(f"{current}/{total}", end="\r")
     print("_"*20)
     print("Adding columns to dataframe...")
     metrics_dict["degree_diff"] = degree_diff
@@ -63,8 +71,7 @@ def get_paths_pairs_metrics(paths_pairs, links_path=GRAPH_METRICS_PATH):
 
 if __name__ == "__main__":
     finished_paths, unfinished_paths = load_paths_pairs()
-    _, links, _ = load_data()
-    finished_paths_metrics = get_paths_pairs_metrics(finished_paths, links)
-    unfinished_paths_metrics = get_paths_pairs_metrics(unfinished_paths, links)
+    finished_paths_metrics = get_paths_pairs_metrics(finished_paths)
+    unfinished_paths_metrics = get_paths_pairs_metrics(unfinished_paths)
     # finished_paths_metrics.to_csv("../data/finished_paths_pairs_metrics.csv")
     # unfinished_paths_metrics.to_csv("../data/unfinished_paths_pairs_metrics.csv")
