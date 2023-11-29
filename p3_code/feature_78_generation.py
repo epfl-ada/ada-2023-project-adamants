@@ -4,7 +4,7 @@ from pathlib import Path
 import numpy as np
 sys.path.append("../book")
 from graph_measures import *
-from utils import load_data, load_paths_pairs
+from utils import load_data, load_paths_pairs, load_paths
 import logging
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.DEBUG)
@@ -103,8 +103,32 @@ def get_paths_pairs_metrics(paths_pairs, nodes_path=GRAPH_METRICS_PATH):
 
 
 if __name__ == "__main__":
+    
+    finished_metrics_pairs_csv_path = Path("../data/p3_extra_data/finished_paths_pairs_metrics.csv").resolve()
+    unfinished_metrics_pairs_csv_path = Path("../data/p3_extra_data/unfinished_paths_pairs_metrics.csv").resolve()
+    
     finished_paths, unfinished_paths = load_paths_pairs()
-    finished_paths_metrics = get_paths_pairs_metrics(finished_paths)
-    unfinished_paths_metrics = get_paths_pairs_metrics(unfinished_paths)
-    finished_paths_metrics.to_csv("../data/finished_paths_pairs_metrics.csv")
-    unfinished_paths_metrics.to_csv("../data/unfinished_paths_pairs_metrics.csv")
+    if not finished_metrics_pairs_csv_path.is_file():
+        print("Computing finished paths pairs metrics...")
+        finished_paths_metrics = get_paths_pairs_metrics(finished_paths)
+        finished_paths_metrics.to_csv(finished_metrics_pairs_csv_path)
+    if not unfinished_metrics_pairs_csv_path.is_file():
+        print("Computing unfinished paths pairs metrics...")
+        unfinished_paths_metrics = get_paths_pairs_metrics(unfinished_paths)
+        unfinished_paths_metrics.to_csv(unfinished_metrics_pairs_csv_path)
+
+    finished_paths_appended_metrics_path = Path("../data/p3_extra_data/finished_paths_appended_metrics.csv").resolve()
+    unfinished_paths_appended_metrics_path = Path("../data/p3_extra_data/unfinished_paths_appended_metrics.csv").resolve()
+    
+    finished_paths, unfinished_paths = load_paths(unquote_names=False)
+    nodes = pd.read_csv(GRAPH_METRICS_PATH)
+    if not finished_paths_appended_metrics_path.is_file():
+        print("Computing finished paths metrics...")
+        finished_paths_appended_metrics = append_features_to_paths(finished_paths, nodes)
+        finished_paths_appended_metrics.to_csv(finished_paths_appended_metrics_path)
+    if not unfinished_paths_appended_metrics_path.is_file():
+        print("Computing unfinished paths metrics...")
+        unfinished_paths_appended_metrics = append_features_to_paths(unfinished_paths, nodes)
+        unfinished_paths_appended_metrics.to_csv(unfinished_paths_appended_metrics_path)
+    print("Done")
+    

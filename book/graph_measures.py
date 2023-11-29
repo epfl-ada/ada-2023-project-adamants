@@ -518,3 +518,84 @@ def compute_metric_slopes(metrics_dict, drop_na=True):
             print(metric_slopes)
         metrics_slopes.append(metric_slopes)
     return metrics_slopes
+
+def add_slopes_to_paths_df(paths_df, metrics_slopes):
+    """Adds the slopes of the metrics before and after the maximum of the degree to the paths dataframe."""
+    for metric_slopes in metrics_slopes:
+        paths_df = pd.concat([paths_df, metric_slopes], axis=1)
+    return paths_df
+
+def compute_path_metrics_w_nodes(nodes, paths_df):
+    """Computes the metrics for each path."""
+    # pre-compute metrics for paths to avoid costly np.isin in the plots
+    path_degree = pd.Series(dtype=object)
+    path_clustering = pd.Series(dtype=object)
+    path_degree_centrality = pd.Series(dtype=object)
+    path_betweenness = pd.Series(dtype=object)
+    path_closeness = pd.Series(dtype=object)
+
+    page_degree_dict = dict(zip(nodes["node_name"], nodes["degree"]))
+    page_clustering_dict = dict(zip(nodes["node_name"], nodes["clustering"]))
+    page_degree_centrality_dict = dict(
+        zip(nodes["node_name"], nodes["degree_centrality"])
+    )
+    page_betweenness_dict = dict(zip(nodes["node_name"], nodes["betweenness"]))
+    page_closeness_dict = dict(zip(nodes["node_name"], nodes["closeness"]))
+
+    not_found_count = 0
+
+    total = len(paths_df)
+    current = 0
+    
+    for i, path in enumerate(paths_df["path"]):
+        page_degrees = []
+        page_clustering = []
+        page_degree_centrality = []
+        page_betweenness = []
+        page_closeness = []
+        for page in path:
+            try:
+                page_degrees.append(page_degree_dict[page])
+                page_clustering.append(page_clustering_dict[page])
+                page_degree_centrality.append(page_degree_centrality_dict[page])
+                page_betweenness.append(page_betweenness_dict[page])
+                page_closeness.append(page_closeness_dict[page])
+            except KeyError:
+                if page == "<":
+                    continue
+                print(f"Page {page} not found in links")
+                not_found_count += 1
+                page_degrees.append(np.nan)
+                page_clustering.append(np.nan)
+                page_degree_centrality.append(np.nan)
+                page_betweenness.append(np.nan)
+                page_closeness.append(np.nan)
+
+        path_degree[i] = np.array(page_degrees)
+        path_clustering[i] = np.array(page_clustering)
+        path_degree_centrality[i] = np.array(page_degree_centrality)
+        path_betweenness[i] = np.array(page_betweenness)
+        path_closeness[i] = np.array(page_closeness)
+        
+        current += 1
+        print(f"Progress: {current}/{total}", end="\r")
+
+    metrics_dict = {
+        "path_degree": path_degree,
+        "path_clustering": path_clustering,
+        "path_degree_centrality": path_degree_centrality,
+        "path_betweenness": path_betweenness,
+        "path_closeness": path_closeness,
+    }
+    print(f"Total of pages not found in links: {not_found_count}")
+    return metrics_dict
+
+def append_features_to_paths(paths_df, nodes):
+    """Adds the slopes of the metrics before and after the maximum of the degree to the paths dataframe."""
+    print("- Metrics")
+    metrics_dict = compute_path_metrics_w_nodes(nodes, paths_df)
+    print("- Slopes")
+    metrics_slopes = compute_metric_slopes(metrics_dict)
+    print("- Adding slopes to dataframe")
+    paths_df = add_slopes_to_paths_df(paths_df, metrics_slopes)
+    return paths_df
