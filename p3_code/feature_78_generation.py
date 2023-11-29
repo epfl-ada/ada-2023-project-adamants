@@ -128,8 +128,7 @@ if __name__ == "__main__":
         finished_paths_appended_metrics.to_csv(finished_paths_appended_metrics_path)
     if not unfinished_paths_appended_metrics_path.is_file():
         print("Computing unfinished paths metrics...")
-        unfinished_paths = unfinished_paths.copy(deep=True)
         unfinished_paths_appended_metrics = append_features_to_paths(unfinished_paths, nodes)
-        unfinished_paths_appended_metrics.to_csv(unfinished_paths_appended_metrics_path)
+        # unfinished_paths_appended_metrics.to_csv(unfinished_paths_appended_metrics_path)
     print("Done")
     
