@@ -5,43 +5,47 @@ import numpy as np
 sys.path.append("../book")
 from graph_measures import *
 from utils import load_data, load_paths_pairs
+import logging
+logger = logging.getLogger(__name__)
+logging.basicConfig(level=logging.DEBUG)
 
-GRAPH_METRICS_PATH = Path("../data/p3_extra_data/links_w_graph_metrics.csv").resolve()
+GRAPH_METRICS_PATH = Path("../data/p3_extra_data/nodes_w_graph_metrics.csv").resolve()
 
 def append_nan_to_dict(d):
     """Adds nan values to a dict for the given keys."""
     for k, v in d.items():
         d[k].append(np.nan)
 
-def get_paths_pairs_metrics(paths_pairs, links_path=GRAPH_METRICS_PATH):
+def get_paths_pairs_metrics(paths_pairs, nodes_path=GRAPH_METRICS_PATH):
     """Adds the graph metrics to path pairs as extra columns.
     
     Makes a deep copy of the data, the modified copy is returned."""
     paths_pairs_metrics = paths_pairs.copy(deep=True)
     print("Computing graph metrics...")
-    if Path(links_path).is_file():
-        links_w_graph_metrics = pd.read_csv(GRAPH_METRICS_PATH)
+    if Path(nodes_path).is_file():
+        nodes_w_graph_metrics = pd.read_csv(GRAPH_METRICS_PATH)
         print("Succesfully loaded")
     else:
         _, links, _ = load_data(unquote_names=False)
-        links_w_graph_metrics = compute_graph_metrics(links, save_csv=True)
+        nodes_w_graph_metrics = compute_node_metrics(links, save_csv=True)
     
-    page_degree_dict_from = dict(zip(links_w_graph_metrics["from"], links_w_graph_metrics["degree"]))
-    page_clustering_dict_from = dict(zip(links_w_graph_metrics["from"], links_w_graph_metrics["clustering"]))
-    page_degree_centrality_dict_from = dict(
-        zip(links_w_graph_metrics["from"], links_w_graph_metrics["degree_centrality"])
+    page_degree_dict= dict(zip(nodes_w_graph_metrics["node_name"], nodes_w_graph_metrics["degree"]))
+    page_clustering_dict = dict(zip(nodes_w_graph_metrics["node_name"], nodes_w_graph_metrics["clustering"]))
+    page_degree_centrality_dict= dict(
+        zip(nodes_w_graph_metrics["node_name"], nodes_w_graph_metrics["degree_centrality"])
     )
-    page_betweenness_dict_from = dict(zip(links_w_graph_metrics["from"], links_w_graph_metrics["betweenness"]))
-    page_closeness_dict_from = dict(zip(links_w_graph_metrics["from"], links_w_graph_metrics["closeness"]))
+    page_betweenness_dict = dict(zip(nodes_w_graph_metrics["node_name"], nodes_w_graph_metrics["betweenness"]))
+    page_closeness_dict = dict(zip(nodes_w_graph_metrics["node_name"], nodes_w_graph_metrics["closeness"]))
     
-    page_degree_dict_to = dict(zip(links_w_graph_metrics["to"], links_w_graph_metrics["degree"]))
-    page_clustering_dict_to = dict(zip(links_w_graph_metrics["to"], links_w_graph_metrics["clustering"]))
-    page_degree_centrality_dict_to = dict(
-        zip(links_w_graph_metrics["to"], links_w_graph_metrics["degree_centrality"])
-    )
-    page_betweenness_dict_to = dict(zip(links_w_graph_metrics["to"], links_w_graph_metrics["betweenness"]))
-    page_closeness_dict_to = dict(zip(links_w_graph_metrics["to"], links_w_graph_metrics["closeness"]))
-        
+    
+    mapping = {
+        "degree": page_degree_dict,
+        "clustering": page_clustering_dict,
+        "degree_centrality": page_degree_centrality_dict,
+        "betweenness": page_betweenness_dict,
+        "closeness": page_closeness_dict,
+    }
+    
     metrics_dict_from = {
         "degree_from": [],
         "clustering_from": [],
@@ -61,32 +65,28 @@ def get_paths_pairs_metrics(paths_pairs, links_path=GRAPH_METRICS_PATH):
     total = len(paths_pairs_metrics)
     current = 0
     for row in paths_pairs_metrics.itertuples():
-        page_from = row[1]
-        page_to = row.to
+        page_from = str(row[1])
+        page_to = str(row.to)
         
         if page_from != "<":
-            try:
-                metrics_dict_from["degree_from"].append(page_degree_dict_from[page_from])
-                metrics_dict_from["clustering_from"].append(page_clustering_dict_from[page_from])
-                metrics_dict_from["closeness_from"].append(page_closeness_dict_from[page_from])
-                metrics_dict_from["betweenness_from"].append(page_betweenness_dict_from[page_from])
-                metrics_dict_from["degree_centrality_from"].append(page_degree_centrality_dict_from[page_from])
-            except KeyError:
-                print(f"Key error: {page_from}")
-                append_nan_to_dict(metrics_dict_from)
+            for k,v in mapping.items():
+                try:
+                    k += "_from"
+                    metrics_dict_from[k].append(v[page_from])
+                except KeyError:
+                    print(f"Key error: {page_from} not found in nodes in metric {k}")
+                    metrics_dict_from[k].append(np.nan)
         else:
             append_nan_to_dict(metrics_dict_from)
         
         if page_to != "<":
-            try:
-                metrics_dict_to["degree_to"].append(page_degree_dict_to[page_to])
-                metrics_dict_to["clustering_to"].append(page_clustering_dict_to[page_to])
-                metrics_dict_to["closeness_to"].append(page_closeness_dict_to[page_to])
-                metrics_dict_to["betweenness_to"].append(page_betweenness_dict_to[page_to])
-                metrics_dict_to["degree_centrality_to"].append(page_degree_centrality_dict_to[page_to])
-            except KeyError:
-                print(f"Key error: {page_to}")
-                append_nan_to_dict(metrics_dict_to)
+            for k,v in mapping.items():
+                try:
+                    k += "_to"
+                    metrics_dict_to[k].append(v[page_to])
+                except KeyError:
+                    print(f"Key error: {page_to} not found in nodes in metric {k}")
+                    metrics_dict_to[k].append(np.nan)
         else:
             append_nan_to_dict(metrics_dict_to)
         
