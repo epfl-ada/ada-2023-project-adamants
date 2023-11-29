@@ -35,7 +35,7 @@ def parse_paths(dataframe):
     except:
         print("The dataframe does not contain a path column")
 
-def load_data(data_path=DATA_PATH):
+def load_data(data_path=DATA_PATH, unquote_names=True):
     """Loads the Wikispeedia data for graph metrics analysis.
 
     Returns:
@@ -70,16 +70,17 @@ def load_data(data_path=DATA_PATH):
     )
 
     shortest_path_matrix = convert_to_matrix(shortest_path)
-    articles.name = articles.name.apply(unquote)
+    if unquote_names:
+        articles.name = articles.name.apply(unquote)
+        links = links.map(lambda x: unquote(x))
     # add a column for each article name, and fill the dataframe with shortest path distances
     shortest_path_df = pd.DataFrame(
         shortest_path_matrix, index=articles.name, columns=articles.name
     )
-    links = links.map(lambda x: unquote(x))
     return shortest_path_df, links, articles
 
 def load_paths(
-    path_finished=PATHS_FINISHED, path_unfinished=PATHS_UNFINISHED
+    path_finished=PATHS_FINISHED, path_unfinished=PATHS_UNFINISHED, unquote_names=True
 ):
     """Loads and creates a path list in the path column of the paths_finished and paths_unfinished dataframes."""
     path_finished = Path(path_finished).resolve()
@@ -95,9 +96,6 @@ def load_paths(
     paths_finished["timestamp"] = pd.to_datetime(paths_finished["timestamp"], unit="s")
 
     paths_finished = parse_paths(paths_finished)
-    paths_finished["path"] = paths_finished["path"].apply(
-        lambda x: [unquote(i) for i in x]
-    )
 
     path_unfinished = Path(path_unfinished).resolve()
     assert path_unfinished.is_file()
@@ -121,13 +119,18 @@ def load_paths(
     )
 
     paths_unfinished = parse_paths(paths_unfinished)
-    paths_unfinished["path"] = paths_unfinished["path"].apply(
-        lambda x: [unquote(i) for i in x]
-    )
+    
+    if unquote_names:
+        paths_finished["path"] = paths_finished["path"].apply(
+            lambda x: [unquote(i) for i in x]
+        )
+        paths_unfinished["path"] = paths_unfinished["path"].apply(
+            lambda x: [unquote(i) for i in x]
+        )
 
     return paths_finished, paths_unfinished
 
-def load_paths_pairs(data_path=DATA_PATH):
+def load_paths_pairs():
     """Loads the paths_finished dataframe and converts the path column to a list of page pairs."""
     finished_pairs_df = pd.read_csv(
         PATHS_PAIRS_FINISHED,
@@ -141,29 +144,6 @@ def load_paths_pairs(data_path=DATA_PATH):
 
 def convert_paths_to_pages_pairs(paths_df):
     """Converts the path column of the paths_finished dataframe to a list of page pairs."""
-    # paths_pairs_df = pd.DataFrame()
-    # count=0
-    # for i in tqdm(range(len(paths_df))):
-    #     row = paths_df.iloc[i]
-    #     path = row["path"]
-    #     if len(path) == 1:
-    #         print(f"Skipping path {i} with only one page")
-    #         continue
-    #     for j in range(len(path) - 1):
-    #         count+=1
-    #         df = pd.DataFrame(
-    #             {"from": path[j], 
-    #              "to": path[j + 1],
-    #              "rating": row["rating"],
-    #              "timestamp": row["timestamp"],
-    #              "hashedIpAddress": row["hashedIpAddress"],
-    #              "durationInSec": row["durationInSec"]},
-    #             index=[count],
-    #         )
-    #         paths_pairs_df = pd.concat([paths_pairs_df, df], ignore_index=True)
-    # if save:
-    #     paths_pairs_df.to_csv("./data/finished_paths_pairs.csv")
-    # return paths_pairs_df
     path_lengths = paths_df["path"].map(len)
     path_lengths = path_lengths[path_lengths > 1]
     paths_df = paths_df.loc[path_lengths.index]

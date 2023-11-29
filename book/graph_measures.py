@@ -181,7 +181,7 @@ def build_links_graph(links):
     return G
 
 
-def compute_graph_metrics(links):
+def compute_graph_metrics(links, save_csv=False):
     """Compute degree, clustering, local efficiency, modularity, closeness centrality, betweenness centrality, and degree centrality.
 
     Args:
@@ -234,6 +234,8 @@ def compute_graph_metrics(links):
     links["degree_centrality"] = links["from"].map(
         centrality
     )  # represents the number of shortest paths that pass through a node (ie is the node a hub)
+    if save_csv:
+        links.to_csv((DATA_PATH / "../p3_extra_data/links_w_graph_metrics.csv").resolve())
     return links
 
 
