@@ -120,7 +120,7 @@ if __name__ == "__main__":
     finished_paths_appended_metrics_path = Path("../data/p3_extra_data/finished_paths_appended_metrics.csv").resolve()
     unfinished_paths_appended_metrics_path = Path("../data/p3_extra_data/unfinished_paths_appended_metrics.csv").resolve()
     
-    finished_paths, unfinished_paths = load_paths(unquote_names=False)
+    finished_paths, unfinished_paths = load_paths(unquote_names=False, drop_timeouts=True)
     nodes = pd.read_csv(GRAPH_METRICS_PATH)
     if not finished_paths_appended_metrics_path.is_file():
         print("Computing finished paths metrics...")
@@ -128,6 +128,7 @@ if __name__ == "__main__":
         finished_paths_appended_metrics.to_csv(finished_paths_appended_metrics_path)
     if not unfinished_paths_appended_metrics_path.is_file():
         print("Computing unfinished paths metrics...")
+        unfinished_paths = unfinished_paths.copy(deep=True)
         unfinished_paths_appended_metrics = append_features_to_paths(unfinished_paths, nodes)
         unfinished_paths_appended_metrics.to_csv(unfinished_paths_appended_metrics_path)
     print("Done")

@@ -11,4 +11,4 @@ wikipedia_graph_viz graph-tool.ipynb
 /data/wikispeedia_paths-and-graph/
 
 !data/*.pkl
-!data/p3_extra_data/
+!data/p3_extra_data/*.csv

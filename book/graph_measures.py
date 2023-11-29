@@ -83,6 +83,8 @@ def estimate_strategy(metric_array, metric=compute_slope):
         return np.nan
     elif max_id == len(metric_array) - 1:
         return np.nan
+    elif len(metric_array) == 1:
+        return np.nan
     else:
         m_before = metric(metric_array[:max_id])
         m_after = metric(metric_array[max_id - 1 :])
@@ -553,6 +555,18 @@ def compute_path_metrics_w_nodes(nodes, paths_df):
         page_degree_centrality = []
         page_betweenness = []
         page_closeness = []
+        
+        if len(path) == 1:
+            print(f"Path of len 1 : {path}\nSkipping...")
+            # path_degree[i] = np.array([np.nan])
+            # path_clustering[i] = np.array([np.nan])
+            # path_degree_centrality[i] = np.array([np.nan])
+            # path_betweenness[i] = np.array([np.nan])
+            # path_closeness[i] = np.array([np.nan])
+            # current += 1
+            # print(f"Progress: {current}/{total}", end="\r")
+            continue
+        
         for page in path:
             try:
                 page_degrees.append(page_degree_dict[page])

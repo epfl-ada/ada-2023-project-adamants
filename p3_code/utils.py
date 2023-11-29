@@ -80,7 +80,7 @@ def load_data(data_path=DATA_PATH, unquote_names=True):
     return shortest_path_df, links, articles
 
 def load_paths(
-    path_finished=PATHS_FINISHED, path_unfinished=PATHS_UNFINISHED, unquote_names=True
+    path_finished=PATHS_FINISHED, path_unfinished=PATHS_UNFINISHED, unquote_names=True, drop_timeouts=True
 ):
     """Loads and creates a path list in the path column of the paths_finished and paths_unfinished dataframes."""
     path_finished = Path(path_finished).resolve()
@@ -127,6 +127,14 @@ def load_paths(
         paths_unfinished["path"] = paths_unfinished["path"].apply(
             lambda x: [unquote(i) for i in x]
         )
+    
+    if drop_timeouts:
+        # filter all with type timeout and 0 ; characters in path
+        paths_unfinished = paths_unfinished[
+            not "timeout" in paths_unfinished["type"] 
+            and paths_unfinished["path"].str.count(";") > 0
+            ]
+        paths_unfinished.reset_index(inplace=True)
 
     return paths_finished, paths_unfinished
 
