@@ -78,15 +78,22 @@ def estimate_strategy(metric_array, max_array, metric=compute_slope):
     """
     # assert metric_array.shape == max_array.shape
     # print(degree_evolution)
+    if len(metric_array) < 3:
+        print("Path too short")
+        return np.nan, np.nan
+    
     if np.isnan(metric_array).all():
+        print("All NaN")
         return np.nan, np.nan
     max_id = np.nanargmax(max_array)
     if max_id == 0:
+        print("Max at 0")
         return np.nan, np.nan
     elif max_id == len(metric_array) - 1:
+        print("Max at end")
         return np.nan, np.nan
-    elif len(metric_array) == 1:
-        return np.nan, np.nan
+    # elif len(metric_array) == 1:
+    #     return np.nan, np.nan
     else:
         m_before = metric(metric_array[:max_id])
         m_after = metric(metric_array[max_id - 1 :])
@@ -501,12 +508,12 @@ def compute_metric_slopes(metrics_dict, drop_na=True):
     """
     na_count = 0
 
-    metrics_slopes = []
-    for metric in metrics_dict.keys():
+    metrics_slopes_list = []
+    for i, metric in enumerate(metrics_dict.keys()):
         print(f"Adding slopes for {metric}")
         metric_slopes = pd.Series(dtype=object)
         metric_slopes = metrics_dict[metric].map(
-            partial(estimate_strategy, metric=compute_slope, max_array=metrics_dict["path_degree"])
+            partial(estimate_strategy, metric=compute_slope, max_array=metrics_dict["path_degree"][i])
         )
         try:
             metric_slopes = pd.DataFrame(
@@ -520,9 +527,9 @@ def compute_metric_slopes(metrics_dict, drop_na=True):
         except ValueError as e:
             print(f"Could not compute slopes for {metric} : {e}")
             print(metric_slopes)
-        metrics_slopes.append(metric_slopes)
+        metrics_slopes_list.append(metric_slopes)
     print(f"Dropped {na_count} NaN values")
-    return metrics_slopes
+    return metrics_slopes_list
 
 def add_slopes_to_paths_df(paths_df, metrics_slopes):
     """Adds the slopes of the metrics before and after the maximum of the degree to the paths dataframe."""
