@@ -73,5 +73,5 @@ if __name__ == "__main__":
     finished_paths, unfinished_paths = load_paths_pairs()
     finished_paths_metrics = get_paths_pairs_metrics(finished_paths)
     unfinished_paths_metrics = get_paths_pairs_metrics(unfinished_paths)
-    # finished_paths_metrics.to_csv("../data/finished_paths_pairs_metrics.csv")
-    # unfinished_paths_metrics.to_csv("../data/unfinished_paths_pairs_metrics.csv")
+    finished_paths_metrics.to_csv("../data/finished_paths_pairs_metrics.csv")
+    unfinished_paths_metrics.to_csv("../data/unfinished_paths_pairs_metrics.csv")
