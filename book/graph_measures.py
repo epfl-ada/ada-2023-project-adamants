@@ -123,7 +123,7 @@ def compute_path_metric_around_max(metric_array, max_array):
 #############################
 
 
-def load_data_graph_metrics(data_path=DATA_PATH):
+def load_data_graph_metrics(data_path=DATA_PATH, unquote_names=True):
     """Loads the Wikispeedia data for graph metrics analysis.
 
     Returns:
@@ -158,12 +158,12 @@ def load_data_graph_metrics(data_path=DATA_PATH):
     )
 
     shortest_path_matrix = convert_to_matrix(shortest_path)
-    articles.name = articles.name.apply(unquote)
-    # add a column for each article name, and fill the dataframe with shortest path distances
+    if unquote_names:
+        articles.name = articles.name.apply(unquote)
+        links = links.map(lambda x: unquote(x))
     shortest_path_df = pd.DataFrame(
         shortest_path_matrix, index=articles.name, columns=articles.name
     )
-    links = links.map(lambda x: unquote(x))
     return shortest_path_df, links, articles
 
 
@@ -181,7 +181,7 @@ def build_links_graph(links):
     return G
 
 
-def compute_graph_metrics(links):
+def compute_graph_metrics(links, save_csv=False):
     """Compute degree, clustering, local efficiency, modularity, closeness centrality, betweenness centrality, and degree centrality.
 
     Args:
@@ -234,8 +234,48 @@ def compute_graph_metrics(links):
     links["degree_centrality"] = links["from"].map(
         centrality
     )  # represents the number of shortest paths that pass through a node (ie is the node a hub)
+    if save_csv:
+        links.to_csv((DATA_PATH / "../p3_extra_data/links_w_graph_metrics.csv").resolve())
     return links
 
+def compute_node_metrics(links, save_csv=False):
+    """Compute degree, clustering, local efficiency, modularity, closeness centrality, betweenness centrality, and degree centrality for each unique node.
+    
+    Args:
+        links (pd.DataFrame): a dataframe with the links between articles
+        
+    Returns:
+            links (pd.DataFrame): a dataframe with the links between articles and the graph metrics added as extra columns"""
+    links = links.copy()
+    G = build_links_graph(links)
+    print("Computing degree...")
+    degree = dict(G.degree(G.nodes()))
+    nx.set_node_attributes(G, degree, "degree")
+    clustering = nx.clustering(G)
+    print("Local clustering coefficient...")
+    nx.set_node_attributes(G, clustering, "clustering")
+    closeness = nx.closeness_centrality(G)
+    print("Closeness centrality...")
+    nx.set_node_attributes(G, closeness, "closeness")
+    betweenness = nx.betweenness_centrality(G)
+    print("Betweenness centrality...")
+    nx.set_node_attributes(G, betweenness, "betweenness")
+    centrality = nx.degree_centrality(G)
+    print("Degree centrality...")
+    nx.set_node_attributes(G, centrality, "degree_centrality")
+    # find all unique node names in the graph, from and to
+    unique_nodes = set(links["from"].unique()).union(set(links["to"].unique()))
+    nodes_df = pd.DataFrame(list(unique_nodes), columns=["node_name"])
+    nodes_df["degree"] = nodes_df["node_name"].map(degree)
+    nodes_df["clustering"] = nodes_df["node_name"].map(clustering)
+    nodes_df["closeness"] = nodes_df["node_name"].map(closeness)
+    nodes_df["betweenness"] = nodes_df["node_name"].map(betweenness)
+    nodes_df["degree_centrality"] = nodes_df["node_name"].map(centrality)
+    
+    if save_csv:
+        nodes_df.to_csv((DATA_PATH / "../p3_extra_data/nodes_w_graph_metrics.csv").resolve())
+    return nodes_df
+    
 
 def load_and_prepare_paths_dfs_for_metrics(
     path_finished=PATHS_FINISHED, path_unfinished=PATHS_UNFINISHED
@@ -478,3 +518,84 @@ def compute_metric_slopes(metrics_dict, drop_na=True):
             print(metric_slopes)
         metrics_slopes.append(metric_slopes)
     return metrics_slopes
+
+def add_slopes_to_paths_df(paths_df, metrics_slopes):
+    """Adds the slopes of the metrics before and after the maximum of the degree to the paths dataframe."""
+    for metric_slopes in metrics_slopes:
+        paths_df = pd.concat([paths_df, metric_slopes], axis=1)
+    return paths_df
+
+def compute_path_metrics_w_nodes(nodes, paths_df):
+    """Computes the metrics for each path."""
+    # pre-compute metrics for paths to avoid costly np.isin in the plots
+    path_degree = pd.Series(dtype=object)
+    path_clustering = pd.Series(dtype=object)
+    path_degree_centrality = pd.Series(dtype=object)
+    path_betweenness = pd.Series(dtype=object)
+    path_closeness = pd.Series(dtype=object)
+
+    page_degree_dict = dict(zip(nodes["node_name"], nodes["degree"]))
+    page_clustering_dict = dict(zip(nodes["node_name"], nodes["clustering"]))
+    page_degree_centrality_dict = dict(
+        zip(nodes["node_name"], nodes["degree_centrality"])
+    )
+    page_betweenness_dict = dict(zip(nodes["node_name"], nodes["betweenness"]))
+    page_closeness_dict = dict(zip(nodes["node_name"], nodes["closeness"]))
+
+    not_found_count = 0
+
+    total = len(paths_df)
+    current = 0
+    
+    for i, path in enumerate(paths_df["path"]):
+        page_degrees = []
+        page_clustering = []
+        page_degree_centrality = []
+        page_betweenness = []
+        page_closeness = []
+        for page in path:
+            try:
+                page_degrees.append(page_degree_dict[page])
+                page_clustering.append(page_clustering_dict[page])
+                page_degree_centrality.append(page_degree_centrality_dict[page])
+                page_betweenness.append(page_betweenness_dict[page])
+                page_closeness.append(page_closeness_dict[page])
+            except KeyError:
+                if page == "<":
+                    continue
+                print(f"Page {page} not found in links")
+                not_found_count += 1
+                page_degrees.append(np.nan)
+                page_clustering.append(np.nan)
+                page_degree_centrality.append(np.nan)
+                page_betweenness.append(np.nan)
+                page_closeness.append(np.nan)
+
+        path_degree[i] = np.array(page_degrees)
+        path_clustering[i] = np.array(page_clustering)
+        path_degree_centrality[i] = np.array(page_degree_centrality)
+        path_betweenness[i] = np.array(page_betweenness)
+        path_closeness[i] = np.array(page_closeness)
+        
+        current += 1
+        print(f"Progress: {current}/{total}", end="\r")
+
+    metrics_dict = {
+        "path_degree": path_degree,
+        "path_clustering": path_clustering,
+        "path_degree_centrality": path_degree_centrality,
+        "path_betweenness": path_betweenness,
+        "path_closeness": path_closeness,
+    }
+    print(f"Total of pages not found in links: {not_found_count}")
+    return metrics_dict
+
+def append_features_to_paths(paths_df, nodes):
+    """Adds the slopes of the metrics before and after the maximum of the degree to the paths dataframe."""
+    print("- Metrics")
+    metrics_dict = compute_path_metrics_w_nodes(nodes, paths_df)
+    print("- Slopes")
+    metrics_slopes = compute_metric_slopes(metrics_dict)
+    print("- Adding slopes to dataframe")
+    paths_df = add_slopes_to_paths_df(paths_df, metrics_slopes)
+    return paths_df

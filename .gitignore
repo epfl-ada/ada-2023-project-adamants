@@ -7,4 +7,8 @@ wikipedia_graph_viz graph-tool.ipynb
 *.pkl
 *.pyc
 /book/_build/*
+/data/plaintext_articles/
+/data/wikispeedia_paths-and-graph/
+
 !data/*.pkl
+!data/p3_extra_data/
