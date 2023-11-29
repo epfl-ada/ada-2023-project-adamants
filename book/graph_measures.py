@@ -567,9 +567,9 @@ def compute_path_metrics_w_nodes(nodes, paths_df):
         page_betweenness = []
         page_closeness = []
         
-        if len(path) == 1:
-            print(f"Path of len 1 : {path}\nSkipping...")
-            continue
+        # if len(path) == 1:
+        #     print(f"Path of len 1 : {path}\nSkipping...")
+        #     continue
         
         for page in path:
             try:
