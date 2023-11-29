@@ -123,7 +123,7 @@ def compute_path_metric_around_max(metric_array, max_array):
 #############################
 
 
-def load_data_graph_metrics(data_path=DATA_PATH):
+def load_data_graph_metrics(data_path=DATA_PATH, unquote_names=True):
     """Loads the Wikispeedia data for graph metrics analysis.
 
     Returns:
@@ -158,12 +158,12 @@ def load_data_graph_metrics(data_path=DATA_PATH):
     )
 
     shortest_path_matrix = convert_to_matrix(shortest_path)
-    articles.name = articles.name.apply(unquote)
-    # add a column for each article name, and fill the dataframe with shortest path distances
+    if unquote_names:
+        articles.name = articles.name.apply(unquote)
+        links = links.map(lambda x: unquote(x))
     shortest_path_df = pd.DataFrame(
         shortest_path_matrix, index=articles.name, columns=articles.name
     )
-    links = links.map(lambda x: unquote(x))
     return shortest_path_df, links, articles
 
 
@@ -238,6 +238,44 @@ def compute_graph_metrics(links, save_csv=False):
         links.to_csv((DATA_PATH / "../p3_extra_data/links_w_graph_metrics.csv").resolve())
     return links
 
+def compute_node_metrics(links, save_csv=False):
+    """Compute degree, clustering, local efficiency, modularity, closeness centrality, betweenness centrality, and degree centrality for each unique node.
+    
+    Args:
+        links (pd.DataFrame): a dataframe with the links between articles
+        
+    Returns:
+            links (pd.DataFrame): a dataframe with the links between articles and the graph metrics added as extra columns"""
+    links = links.copy()
+    G = build_links_graph(links)
+    print("Computing degree...")
+    degree = dict(G.degree(G.nodes()))
+    nx.set_node_attributes(G, degree, "degree")
+    clustering = nx.clustering(G)
+    print("Local clustering coefficient...")
+    nx.set_node_attributes(G, clustering, "clustering")
+    closeness = nx.closeness_centrality(G)
+    print("Closeness centrality...")
+    nx.set_node_attributes(G, closeness, "closeness")
+    betweenness = nx.betweenness_centrality(G)
+    print("Betweenness centrality...")
+    nx.set_node_attributes(G, betweenness, "betweenness")
+    centrality = nx.degree_centrality(G)
+    print("Degree centrality...")
+    nx.set_node_attributes(G, centrality, "degree_centrality")
+    # find all unique node names in the graph, from and to
+    unique_nodes = set(links["from"].unique()).union(set(links["to"].unique()))
+    nodes_df = pd.DataFrame(list(unique_nodes), columns=["node_name"])
+    nodes_df["degree"] = nodes_df["node_name"].map(degree)
+    nodes_df["clustering"] = nodes_df["node_name"].map(clustering)
+    nodes_df["closeness"] = nodes_df["node_name"].map(closeness)
+    nodes_df["betweenness"] = nodes_df["node_name"].map(betweenness)
+    nodes_df["degree_centrality"] = nodes_df["node_name"].map(centrality)
+    
+    if save_csv:
+        nodes_df.to_csv((DATA_PATH / "../p3_extra_data/nodes_w_graph_metrics.csv").resolve())
+    return nodes_df
+    
 
 def load_and_prepare_paths_dfs_for_metrics(
     path_finished=PATHS_FINISHED, path_unfinished=PATHS_UNFINISHED
