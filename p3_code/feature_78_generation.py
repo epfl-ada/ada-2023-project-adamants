@@ -101,6 +101,46 @@ def get_paths_pairs_metrics(paths_pairs, nodes_path=GRAPH_METRICS_PATH):
         
     return paths_pairs_metrics
 
+def compute_metrics_slopes(metrics_dict):
+    slopes = {}
+    slope_bef = "slope_before_max"
+    slope_aft = "slope_after_max"
+    for k,v in metrics_dict.items():
+        v.index = range(len(v))
+        slopes[k] = {} 
+        slopes[k][slope_bef] = []
+        slopes[k][slope_aft] = []
+        for i, val in enumerate(v):
+            if len(val) < 3:
+                slopes[k][slope_bef].append(np.nan)
+                slopes[k][slope_aft].append(np.nan)
+                continue
+            if np.isnan(val).all():
+                slopes[k][slope_bef].append(np.nan)
+                slopes[k][slope_aft].append(np.nan)
+                continue
+            max_idx = np.nanargmax(metrics_dict["path_degree"][i])
+            if max_idx == 0:
+                slopes[k][slope_bef].append(np.nan)
+                slopes[k][slope_aft].append(np.nan)
+                continue
+            if max_idx == len(val) - 1:
+                slopes[k][slope_bef].append(np.nan)
+                slopes[k][slope_aft].append(np.nan)
+                continue
+            before_max = val[:max_idx]
+            after_max = val[max_idx+1:]
+            
+            before_too_short = len(before_max) < 2
+            after_too_short = len(after_max) < 2
+            
+            slopes[k][slope_bef].append(np.polyfit(range(len(before_max)), before_max, 1)[0] if not before_too_short else np.nan)
+            slopes[k][slope_aft].append(np.polyfit(range(len(after_max)), after_max, 1)[0] if not after_too_short else np.nan)
+        slopes[k] = pd.DataFrame.from_dict(slopes[k], orient="index").T
+        slopes[k].columns = [str(k + "_slope_before"), str(k + "_slope_after")]
+        
+    return slopes
+
 
 if __name__ == "__main__":
     
@@ -120,15 +160,36 @@ if __name__ == "__main__":
     finished_paths_appended_metrics_path = Path("../data/p3_extra_data/finished_paths_appended_metrics.csv").resolve()
     unfinished_paths_appended_metrics_path = Path("../data/p3_extra_data/unfinished_paths_appended_metrics.csv").resolve()
     
-    finished_paths, unfinished_paths = load_paths(unquote_names=False)
+    finished_paths, unfinished_paths = load_paths(unquote_names=False, drop_timeouts=True)
     nodes = pd.read_csv(GRAPH_METRICS_PATH)
     if not finished_paths_appended_metrics_path.is_file():
         print("Computing finished paths metrics...")
-        finished_paths_appended_metrics = append_features_to_paths(finished_paths, nodes)
-        finished_paths_appended_metrics.to_csv(finished_paths_appended_metrics_path)
+        metrics_dict_fin = compute_path_metrics_w_nodes(
+            nodes, finished_paths 
+        )
+        slopes_fin = compute_metrics_slopes(metrics_dict_fin)
+        finished_paths = finished_paths.copy(deep=True)
+        
+        slopes_fin_df = pd.DataFrame()
+        for k,v in slopes_fin.items():
+            slopes_fin_df = pd.concat([slopes_fin_df, v], axis=1)
+
+        finished_paths_modif = finished_paths.copy()
+        finished_paths_modif = pd.concat([finished_paths_modif, slopes_fin_df], axis=1)
+        finished_paths_modif.to_csv(finished_paths_appended_metrics_path)
+        
     if not unfinished_paths_appended_metrics_path.is_file():
         print("Computing unfinished paths metrics...")
-        unfinished_paths_appended_metrics = append_features_to_paths(unfinished_paths, nodes)
-        unfinished_paths_appended_metrics.to_csv(unfinished_paths_appended_metrics_path)
+        metrics_dict_unfin = compute_path_metrics_w_nodes(
+            nodes, unfinished_paths 
+        )
+        slopes_unfin = compute_metrics_slopes(metrics_dict_unfin)
+
+        slopes_unfin_df = pd.DataFrame()
+        for k,v in slopes_unfin.items():
+            slopes_unfin_df = pd.concat([slopes_unfin_df, v], axis=1)
+            
+        paths_unfinished_modif = unfinished_paths.copy()
+        paths_unfinished_modif = pd.concat([paths_unfinished_modif, slopes_unfin_df], axis=1)
+        paths_unfinished_modif.to_csv(unfinished_paths_appended_metrics_path)
     print("Done")
-    

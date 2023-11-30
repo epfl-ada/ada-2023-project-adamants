@@ -62,32 +62,41 @@ def compute_slope(path_metric_evolution):
     return fitted_line[0]
 
 
-def estimate_strategy(metric_array, metric=compute_slope):
+def estimate_strategy(metric_array, max_array, metric=compute_slope):
     """Uses the maximum of the degree in the path to estimate the strategy of the user.
 
     The goal is to see if the degree tends to increase before reaching the maximum and then decrease.
 
     Args:
         metric_array (np.array): array of the metric for the pages in the path
+        max_array (np.array): array of which the maximum is used to estimate the strategy, usually the degree
         metric (function): function to use to compute the metric of the degree evolution before and after the maximum. Can use compute_slope or np.mean for example.
 
     Returns:
         m_before (float): the metric of the degree evolution before the maximum
         m_after (float): the metric of the degree evolution after the maximum
     """
+    # assert metric_array.shape == max_array.shape
     # print(degree_evolution)
+    if len(metric_array) < 3:
+        print("Path too short")
+        return np.nan, np.nan
+    
     if np.isnan(metric_array).all():
-        return np.nan
-    max_id = np.nanargmax(metric_array)
+        print("All NaN")
+        return np.nan, np.nan
+    max_id = np.nanargmax(max_array)
     if max_id == 0:
-        return np.nan
+        print("Max at 0")
+        return np.nan, np.nan
     elif max_id == len(metric_array) - 1:
-        return np.nan
+        print("Max at end")
+        return np.nan, np.nan
+    # elif len(metric_array) == 1:
+    #     return np.nan, np.nan
     else:
         m_before = metric(metric_array[:max_id])
         m_after = metric(metric_array[max_id - 1 :])
-        if m_before is np.nan or m_after is np.nan:
-            return np.nan
         return m_before, m_after
 
 
@@ -499,25 +508,28 @@ def compute_metric_slopes(metrics_dict, drop_na=True):
     """
     na_count = 0
 
-    metrics_slopes = []
-    for metric in metrics_dict.keys():
+    metrics_slopes_list = []
+    for i, metric in enumerate(metrics_dict.keys()):
+        print(f"Adding slopes for {metric}")
         metric_slopes = pd.Series(dtype=object)
         metric_slopes = metrics_dict[metric].map(
-            partial(estimate_strategy, metric=compute_slope)
+            partial(estimate_strategy, metric=compute_slope, max_array=metrics_dict["path_degree"][i])
         )
-        if drop_na:
-            metric_slopes.dropna(inplace=True)
-            na_count += metric_slopes.isna().sum().sum()
         try:
             metric_slopes = pd.DataFrame(
                 metric_slopes.tolist(),
                 columns=[f"slope_{metric}_before", f"slope_{metric}_after"],
             )
-        except ValueError:
-            print(f"Could not compute slopes for {metric}")
+            if drop_na:
+                # drop NaN but keep the index
+                na_count += metric_slopes.isna().sum().sum()
+                metric_slopes.dropna(inplace=True)
+        except ValueError as e:
+            print(f"Could not compute slopes for {metric} : {e}")
             print(metric_slopes)
-        metrics_slopes.append(metric_slopes)
-    return metrics_slopes
+        metrics_slopes_list.append(metric_slopes)
+    print(f"Dropped {na_count} NaN values")
+    return metrics_slopes_list
 
 def add_slopes_to_paths_df(paths_df, metrics_slopes):
     """Adds the slopes of the metrics before and after the maximum of the degree to the paths dataframe."""
@@ -545,6 +557,7 @@ def compute_path_metrics_w_nodes(nodes, paths_df):
     not_found_count = 0
 
     total = len(paths_df)
+    print("Total of paths: ", total)
     current = 0
     
     for i, path in enumerate(paths_df["path"]):
@@ -553,6 +566,11 @@ def compute_path_metrics_w_nodes(nodes, paths_df):
         page_degree_centrality = []
         page_betweenness = []
         page_closeness = []
+        
+        # if len(path) == 1:
+        #     print(f"Path of len 1 : {path}\nSkipping...")
+        #     continue
+        
         for page in path:
             try:
                 page_degrees.append(page_degree_dict[page])
@@ -595,7 +613,8 @@ def append_features_to_paths(paths_df, nodes):
     print("- Metrics")
     metrics_dict = compute_path_metrics_w_nodes(nodes, paths_df)
     print("- Slopes")
-    metrics_slopes = compute_metric_slopes(metrics_dict)
+    metrics_slopes = compute_metric_slopes(metrics_dict, drop_na=False)
     print("- Adding slopes to dataframe")
+    # print(metrics_slopes)
     paths_df = add_slopes_to_paths_df(paths_df, metrics_slopes)
     return paths_df
