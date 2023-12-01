@@ -1,6 +1,9 @@
 import pandas as pd
 import numpy as np
 import itertools
+from sentence_transformers import SentenceTransformer, util
+from collections import defaultdict
+from os import environ
 
 def add_time_per_edge(df):
 	df_cp = df.copy()
@@ -29,7 +32,7 @@ def split_into_edges(df):
 
 from transformers import AutoTokenizer
 from sklearn.metrics.pairwise import cosine_similarity
-from tqdm import tqdm
+from tqdm import tqdm, trange
 
 def add_BERTscore_metric(df_path, df_edge):
 	df_cp = df_path.copy()
@@ -63,7 +66,68 @@ def add_BERTscore_metric(df_path, df_edge):
 		~np.isnan(df_cp['sucessive_pairs_encoded_mean'])
 	]  # Remove NaNs
 
-	from collections import defaultdict
+	global_dict = defaultdict(list)
+
+	for i in range(len(df_cp['sucessive_pairs'])):
+		local_rating = df_cp["rating"].iloc[i]
+		for key, value in zip(df_cp['sucessive_pairs'].iloc[i], df_cp['sucessive_pairs_encoded'].iloc[i]):
+			global_dict[key].append((local_rating, value))
+
+	global_dict = {key: np.array(value) for key, value in global_dict.items()}
+	edge_score_df = pd.DataFrame(
+		{
+			"edge": global_dict.keys(),
+			"mean_bert_score": [np.nanmean(a[:, 1]) for a in global_dict.values()],
+			"mean_rating": [np.nanmean(a[:, 0]) for a in global_dict.values()],
+		}
+	)
+
+	df_cp.rename(columns={'sucessive_pairs_encoded_mean': 'BERTscore'}, inplace=True)
+
+	return df_cp, pd.merge(df_edge, edge_score_df, on='edge', how='outer')
+
+from torch import device
+from torch.cuda import is_available
+
+def add_sentence_similarity_metric(df_path, df_edge):
+
+	environ['TOKENIZERS_PARALLELISM'] = "true"
+	dev = device('cuda' if is_available() else 'cpu')
+
+	df_cp = df_path.copy()
+	tokenizer = SentenceTransformer('all-mpnet-base-v2', device=dev)
+	# tokenizer = SentenceTransformer('all-MiniLM-L6-v2', device=dev)
+
+
+	def compute_sim(s1, s2):
+		enc1 = all_terms_mapped_encodings[s1]
+		enc2 = all_terms_mapped_encodings[s2]
+		return util.dot_score(enc1, enc2).item()
+
+
+	df_cp['sucessive_pairs'] = [
+		[(x.split(";")[i], x.split(";")[i + 1]) for i in range(len(x.split(";")) - 1)]
+		for x in df_cp["path"].to_list()
+	]
+
+	all_terms = list(set(itertools.chain(*df_cp['sucessive_pairs'].to_list()))) # This is a list of lists of tuples -> all pairs, for each path. We turn that into a list of pairs
+	all_terms = list(set(itertools.chain(*all_terms))) # Grab this list of pairs, and turn it to unique terms
+	all_encoded_terms = tokenizer.encode(all_terms, convert_to_numpy = False, convert_to_tensor = True, batch_size=64, normalize_embeddings = True, show_progress_bar = True, device = dev)
+	all_terms_mapped_encodings = {all_terms[i]: all_encoded_terms[i] for i in range(len(all_terms))}
+
+	encoded_result = [None] * len(df_cp['sucessive_pairs'])
+	print('Starting loop')
+	for i in trange(len(df_cp['sucessive_pairs']), desc='Computing dot products'):
+		encoded_result[i] = [compute_sim(*a) for a in df_cp['sucessive_pairs'].iloc[i]]
+
+	df_cp['sucessive_pairs_encoded'] = encoded_result
+
+	df_cp['sucessive_pairs_encoded_mean'] = np.array(
+		[np.mean(x) for x in df_cp['sucessive_pairs_encoded']]
+	)  # Mean BERTscore per path
+	df_cp = df_cp.loc[
+		~np.isnan(df_cp['sucessive_pairs_encoded_mean'])
+	]  # Remove NaNs
 
 	global_dict = defaultdict(list)
 
@@ -81,6 +145,6 @@ def add_BERTscore_metric(df_path, df_edge):
 		}
 	)
 
-	df_cp.rename(columns={'successive_pairs_mean': 'BERTscore'}, inplace=True)
+	df_cp.rename(columns={'sucessive_pairs_encoded_mean': 'BERTscore'}, inplace=True)
 
 	return df_cp, pd.merge(df_edge, edge_score_df, on='edge', how='outer')
