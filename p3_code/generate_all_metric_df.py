@@ -106,7 +106,7 @@ paths_finished_modif = paths_finished.copy()
 paths_finished_modif = pd.concat([paths_finished_modif, slopes_fin_df], axis=1)
 
 # Save
-paths_unfinished_modif.to_pickle(DATA_FOLDER + 'combined_metrics_unfinished_paths.pkl')
-paths_finished_modif.to_pickle(DATA_FOLDER + 'combined_metrics_finished_paths.pkl')
-unfinished_edge_df.to_pickle(DATA_FOLDER + 'combined_metrics_unfinished_edges.pkl')
-finished_edge_df.to_pickle(DATA_FOLDER + 'combined_metrics_finished_edges.pkl')
+paths_unfinished_modif.to_csv(DATA_FOLDER + 'combined_metrics_unfinished_paths.csv')
+paths_finished_modif.to_csv(DATA_FOLDER + 'combined_metrics_finished_paths.csv')
+unfinished_edge_df.to_csv(DATA_FOLDER + 'combined_metrics_unfinished_edges.csv')
+finished_edge_df.to_csv(DATA_FOLDER + 'combined_metrics_finished_edges.csv')
