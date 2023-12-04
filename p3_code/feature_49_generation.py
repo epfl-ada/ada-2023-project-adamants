@@ -34,7 +34,7 @@ from transformers import AutoTokenizer
 from sklearn.metrics.pairwise import cosine_similarity
 from tqdm import tqdm, trange
 
-def add_BERTscore_metric(df_path, df_edge):
+def add_BERTscore_metric(df_path, df_edge, finished=True):
 	df_cp = df_path.copy()
 	tokenizer = AutoTokenizer.from_pretrained(
     	"dslim/bert-base-NER"
@@ -68,19 +68,32 @@ def add_BERTscore_metric(df_path, df_edge):
 
 	global_dict = defaultdict(list)
 
-	for i in range(len(df_cp['sucessive_pairs'])):
-		local_rating = df_cp["rating"].iloc[i]
-		for key, value in zip(df_cp['sucessive_pairs'].iloc[i], df_cp['sucessive_pairs_encoded'].iloc[i]):
-			global_dict[key].append((local_rating, value))
+	if finished:
+		for i in range(len(df_cp['sucessive_pairs'])):
+			local_rating = df_cp["rating"].iloc[i]
+			for key, value in zip(df_cp['sucessive_pairs'].iloc[i], df_cp['sucessive_pairs_encoded'].iloc[i]):
+				global_dict[key].append((local_rating, value))
 
-	global_dict = {key: np.array(value) for key, value in global_dict.items()}
-	edge_score_df = pd.DataFrame(
-		{
-			"edge": global_dict.keys(),
-			"mean_bert_score": [np.nanmean(a[:, 1]) for a in global_dict.values()],
-			"mean_rating": [np.nanmean(a[:, 0]) for a in global_dict.values()],
-		}
-	)
+		global_dict = {key: np.array(value) for key, value in global_dict.items()}
+		edge_score_df = pd.DataFrame(
+			{
+				"edge": global_dict.keys(),
+				"mean_bert_score": [np.nanmean(a[:, 1]) for a in global_dict.values()],
+				"mean_rating": [np.nanmean(a[:, 0]) for a in global_dict.values()],
+			}
+		)
+	else:
+		for i in range(len(df_cp['sucessive_pairs'])):
+			for key, value in zip(df_cp['sucessive_pairs'].iloc[i], df_cp['sucessive_pairs_encoded'].iloc[i]):
+				global_dict[key].append((-1, value))
+
+		global_dict = {key: np.array(value) for key, value in global_dict.items()}
+		edge_score_df = pd.DataFrame(
+			{
+				"edge": global_dict.keys(),
+				"mean_bert_score": [np.nanmean(a[:, 1]) for a in global_dict.values()],
+			}
+		)
 
 	df_cp.rename(columns={'sucessive_pairs_encoded_mean': 'BERTscore'}, inplace=True)
 
@@ -89,7 +102,7 @@ def add_BERTscore_metric(df_path, df_edge):
 from torch import device
 from torch.cuda import is_available
 
-def add_sentence_similarity_metric(df_path, df_edge):
+def add_sentence_similarity_metric(df_path, df_edge, finished=True):
 
 	environ['TOKENIZERS_PARALLELISM'] = "true"
 	dev = device('cuda' if is_available() else 'cpu')
@@ -131,19 +144,32 @@ def add_sentence_similarity_metric(df_path, df_edge):
 
 	global_dict = defaultdict(list)
 
-	for i in range(len(df_cp['sucessive_pairs'])):
-		local_rating = df_cp["rating"].iloc[i]
-		for key, value in zip(df_cp['sucessive_pairs'].iloc[i], df_cp['sucessive_pairs_encoded'].iloc[i]):
-			global_dict[key].append((local_rating, value))
+	if finished:
+		for i in range(len(df_cp['sucessive_pairs'])):
+			local_rating = df_cp["rating"].iloc[i]
+			for key, value in zip(df_cp['sucessive_pairs'].iloc[i], df_cp['sucessive_pairs_encoded'].iloc[i]):
+				global_dict[key].append((local_rating, value))
 
-	global_dict = {key: np.array(value) for key, value in global_dict.items()}
-	edge_score_df = pd.DataFrame(
-		{
-			"edge": global_dict.keys(),
-			"mean_bert_score": [np.nanmean(a[:, 1]) for a in global_dict.values()],
-			"mean_rating": [np.nanmean(a[:, 0]) for a in global_dict.values()],
-		}
-	)
+		global_dict = {key: np.array(value) for key, value in global_dict.items()}
+		edge_score_df = pd.DataFrame(
+			{
+				"edge": global_dict.keys(),
+				"mean_bert_score": [np.nanmean(a[:, 1]) for a in global_dict.values()],
+				"mean_rating": [np.nanmean(a[:, 0]) for a in global_dict.values()],
+			}
+		)
+	else:
+		for i in range(len(df_cp['sucessive_pairs'])):
+			for key, value in zip(df_cp['sucessive_pairs'].iloc[i], df_cp['sucessive_pairs_encoded'].iloc[i]):
+				global_dict[key].append((-1, value))
+
+		global_dict = {key: np.array(value) for key, value in global_dict.items()}
+		edge_score_df = pd.DataFrame(
+			{
+				"edge": global_dict.keys(),
+				"mean_bert_score": [np.nanmean(a[:, 1]) for a in global_dict.values()],
+			}
+		)
 
 	df_cp.rename(columns={'sucessive_pairs_encoded_mean': 'BERTscore'}, inplace=True)
 

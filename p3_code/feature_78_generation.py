@@ -2,7 +2,9 @@ import sys
 import pandas as pd
 from pathlib import Path
 import numpy as np
+import os
 sys.path.append("../book")
+sys.path.append("book/") # Attend to more cases
 from graph_measures import *
 from utils import load_data, load_paths_pairs, load_paths
 import logging
@@ -133,9 +135,15 @@ def compute_metrics_slopes(metrics_dict):
             
             before_too_short = len(before_max) < 2
             after_too_short = len(after_max) < 2
-            
-            slopes[k][slope_bef].append(np.polyfit(range(len(before_max)), before_max, 1)[0] if not before_too_short else np.nan)
-            slopes[k][slope_aft].append(np.polyfit(range(len(after_max)), after_max, 1)[0] if not after_too_short else np.nan)
+        
+            try:
+                slopes[k][slope_bef].append(np.polyfit(range(len(before_max)), before_max, 1)[0] if not before_too_short else np.nan)
+            except np.linalg.LinAlgError:
+                slopes[k][slope_bef].append(np.nan)
+            try:
+                slopes[k][slope_aft].append(np.polyfit(range(len(after_max)), after_max, 1)[0] if not after_too_short else np.nan)
+            except np.linalg.LinAlgError:
+                slopes[k][slope_aft].append(np.nan)
         slopes[k] = pd.DataFrame.from_dict(slopes[k], orient="index").T
         slopes[k].columns = [str(k + "_slope_before"), str(k + "_slope_after")]
         

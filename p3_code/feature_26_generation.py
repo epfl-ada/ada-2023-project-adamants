@@ -49,7 +49,6 @@ def load(name):
     return df
 
 
-
 def load_articles():
     """Loading articles dataset"""
     articles = pd.read_csv(
@@ -61,14 +60,6 @@ def load_articles():
         skiprows=12,
     ).copy(deep=True)
     return articles
-
-
-
-
-
-
-
-
 
 
 def add_link_position(df, finished, feature_name="link_position"):
@@ -91,13 +82,11 @@ def add_link_position(df, finished, feature_name="link_position"):
     average_position = next_link_position_series.mean()
 
     # add new feature to dataframe
-    #df[feature_name] = pd.Series(next_link_position_series)
+    df[feature_name] = pd.Series(next_link_position_series)
     
-    return pd.Series(next_link_position_series), average_position
+    # return pd.Series(next_link_position_series), average_position
+    return df, average_position
    
-
-
-
 
 def successive_pairs(paths):
     """Grouping successive pairs from paths"""
@@ -108,7 +97,6 @@ def successive_pairs(paths):
     return pairs
 
 
-
 def remove_backclicks_and_split(paths):
     """Removing back clicks (<) and splitting paths (;)"""
     for i in tqdm(range(len(paths)), file=sys.stdout):
@@ -117,8 +105,6 @@ def remove_backclicks_and_split(paths):
             if item == "<":
                 paths["path"].iloc[i].remove(item)
     return paths    
-    
-
 
 
 def path_to_plaintext(article_name):
@@ -127,8 +113,6 @@ def path_to_plaintext(article_name):
     ALL_PLAINTEXT = "../data/plaintext_articles/"
     path = ALL_PLAINTEXT + article_name_undsc + ".txt"
     return path
-
-
 
 
 def find_word_position(successive_pair):
@@ -148,7 +132,6 @@ def find_word_position(successive_pair):
             return 0
 
 
-
 def compute_position_for_all_pairs(successive_pairs, max_path_length):
     """Applies find_word_position wholes dataframe"""
     next_link_position = np.zeros(
@@ -164,15 +147,6 @@ def compute_position_for_all_pairs(successive_pairs, max_path_length):
         position_series = np.append(position_series,next_link_position[i,np.nonzero(next_link_position[i])][0])
 
     return position_series
-
-
-
-
-
-
-
-
-
 
 
 def add_path_length(df, articles, shortest_path_distance_matrix, finished, feature_name="path_length"):
@@ -195,7 +169,6 @@ def add_path_length(df, articles, shortest_path_distance_matrix, finished, featu
     df['optimal_path_length'] = optimal_path_lengths
     
     return df, optimal_path_lengths.mean()
-
 
 
 def optimal_path_length(paths, finished, articles, shortest_path_distance_matrix):
