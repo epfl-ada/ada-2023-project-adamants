@@ -19,6 +19,18 @@ paths_unfinished = load('paths_unfinished')
 shortest_path_distance_matrix = load('shortest_path_matrix')
 articles = load_articles()
 
+# 1: Number of backtracks in path
+print('Feature 1')
+paths_finished_copy = paths_finished.copy()
+paths_finished = add_number_of_backtracks(paths_finished_copy)
+paths_unfinished_copy = paths_unfinished.copy()
+paths_unfinished = add_number_of_backtracks(paths_unfinished_copy)
+
+# 3: Number of paths previously played per player
+print('Feature 3')
+paths_finished_copy, paths_unfinished_copy = paths_finished.copy(), paths_unfinished.copy()
+paths_finished, paths_unfinished = add_number_of_paths_previously_played(paths_finished_copy, paths_unfinished_copy)
+
 # 6: Position of clicked link in article
 print('Feature 6')
 paths_finished_copy = paths_finished.copy()
@@ -59,17 +71,6 @@ paths_finished, finished_edge_df = add_sentence_similarity_metric(paths_finished
 paths_unfinished_copy, unfinished_edge_df_copy = paths_unfinished.copy(), unfinished_edge_df.copy()
 paths_unfinished, unfinished_edge_df = add_sentence_similarity_metric(paths_unfinished_copy, unfinished_edge_df_copy, finished=False)
 
-# 1: Number of backtracks in path
-print('Feature 1')
-paths_finished_copy = paths_finished.copy()
-paths_finished = add_number_of_backtracks(paths_finished_copy)
-paths_unfinished_copy = paths_unfinished.copy()
-paths_unfinished = add_number_of_backtracks(paths_unfinished_copy)
-
-# 3: Number of paths previously played per player
-print('Feature 3')
-paths_finished_copy, paths_unfinished_copy = paths_finished.copy(), paths_unfinished.copy()
-paths_finished, paths_unfinished = add_number_of_paths_previously_played(paths_finished_copy, paths_unfinished_copy)
 
 # For compatibility with next functions, this has to be done
 paths_finished["path"] = paths_finished["path"].map(lambda x: x.split(";"))
