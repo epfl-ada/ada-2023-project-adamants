@@ -1,7 +1,7 @@
 import pandas as pd
 import warnings
 
-def add_number_of_backtracks(df,feature_name="backtrack",quiet=False):
+def add_number_of_backtracks(df, feature_name="backtrack", quiet=False):
     """Add a feature to the dataframe that counts the number of backtracks in the path
     --------------------
     Input:
@@ -11,11 +11,13 @@ def add_number_of_backtracks(df,feature_name="backtrack",quiet=False):
     Return:
         the dataframe with the new feature
     """
-    df= df.copy(deep=True)
+    df = df.copy(deep=True)
     if not "path" in df.columns:
         raise ValueError("The dataframe needs to contain the full path in the column 'path'")
     if feature_name in df.columns and not quiet:
-        warnings.warn("The dataframe already contains a column named "+feature_name)
+        warnings.warn("The dataframe already contains a column named " + feature_name)
+    if not any(df["path"].str.contains("<")):
+        raise ValueError("No path contains '<'")
     df[feature_name] = df["path"].str.count("<")
     return df
 
