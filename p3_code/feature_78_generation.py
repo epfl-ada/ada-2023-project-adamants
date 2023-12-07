@@ -114,8 +114,8 @@ def compute_metrics_slopes(metrics_dict):
         slopes[k][slope_aft] = []
         for i, val in enumerate(v):
             if len(val) < 3:
-                slopes[k][slope_bef].append(np.nan)
-                slopes[k][slope_aft].append(np.nan)
+                slopes[k][slope_bef].append(0)
+                slopes[k][slope_aft].append(0)
                 continue
             if np.isnan(val).all():
                 slopes[k][slope_bef].append(np.nan)
@@ -123,12 +123,18 @@ def compute_metrics_slopes(metrics_dict):
                 continue
             max_idx = np.nanargmax(metrics_dict["path_degree"][i])
             if max_idx == 0:
-                slopes[k][slope_bef].append(np.nan)
-                slopes[k][slope_aft].append(np.nan)
+                slopes[k][slope_bef].append(0)
+                try:
+                    slopes[k][slope_aft].append(np.polyfit(range(len(val)), val, 1)[0])
+                except np.linalg.LinAlgError:
+                    slopes[k][slope_aft].append(np.nan)
                 continue
             if max_idx == len(val) - 1:
-                slopes[k][slope_bef].append(np.nan)
-                slopes[k][slope_aft].append(np.nan)
+                try:
+                    slopes[k][slope_bef].append(np.polyfit(range(len(val)), val, 1)[0])
+                except:
+                    slopes[k][slope_bef].append(np.nan)
+                slopes[k][slope_aft].append(0)
                 continue
             before_max = val[:max_idx]
             after_max = val[max_idx+1:]
