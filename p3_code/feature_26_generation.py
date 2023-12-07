@@ -76,16 +76,15 @@ def add_link_position(df, finished, feature_name="link_position"):
     path_length = df["path"].apply(lambda x: len(x))
     max_path_length = path_length.max()
 
-    next_link_position_series = compute_position_for_all_pairs(pairs, max_path_length)
-
-    # Computing average position of next clicked link
-    average_position = next_link_position_series.mean()
+    position_series_median_per_path, next_link_position, position_series = compute_position_for_all_pairs(pairs, max_path_length)
 
     # add new feature to dataframe
-    df[feature_name] = pd.Series(next_link_position_series)
+    position_series_median_per_path = position_series_median_per_path.reshape(len(position_series_median_per_path),)
+    df[feature_name] = pd.Series(position_series_median_per_path)
+
     
     # return pd.Series(next_link_position_series), average_position
-    return df, average_position
+    return df, position_series_median_per_path
    
 
 def successive_pairs(paths):
@@ -125,7 +124,8 @@ def find_word_position(successive_pair):
     with open(article, encoding="utf8") as file:
         content = file.read()
         try:
-            return content.index(target_words)
+            number_of_characters = len(content)
+            return content.index(target_words)/number_of_characters
         except:  # Mistake because sometimes word in is html file but not in text file. 
                 # To be treated later. Right now we don't consider these datapoints
             # print(f"The group of words '{successive_pair[1]}' was not found in the file '{successive_pair[0]}'.")
@@ -146,7 +146,14 @@ def compute_position_for_all_pairs(successive_pairs, max_path_length):
     for i in tqdm(range(len(next_link_position)), file=sys.stdout):
         position_series = np.append(position_series,next_link_position[i,np.nonzero(next_link_position[i])][0])
 
-    return position_series
+    # or compute mean position for each path
+    position_series_median_per_path = np.zeros((len(next_link_position), 1))
+    for i in tqdm(range(len(next_link_position)), file=sys.stdout):
+        position_series_median_per_path[i] = np.median(next_link_position[i,np.nonzero(next_link_position[i])])
+
+    return position_series_median_per_path, next_link_position, position_series
+
+
 
 
 def add_path_length(df, articles, shortest_path_distance_matrix, finished, feature_name="path_length"):
