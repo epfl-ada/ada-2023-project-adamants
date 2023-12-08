@@ -34,6 +34,13 @@ print('Feature 3')
 paths_finished_copy, paths_unfinished_copy = paths_finished.copy(), paths_unfinished.copy()
 paths_finished, paths_unfinished = add_number_of_paths_previously_played(paths_finished_copy, paths_unfinished_copy)
 
+# 4: Time per edge
+print('Feature 4')
+paths_finished_copy = paths_finished.copy()
+paths_finished = add_time_per_edge(paths_finished_copy)
+paths_unfinished_copy = paths_unfinished.copy()
+paths_unfinished = add_time_per_edge(paths_unfinished_copy)
+
 # 6: Position of clicked link in article
 print('Feature 6')
 paths_finished_copy = paths_finished.copy()
@@ -56,12 +63,6 @@ paths_unfinished = add_path_length(paths_unfinished_copy, articles, shortest_pat
 paths_finished['path'] = paths_finished['path'].map(lambda x: ';'.join(x))
 paths_unfinished['path'] = paths_unfinished['path'].map(lambda x: ';'.join(x))
 
-# 4: Time per edge
-print('Feature 4')
-paths_finished_copy = paths_finished.copy()
-paths_finished = add_time_per_edge(paths_finished_copy)
-paths_unfinished_copy = paths_unfinished.copy()
-paths_unfinished = add_time_per_edge(paths_unfinished_copy)
 
 # Intermediary: split into edges (necessary for later)
 finished_edge_df = split_into_edges(paths_finished)
