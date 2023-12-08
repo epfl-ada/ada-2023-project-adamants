@@ -2,6 +2,7 @@ from feature_26_generation import DATA_FOLDER, PATHS_AND_GRAPH, PATHS_FINISHED, 
 from feature_13_generation import add_number_of_backtracks, add_number_of_paths_previously_played
 from feature_49_generation import add_time_per_edge, split_into_edges, add_sentence_similarity_metric
 from feature_78_generation import GRAPH_METRICS_PATH, get_paths_pairs_metrics, compute_metrics_slopes
+from feature_5_generation import  add_average_time_on_page, add_paths_ratio
 import pandas as pd
 from pandas.errors import SettingWithCopyWarning
 import sys
@@ -65,6 +66,14 @@ paths_unfinished = add_time_per_edge(paths_unfinished_copy)
 # Intermediary: split into edges (necessary for later)
 finished_edge_df = split_into_edges(paths_finished)
 unfinished_edge_df = split_into_edges(paths_unfinished)
+
+# 5: Player performance
+print('Feature 5')
+paths_finished_copy = paths_finished.copy()
+paths_finished = add_paths_ratio(paths_finished_copy)
+paths_finished = add_average_time_on_page(paths_finished_copy)
+
+
 
 # 9: Sentence-transformers-based word-pair simililarity metric
 print("Feature 9")
