@@ -100,7 +100,7 @@ for k,v in unfinished_slopes.items():
     
 paths_unfinished_modif = paths_unfinished.copy()
 paths_unfinished_raw_w_slopes = pd.concat([paths_unfinished_raw, slopes_unfin_df], axis=1)
-paths_unfinished_modif = pd.merge(paths_unfinished_modif, paths_unfinished_raw_w_slopes, how="left", on=["hashedIpAddress", "timestamp", "durationInSec", "path"])
+paths_unfinished_modif = pd.merge(paths_unfinished_modif, paths_unfinished_raw_w_slopes, how="left", on=["hashedIpAddress", "timestamp", "durationInSec"])
 
 slopes_fin_df = pd.DataFrame()
 for k,v in finished_slopes.items():
@@ -108,7 +108,7 @@ for k,v in finished_slopes.items():
     
 paths_finished_modif = paths_finished.copy()
 paths_finished_raw_w_slopes = pd.concat([paths_finished_raw, slopes_fin_df], axis=1)
-paths_finished_modif = pd.merge(paths_finished_modif, paths_finished_raw_w_slopes, how="left", on=["hashedIpAddress", "timestamp", "durationInSec", "path","rating"])
+paths_finished_modif = pd.merge(paths_finished_modif, paths_finished_raw_w_slopes, how="left", on=["hashedIpAddress", "timestamp", "durationInSec","rating"])
 
 # Save
 paths_unfinished_modif.to_csv(DATA_FOLDER + 'combined_metrics_unfinished_paths.csv')
