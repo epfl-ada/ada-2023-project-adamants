@@ -8,7 +8,7 @@ wikipedia_graph_viz graph-tool.ipynb
 /book/_build/*
 /data/plaintext_articles/*
 /data/wikispeedia_paths-and-graph/*
-
+data/*
 !data/*.pkl
 !data/p3_extra_data/*.csv
 data/wikispeedia_articles_plaintext.tar.gz
