@@ -73,6 +73,9 @@ paths_finished_copy = paths_finished.copy()
 paths_finished = add_paths_ratio(paths_finished_copy)
 paths_finished = add_average_time_on_page(paths_finished_copy)
 
+paths_unfinished_copy = paths_unfinished.copy()
+paths_unfinished = add_paths_ratio(paths_unfinished_copy)
+paths_unfinished = add_average_time_on_page(paths_unfinished_copy)
 
 
 # 9: Sentence-transformers-based word-pair simililarity metric
@@ -81,7 +84,6 @@ paths_finished_copy, finished_edge_df_copy = paths_finished.copy(), finished_edg
 paths_finished, finished_edge_df = add_sentence_similarity_metric(paths_finished_copy, finished_edge_df_copy, finished=True)
 paths_unfinished_copy, unfinished_edge_df_copy = paths_unfinished.copy(), unfinished_edge_df.copy()
 paths_unfinished, unfinished_edge_df = add_sentence_similarity_metric(paths_unfinished_copy, unfinished_edge_df_copy, finished=False)
-
 
 # For compatibility with next functions, this has to be done
 paths_finished["path"] = paths_finished["path"].map(lambda x: x.split(";"))
@@ -118,6 +120,12 @@ for k,v in finished_slopes.items():
 paths_finished_modif = paths_finished.copy()
 paths_finished_raw_w_slopes = pd.concat([paths_finished_raw, slopes_fin_df], axis=1)
 paths_finished_modif = pd.merge(paths_finished_modif, paths_finished_raw_w_slopes, how="left", on=["hashedIpAddress", "timestamp", "durationInSec","rating"])
+
+
+paths_finished_modif = paths_finished_modif.drop(columns=['path_y'], errors='ignore')
+paths_finished_modif = paths_finished_modif.rename(columns={'path_x': 'path'})
+paths_unfinished_modif = paths_unfinished_modif.drop(columns=['path_y'], errors='ignore')
+paths_unfinished_modif = paths_unfinished_modif.rename(columns={'path_x': 'path'})
 
 # Save
 paths_unfinished_modif.to_csv(DATA_FOLDER + 'combined_metrics_unfinished_paths.csv')

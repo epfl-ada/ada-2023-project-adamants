@@ -103,7 +103,7 @@ def get_paths_pairs_metrics(paths_pairs, nodes_path=GRAPH_METRICS_PATH):
         
     return paths_pairs_metrics
 
-def compute_metrics_slopes(metrics_dict):
+def compute_metrics_slopes(metrics_dict, invalid_values=np.nan):
     slopes = {}
     slope_bef = "slope_before_max"
     slope_aft = "slope_after_max"
@@ -114,27 +114,27 @@ def compute_metrics_slopes(metrics_dict):
         slopes[k][slope_aft] = []
         for i, val in enumerate(v):
             if len(val) < 3:
-                slopes[k][slope_bef].append(0)
-                slopes[k][slope_aft].append(0)
+                slopes[k][slope_bef].append(invalid_values)
+                slopes[k][slope_aft].append(invalid_values)
                 continue
             if np.isnan(val).all():
-                slopes[k][slope_bef].append(np.nan)
-                slopes[k][slope_aft].append(np.nan)
+                slopes[k][slope_bef].append(invalid_values)
+                slopes[k][slope_aft].append(invalid_values)
                 continue
             max_idx = np.nanargmax(metrics_dict["path_degree"][i])
             if max_idx == 0:
-                slopes[k][slope_bef].append(0)
+                slopes[k][slope_bef].append(invalid_values)
                 try:
                     slopes[k][slope_aft].append(np.polyfit(range(len(val)), val, 1)[0])
                 except np.linalg.LinAlgError:
-                    slopes[k][slope_aft].append(np.nan)
+                    slopes[k][slope_aft].append(invalid_values)
                 continue
             if max_idx == len(val) - 1:
                 try:
                     slopes[k][slope_bef].append(np.polyfit(range(len(val)), val, 1)[0])
                 except:
-                    slopes[k][slope_bef].append(np.nan)
-                slopes[k][slope_aft].append(0)
+                    slopes[k][slope_bef].append(invalid_values)
+                slopes[k][slope_aft].append(invalid_values)
                 continue
             before_max = val[:max_idx]
             after_max = val[max_idx+1:]
@@ -143,13 +143,13 @@ def compute_metrics_slopes(metrics_dict):
             after_too_short = len(after_max) < 2
         
             try:
-                slopes[k][slope_bef].append(np.polyfit(range(len(before_max)), before_max, 1)[0] if not before_too_short else 0)
+                slopes[k][slope_bef].append(np.polyfit(range(len(before_max)), before_max, 1)[0] if not before_too_short else invalid_values)
             except np.linalg.LinAlgError:
-                slopes[k][slope_bef].append(np.nan)
+                slopes[k][slope_bef].append(invalid_values)
             try:
-                slopes[k][slope_aft].append(np.polyfit(range(len(after_max)), after_max, 1)[0] if not after_too_short else 0)
+                slopes[k][slope_aft].append(np.polyfit(range(len(after_max)), after_max, 1)[0] if not after_too_short else invalid_values)
             except np.linalg.LinAlgError:
-                slopes[k][slope_aft].append(np.nan)
+                slopes[k][slope_aft].append(invalid_values)
         slopes[k] = pd.DataFrame.from_dict(slopes[k], orient="index").T
         slopes[k].columns = [str(k + "_slope_before"), str(k + "_slope_after")]
         
