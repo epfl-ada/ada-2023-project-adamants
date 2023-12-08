@@ -62,7 +62,7 @@ def load_articles():
     return articles
 
 
-def add_link_position(df, finished, feature_name="link_position"):
+def add_link_position(df, finished):
     """Adds the next link position to path pairs as extra columns.
     
     Makes a deep copy of the data, the modified copy is returned."""
@@ -76,15 +76,17 @@ def add_link_position(df, finished, feature_name="link_position"):
     path_length = df["path"].apply(lambda x: len(x))
     max_path_length = path_length.max()
 
-    position_series_median_per_path, next_link_position, position_series = compute_position_for_all_pairs(pairs, max_path_length)
+    position_mean, position_std = compute_position_for_all_pairs(pairs, max_path_length)
 
-    # add new feature to dataframe
-    position_series_median_per_path = position_series_median_per_path.reshape(len(position_series_median_per_path),)
-    df[feature_name] = pd.Series(position_series_median_per_path)
+    # add new features to dataframe
+    position_mean = position_mean.reshape(len(position_mean),)
+    df['position_mean'] = pd.Series(position_mean)
+    position_std = position_std.reshape(len(position_std),)
+    df['position_std'] = pd.Series(position_std)
 
     
     # return pd.Series(next_link_position_series), average_position
-    return df, position_series_median_per_path
+    return df
    
 
 def successive_pairs(paths):
@@ -142,16 +144,18 @@ def compute_position_for_all_pairs(successive_pairs, max_path_length):
             next_link_position[i, j] = find_word_position(successive_pairs[i][j])
 
     # make it into a series
-    position_series = []
-    for i in tqdm(range(len(next_link_position)), file=sys.stdout):
-        position_series = np.append(position_series,next_link_position[i,np.nonzero(next_link_position[i])][0])
+    #position_series = []
+    #for i in tqdm(range(len(next_link_position)), file=sys.stdout):
+        #position_series = np.append(position_series,next_link_position[i,np.nonzero(next_link_position[i])][0])
 
     # or compute mean position for each path
-    position_series_median_per_path = np.zeros((len(next_link_position), 1))
+    position_mean = np.zeros((len(next_link_position), 1))
+    position_std = np.zeros((len(next_link_position), 1))
     for i in tqdm(range(len(next_link_position)), file=sys.stdout):
-        position_series_median_per_path[i] = np.median(next_link_position[i,np.nonzero(next_link_position[i])])
+        position_mean[i] = next_link_position[i,np.nonzero(next_link_position[i])].mean()
+        position_std[i] = next_link_position[i,np.nonzero(next_link_position[i])].std()
 
-    return position_series_median_per_path, next_link_position, position_series
+    return position_mean, position_std
 
 
 
