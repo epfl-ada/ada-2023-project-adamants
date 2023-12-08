@@ -171,6 +171,6 @@ def add_sentence_similarity_metric(df_path, df_edge, finished=True):
 			}
 		)
 
-	df_cp.rename(columns={'sucessive_pairs_encoded_mean': 'BERTscore'}, inplace=True)
+	df_cp.rename(columns={'sucessive_pairs_encoded_mean': 'semantic_similarity'}, inplace=True)
 
 	return df_cp, pd.merge(df_edge, edge_score_df, on='edge', how='outer')
