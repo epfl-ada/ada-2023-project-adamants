@@ -143,11 +143,11 @@ def compute_metrics_slopes(metrics_dict):
             after_too_short = len(after_max) < 2
         
             try:
-                slopes[k][slope_bef].append(np.polyfit(range(len(before_max)), before_max, 1)[0] if not before_too_short else np.nan)
+                slopes[k][slope_bef].append(np.polyfit(range(len(before_max)), before_max, 1)[0] if not before_too_short else 0)
             except np.linalg.LinAlgError:
                 slopes[k][slope_bef].append(np.nan)
             try:
-                slopes[k][slope_aft].append(np.polyfit(range(len(after_max)), after_max, 1)[0] if not after_too_short else np.nan)
+                slopes[k][slope_aft].append(np.polyfit(range(len(after_max)), after_max, 1)[0] if not after_too_short else 0)
             except np.linalg.LinAlgError:
                 slopes[k][slope_aft].append(np.nan)
         slopes[k] = pd.DataFrame.from_dict(slopes[k], orient="index").T
