@@ -37,9 +37,9 @@ paths_finished, paths_unfinished = add_number_of_paths_previously_played(paths_f
 # 6: Position of clicked link in article
 print('Feature 6')
 paths_finished_copy = paths_finished.copy()
-paths_finished = add_link_position(paths_finished_copy, True)[0]
+paths_finished = add_link_position(paths_finished_copy, True)
 paths_unfinished_copy = paths_unfinished.copy()
-paths_unfinished = add_link_position(paths_unfinished_copy, False)[0]
+paths_unfinished = add_link_position(paths_unfinished_copy, False)
 
 # For compatibility with next functions, this has to be done
 paths_finished['path'] = paths_finished['path'].map(lambda x: ';'.join(x))
