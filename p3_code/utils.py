@@ -185,4 +185,68 @@ def convert_paths_to_pages_pairs(paths_df):
     paths_pairs_df["durationInSec"] = durationInSec_series
     
     return paths_pairs_df
-        
+
+### clustering ###
+
+FEATURES_COLS_USED_FOR_CLUSTERING = [
+    "durationInSec",
+    #   'rating_x',
+    "backtrack",
+    "numberOfPath",
+    # "link_position",
+    "position_mean",
+    "position_std",
+    "path_length",
+    #  'optimal_path_length',
+    "coarse_mean_time",
+    "semantic_similarity",
+    "path_degree_slope_before",
+    "path_degree_slope_after",
+    "path_clustering_slope_before",
+    "path_clustering_slope_after",
+    "path_degree_centrality_slope_before",
+    "path_degree_centrality_slope_after",
+    "path_betweenness_slope_before",
+    "path_betweenness_slope_after",
+    "path_closeness_slope_before",
+    "path_closeness_slope_after",
+]
+
+COLS_REPLACE_NAN_WITH_MEAN = [ # cols where nan values are replaced with mean of the column
+    "path_degree_slope_before",
+    "path_degree_slope_after",
+    "path_clustering_slope_before",
+    "path_clustering_slope_after",
+    "path_degree_centrality_slope_before",
+    "path_degree_centrality_slope_after",
+    "path_betweenness_slope_before",
+    "path_betweenness_slope_after",
+    "path_closeness_slope_before",
+    "path_closeness_slope_after",
+]
+COLS_LOG = [ # cols to apply log transformation
+    "durationInSec",
+    "numberOfPath",
+    "path_length",
+    "coarse_mean_time",
+]
+
+def replace_nan_with_mean(df, cols):
+    for col in cols:
+        df[col] = df[col].fillna(df[col].mean())
+    return df
+
+def replace_value_with_mean(df, cols, value):
+    for col in cols:
+        df[col] = df[col].replace(value, df[col].mean())
+    return df
+
+def normalize_features(df, cols_log=COLS_LOG, cols_replace_nan_with_mean=COLS_REPLACE_NAN_WITH_MEAN):
+    df=df.copy(deep=True)
+    # replace NaN with mean
+    df = replace_nan_with_mean(df, cols_replace_nan_with_mean)
+    # take the log of a set determined features to make them more normally distributed
+    df[cols_log] = np.log(df[cols_log])
+    # get the z-score of each features, to have them all on the same scale
+    df = df.apply(lambda x: (x - x.mean()) / x.std())
+    return df
