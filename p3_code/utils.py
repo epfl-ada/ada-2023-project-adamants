@@ -132,7 +132,7 @@ def load_paths(
         # filter all with type timeout and 0 ; characters in path
         paths_unfinished = paths_unfinished[
             not "timeout" in paths_unfinished["type"]
-            and paths_unfinished["path"].map(len) > 1
+            and paths_unfinished["path"].count(";") > 0
             ]
         paths_unfinished.reset_index(inplace=True)
 

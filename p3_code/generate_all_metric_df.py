@@ -16,11 +16,14 @@ warnings.simplefilter(action='ignore', category=SettingWithCopyWarning) # Huge a
 
 print('Setup')
 paths_finished_raw = load('paths_finished')
-paths_unfinished_raw = load('paths_unfinished')
+paths_unfinished_raw = load('paths_unfinished', drop_timeouts=True)
+print(f"Shape of paths_finished_raw: {paths_finished_raw.shape}")
+print(f"Shape of paths_unfinished_raw: {paths_unfinished_raw.shape}")
 paths_finished = paths_finished_raw.copy()
 paths_unfinished = paths_unfinished_raw.copy()
 shortest_path_distance_matrix = load('shortest_path_matrix')
 articles = load_articles()
+
 
 # 1: Number of backtracks in path
 print('Feature 1')
@@ -29,26 +32,38 @@ paths_finished = add_number_of_backtracks(paths_finished_copy)
 paths_unfinished_copy = paths_unfinished.copy()
 paths_unfinished = add_number_of_backtracks(paths_unfinished_copy)
 
-# 3: Number of paths previously played per player
+print(f"Shape of paths_finished: {paths_finished.shape} after adding feature 1")
+print(f"Shape of paths_unfinished: {paths_unfinished.shape} after adding feature 1")
+
+# # 3: Number of paths previously played per player
 print('Feature 3')
 paths_finished_copy, paths_unfinished_copy = paths_finished.copy(), paths_unfinished.copy()
 paths_finished, paths_unfinished = add_number_of_paths_previously_played(paths_finished_copy, paths_unfinished_copy)
 
-# 4: Time per edge
+print(f"Shape of paths_finished: {paths_finished.shape} after adding feature 3")
+print(f"Shape of paths_unfinished: {paths_unfinished.shape} after adding feature 3")
+
+# # 4: Time per edge
 print('Feature 4')
 paths_finished_copy = paths_finished.copy()
 paths_finished = add_time_per_edge(paths_finished_copy)
 paths_unfinished_copy = paths_unfinished.copy()
 paths_unfinished = add_time_per_edge(paths_unfinished_copy)
 
+print(f"Shape of paths_finished: {paths_finished.shape} after adding feature 4")
+print(f"Shape of paths_unfinished: {paths_unfinished.shape} after adding feature 4")
+
 # 6: Position of clicked link in article
-print('Feature 6')
+# print('Feature 6')
 paths_finished_copy = paths_finished.copy()
 paths_finished = add_link_position(paths_finished_copy, True)
 paths_unfinished_copy = paths_unfinished.copy()
 paths_unfinished = add_link_position(paths_unfinished_copy, False)
 
-# For compatibility with next functions, this has to be done
+print(f"Shape of paths_finished: {paths_finished.shape} after adding feature 6")
+print(f"Shape of paths_unfinished: {paths_unfinished.shape} after adding feature 6")
+
+# # For compatibility with next functions, this has to be done
 paths_finished['path'] = paths_finished['path'].map(lambda x: ';'.join(x))
 paths_unfinished['path'] = paths_unfinished['path'].map(lambda x: ';'.join(x))
 
@@ -59,10 +74,12 @@ paths_finished = add_path_length(paths_finished_copy, articles, shortest_path_di
 paths_unfinished_copy = paths_unfinished.copy()
 paths_unfinished = add_path_length(paths_unfinished_copy, articles, shortest_path_distance_matrix, False)[0]
 
+print(f"Shape of paths_finished: {paths_finished.shape} after adding feature 2")
+print(f"Shape of paths_unfinished: {paths_unfinished.shape} after adding feature 2")
+
 # For compatibility with next functions, this has to be done
 paths_finished['path'] = paths_finished['path'].map(lambda x: ';'.join(x))
 paths_unfinished['path'] = paths_unfinished['path'].map(lambda x: ';'.join(x))
-
 
 # Intermediary: split into edges (necessary for later)
 finished_edge_df = split_into_edges(paths_finished)
@@ -78,6 +95,8 @@ paths_unfinished_copy = paths_unfinished.copy()
 paths_unfinished = add_paths_ratio(paths_unfinished_copy)
 paths_unfinished = add_average_time_on_page(paths_unfinished_copy)
 
+print(f"Shape of paths_finished: {paths_finished.shape} after adding feature 5")
+print(f"Shape of paths_unfinished: {paths_unfinished.shape} after adding feature 5")
 
 # 9: Sentence-transformers-based word-pair simililarity metric
 print("Feature 9")
@@ -86,12 +105,14 @@ paths_finished, finished_edge_df = add_sentence_similarity_metric(paths_finished
 paths_unfinished_copy, unfinished_edge_df_copy = paths_unfinished.copy(), unfinished_edge_df.copy()
 paths_unfinished, unfinished_edge_df = add_sentence_similarity_metric(paths_unfinished_copy, unfinished_edge_df_copy, finished=False)
 
+print
+
 # For compatibility with next functions, this has to be done
 paths_finished["path"] = paths_finished["path"].map(lambda x: x.split(";"))
 paths_unfinished["path"] = paths_unfinished["path"].map(lambda x: x.split(";"))
 
 # # 7 & 8 : Path pair metrics and metrics slopes
-print('Metrics 7 & 8')
+print('Features 7 & 8')
 paths_finished_copy, paths_unfinished_copy = paths_finished.copy(), paths_unfinished.copy()
 paths_finished_modif = add_computed_graph_features(
     paths_finished_raw,
@@ -103,7 +124,6 @@ paths_unfinished_modif = add_computed_graph_features(
     paths_unfinished_copy, 
     metrics_pickle_path="../data/p3_extra_data/unfinished_path_metrics.pkl"
 )
-paths_finished_modif = compute_metrics_slopes(paths_finished_modif)
 
 # Save
 paths_unfinished_modif.to_csv(DATA_FOLDER + 'combined_metrics_unfinished_paths.csv')

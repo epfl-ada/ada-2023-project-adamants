@@ -11,7 +11,7 @@ PATHS_UNFINISHED = PATHS_AND_GRAPH + "paths_unfinished.tsv"
 SHORTEST_PATH_MATRIX = PATHS_AND_GRAPH + "shortest-path-distance-matrix.txt"
 ARTICLES = PATHS_AND_GRAPH + "articles.tsv"
 
-def load(name):
+def load(name, drop_timeouts=False):
     """Loading different datasets""" 
     if name == 'paths_finished':
         names=["hashedIpAddress", "timestamp", "durationInSec", "path", "rating"]
@@ -41,6 +41,9 @@ def load(name):
 
     if (name == 'paths_unfinished' or name == 'paths_finished'):
         df["timestamp"] = pd.to_datetime(df["timestamp"], unit="s")
+        if name == 'paths_unfinished' and drop_timeouts == True:
+            df = df[not "timeout" in df["type"] and df["path"].str.count(";") > 0]
+            df.reset_index(inplace=True)
     
     # for shortest path matrix: splitting string into list
     if name == 'shortest_path_matrix':
