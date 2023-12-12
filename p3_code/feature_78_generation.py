@@ -8,10 +8,98 @@ sys.path.append("book/") # Attend to more cases
 from graph_measures import *
 from utils import load_data, load_paths_pairs, load_paths
 import logging
+import pickle
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.DEBUG)
 
 GRAPH_METRICS_PATH = Path("../data/p3_extra_data/nodes_w_graph_metrics.csv").resolve()
+
+
+def compute_path_metrics_w_nodes(nodes, paths_df, pickle_path = None):
+    """Computes the metrics for each path."""
+    pickle_path = Path(pickle_path).resolve()
+    # pre-compute metrics for paths to avoid costly np.isin in the plots
+    if not pickle_path.is_file() and pickle_path is not None:
+        path_degree = pd.Series(dtype=object)
+        path_clustering = pd.Series(dtype=object)
+        path_degree_centrality = pd.Series(dtype=object)
+        path_betweenness = pd.Series(dtype=object)
+        path_closeness = pd.Series(dtype=object)
+
+        page_degree_dict = dict(zip(nodes["node_name"], nodes["degree"]))
+        page_clustering_dict = dict(zip(nodes["node_name"], nodes["clustering"]))
+        page_degree_centrality_dict = dict(
+            zip(nodes["node_name"], nodes["degree_centrality"])
+        )
+        page_betweenness_dict = dict(zip(nodes["node_name"], nodes["betweenness"]))
+        page_closeness_dict = dict(zip(nodes["node_name"], nodes["closeness"]))
+
+        not_found_count = 0
+
+        total = len(paths_df)
+        print("Total of paths: ", total)
+        current = 0
+        
+        for i, path in enumerate(paths_df["path"]):
+            page_degrees = []
+            page_clustering = []
+            page_degree_centrality = []
+            page_betweenness = []
+            page_closeness = []
+            
+            # if len(path) == 1:
+            #     print(f"Path of len 1 : {path}\nSkipping...")
+            #     continue
+            
+            for page in path:
+                try:
+                    page_degrees.append(page_degree_dict[page])
+                    page_clustering.append(page_clustering_dict[page])
+                    page_degree_centrality.append(page_degree_centrality_dict[page])
+                    page_betweenness.append(page_betweenness_dict[page])
+                    page_closeness.append(page_closeness_dict[page])
+                except KeyError:
+                    if page == "<":
+                        continue
+                    print(f"Page {page} not found in links")
+                    not_found_count += 1
+                    page_degrees.append(np.nan)
+                    page_clustering.append(np.nan)
+                    page_degree_centrality.append(np.nan)
+                    page_betweenness.append(np.nan)
+                    page_closeness.append(np.nan)
+
+            path_degree[i] = np.array(page_degrees)
+            path_clustering[i] = np.array(page_clustering)
+            path_degree_centrality[i] = np.array(page_degree_centrality)
+            path_betweenness[i] = np.array(page_betweenness)
+            path_closeness[i] = np.array(page_closeness)
+            
+            current += 1
+            print(f"Progress: {current}/{total}", end="\r")
+
+        metrics_dict = {
+            "path_degree": path_degree,
+            "path_clustering": path_clustering,
+            "path_degree_centrality": path_degree_centrality,
+            "path_betweenness": path_betweenness,
+            "path_closeness": path_closeness,
+        }
+        print(f"Total of pages not found in links: {not_found_count}")
+        
+        # save as pickle
+        with Path(pickle_path).open("wb") as f:
+            pickle.dump(metrics_dict, f)
+        
+        return metrics_dict
+    elif Path(pickle_path).is_file():
+        print("Loading metrics from pickle...")
+        with Path(pickle_path).open("rb") as f:
+            return pickle.load(f)
+
+    else:
+        raise ValueError(f"Invalid pickle path: {pickle_path}")
+
 
 def append_nan_to_dict(d):
     """Adds nan values to a dict for the given keys."""
@@ -143,11 +231,13 @@ def compute_metrics_slopes(metrics_dict, invalid_values=np.nan):
             after_too_short = len(after_max) < 2
         
             try:
-                slopes[k][slope_bef].append(np.polyfit(range(len(before_max)), before_max, 1)[0] if not before_too_short else invalid_values)
+                slope = np.polyfit(range(len(before_max)), before_max, 1)[0] / len(before_max)
+                slopes[k][slope_bef].append(slope if not before_too_short else invalid_values)
             except np.linalg.LinAlgError:
                 slopes[k][slope_bef].append(invalid_values)
             try:
-                slopes[k][slope_aft].append(np.polyfit(range(len(after_max)), after_max, 1)[0] if not after_too_short else invalid_values)
+                slope = np.polyfit(range(len(after_max)), after_max, 1)[0] / len(after_max)
+                slopes[k][slope_aft].append(slope if not after_too_short else invalid_values)
             except np.linalg.LinAlgError:
                 slopes[k][slope_aft].append(invalid_values)
         slopes[k] = pd.DataFrame.from_dict(slopes[k], orient="index").T
