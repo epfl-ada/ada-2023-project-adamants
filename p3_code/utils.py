@@ -132,7 +132,7 @@ def load_paths(
         # filter all with type timeout and 0 ; characters in path
         paths_unfinished = paths_unfinished[
             not "timeout" in paths_unfinished["type"]
-            and paths_unfinished["path"].map(len) > 1
+            and paths_unfinished["path"].count(";") > 0
             ]
         paths_unfinished.reset_index(inplace=True)
 
@@ -200,29 +200,39 @@ FEATURES_COLS_USED_FOR_CLUSTERING = [
     #  'optimal_path_length',
     "coarse_mean_time",
     "semantic_similarity",
-    "path_degree_slope_before",
-    "path_degree_slope_after",
-    "path_clustering_slope_before",
-    "path_clustering_slope_after",
-    "path_degree_centrality_slope_before",
-    "path_degree_centrality_slope_after",
-    "path_betweenness_slope_before",
-    "path_betweenness_slope_after",
-    "path_closeness_slope_before",
-    "path_closeness_slope_after",
+    # "path_degree_slope_before",
+    # "path_degree_slope_after",
+    # "path_clustering_slope_before",
+    # "path_clustering_slope_after",
+    # "path_degree_centrality_slope_before",
+    # "path_degree_centrality_slope_after",
+    # "path_betweenness_slope_before",
+    # "path_betweenness_slope_after",
+    # "path_closeness_slope_before",
+    # "path_closeness_slope_after",
+    "path_degree_abs_sum",
+    "path_clustering_abs_sum",
+    'path_degree_centrality_abs_sum',
+    'path_betweenness_abs_sum',
+    'path_closeness_abs_sum'
 ]
 
 COLS_REPLACE_NAN_WITH_MEAN = [ # cols where nan values are replaced with mean of the column
-    "path_degree_slope_before",
-    "path_degree_slope_after",
-    "path_clustering_slope_before",
-    "path_clustering_slope_after",
-    "path_degree_centrality_slope_before",
-    "path_degree_centrality_slope_after",
-    "path_betweenness_slope_before",
-    "path_betweenness_slope_after",
-    "path_closeness_slope_before",
-    "path_closeness_slope_after",
+    # "path_degree_slope_before",
+    # "path_degree_slope_after",
+    # "path_clustering_slope_before",
+    # "path_clustering_slope_after",
+    # "path_degree_centrality_slope_before",
+    # "path_degree_centrality_slope_after",
+    # "path_betweenness_slope_before",
+    # "path_betweenness_slope_after",
+    # "path_closeness_slope_before",
+    # "path_closeness_slope_after",
+    "path_degree_abs_sum",
+    "path_clustering_abs_sum",
+    'path_degree_centrality_abs_sum',
+    'path_betweenness_abs_sum',
+    'path_closeness_abs_sum'
 ]
 COLS_LOG = [ # cols to apply log transformation
     "durationInSec",
