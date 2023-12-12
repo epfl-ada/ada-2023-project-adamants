@@ -232,7 +232,9 @@ COLS_REPLACE_NAN_WITH_MEAN = [ # cols where nan values are replaced with mean of
     "path_clustering_abs_sum",
     'path_degree_centrality_abs_sum',
     'path_betweenness_abs_sum',
-    'path_closeness_abs_sum'
+    'path_closeness_abs_sum',
+    "position_mean",
+    "position_std",
 ]
 COLS_LOG = [ # cols to apply log transformation
     "durationInSec",
