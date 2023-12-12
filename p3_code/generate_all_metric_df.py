@@ -92,41 +92,23 @@ paths_unfinished["path"] = paths_unfinished["path"].map(lambda x: x.split(";"))
 
 # # 7 & 8 : Path pair metrics and metrics slopes
 print('Metrics 7 & 8')
-nodes = pd.read_csv(GRAPH_METRICS_PATH)
-paths_unfinished_copy = paths_unfinished.copy()
-unfinished_metrics_dict = compute_path_metrics_w_nodes(
-    nodes, paths_unfinished_copy
+paths_finished_copy, paths_unfinished_copy = paths_finished.copy(), paths_unfinished.copy()
+paths_finished_modif = add_computed_graph_features(
+    paths_finished_raw,
+    paths_finished_copy, 
+    metrics_pickle_path="../data/p3_extra_data/unfinished_path_metrics.pkl"
 )
-unfinished_slopes = compute_metrics_slopes(unfinished_metrics_dict)
-
-paths_finished_copy = paths_finished.copy()
-finished_metrics_dict = compute_path_metrics_w_nodes(
-    nodes, paths_finished_copy 
+paths_unfinished_modif = add_computed_graph_features(
+    paths_unfinished_raw, 
+    paths_unfinished_copy, 
+    metrics_pickle_path="../data/p3_extra_data/finished_path_metrics.pkl"
 )
-finished_slopes = compute_metrics_slopes(finished_metrics_dict)
+paths_finished_modif = compute_metrics_slopes(paths_finished_modif)
 
-
-slopes_unfin_df = pd.DataFrame()
-for k,v in unfinished_slopes.items():
-    slopes_unfin_df = pd.concat([slopes_unfin_df, v], axis=1)
-    
-paths_unfinished_modif = paths_unfinished.copy()
-paths_unfinished_raw_w_slopes = pd.concat([paths_unfinished_raw, slopes_unfin_df], axis=1)
-paths_unfinished_modif = pd.merge(paths_unfinished_modif, paths_unfinished_raw_w_slopes, how="left", on=["hashedIpAddress", "timestamp", "durationInSec"])
-
-slopes_fin_df = pd.DataFrame()
-for k,v in finished_slopes.items():
-    slopes_fin_df = pd.concat([slopes_fin_df, v], axis=1)
-    
-paths_finished_modif = paths_finished.copy()
-paths_finished_raw_w_slopes = pd.concat([paths_finished_raw, slopes_fin_df], axis=1)
-paths_finished_modif = pd.merge(paths_finished_modif, paths_finished_raw_w_slopes, how="left", on=["hashedIpAddress", "timestamp", "durationInSec","rating"])
-
-
-paths_finished_modif = paths_finished_modif.drop(columns=['path_y'], errors='ignore')
-paths_finished_modif = paths_finished_modif.rename(columns={'path_x': 'path'})
-paths_unfinished_modif = paths_unfinished_modif.drop(columns=['path_y'], errors='ignore')
-paths_unfinished_modif = paths_unfinished_modif.rename(columns={'path_x': 'path'})
+# paths_finished_modif = paths_finished_modif.drop(columns=['path_y'], errors='ignore')
+# paths_finished_modif = paths_finished_modif.rename(columns={'path_x': 'path'})
+# paths_unfinished_modif = paths_unfinished_modif.drop(columns=['path_y'], errors='ignore')
+# paths_unfinished_modif = paths_unfinished_modif.rename(columns={'path_x': 'path'})
 
 # Save
 paths_unfinished_modif.to_csv(DATA_FOLDER + 'combined_metrics_unfinished_paths.csv')

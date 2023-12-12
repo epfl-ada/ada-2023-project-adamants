@@ -387,3 +387,36 @@ if __name__ == "__main__":
         paths_unfinished_modif = pd.concat([paths_unfinished_modif, slopes_unfin_df], axis=1)
         paths_unfinished_modif.to_csv(unfinished_paths_appended_metrics_path)
     print("Done")
+
+def add_computed_graph_features(path_dataframe, target_dataframe, metrics_pickle_path, use_log=True,drop_duplicates_from_merge=True):
+    """Adds the computed graph features to the dataframe."""
+    path_dataframe = path_dataframe.copy(deep=True)
+    nodes = pd.read_csv(GRAPH_METRICS_PATH)
+    
+    metrics_dict = compute_path_metrics_w_nodes(nodes, path_dataframe, metrics_pickle_path)
+    
+    # slopes = compute_metrics_slopes(metrics_dict)
+    slopes = compute_metrics_mean_diff(metrics_dict)
+    # slopes = compute_delta_norm(metrics_dict)
+
+    slopes_temp = slopes.copy()
+    for k, v in slopes.items():
+        print(f"Metric {k}")
+        abs_sum = v[str(k)+"_slope_before"].abs() + v[str(k)+"_slope_after"].abs()
+        if use_log:
+            abs_sum = abs_sum.apply(lambda x : np.log(x+1e-10))
+        slopes_temp[str(k)+"_abs_sum"] = abs_sum
+    slopes = slopes_temp
+    slopes_abs_sum = {}
+    for k,v in slopes.items():
+        if "abs_sum" in k:
+            slopes_abs_sum[k] = v
+    slopes_abs_sum  = pd.DataFrame(slopes_abs_sum)
+    assert len(slopes_abs_sum) == len(path_dataframe), f"Length of slopes_abs_sum ({len(slopes_abs_sum)}) and path_dataframe ({len(path_dataframe)}) do not match"
+    concat_df = pd.concat([path_dataframe, slopes_abs_sum], axis=1)
+    merged_df = pd.merge(target_dataframe, concat_df, how="left", on=["hashedIpAddress", "timestamp", "durationInSec"])
+    
+    if drop_duplicates_from_merge:
+        merged_df = merged_df.loc[:,~merged_df.columns.str.endswith("_y")]
+        merged_df = merged_df.rename(columns={col: col[:-2] for col in merged_df.columns if col.endswith("_x")})
+    return merged_df
