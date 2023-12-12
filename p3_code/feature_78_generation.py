@@ -155,6 +155,96 @@ def compute_metrics_slopes(metrics_dict, invalid_values=np.nan):
         
     return slopes
 
+def compute_metrics_mean_diff(metrics_dict, invalid_values=np.nan):
+    mean_diff = {}
+    mean_diff_bef = "slope_before_max"
+    mean_diff_aft = "slope_after_max"
+    for k,v in metrics_dict.items():
+        v.index = range(len(v))
+        mean_diff[k] = {} 
+        mean_diff[k][mean_diff_bef] = []
+        mean_diff[k][mean_diff_aft] = []
+        for i, val in enumerate(v):
+            if len(val) < 3:
+                mean_diff[k][mean_diff_bef].append(invalid_values)
+                mean_diff[k][mean_diff_aft].append(invalid_values)
+                continue
+            if np.isnan(val).all():
+                mean_diff[k][mean_diff_bef].append(invalid_values)
+                mean_diff[k][mean_diff_aft].append(invalid_values)
+                continue
+            max_idx = np.nanargmax(metrics_dict["path_degree"][i])
+            
+            # take path with max included
+            before_max = val[:max_idx+1]
+            after_max = val[max_idx:]
+            
+            if len(before_max) < 2:
+                mean_diff[k][mean_diff_bef].append(invalid_values)
+                mean_diff[k][mean_diff_aft].append(invalid_values)
+                continue
+            if len(after_max) < 2:
+                mean_diff[k][mean_diff_bef].append(invalid_values)
+                mean_diff[k][mean_diff_aft].append(invalid_values)
+                continue
+            
+            before_diff = np.diff(before_max)
+            after_diff = np.diff(after_max)
+            before_mean_diff = np.mean(before_diff) / len(before_diff)
+            after_mean_diff = np.mean(after_diff) / len(after_diff)
+            
+            mean_diff[k][mean_diff_bef].append(before_mean_diff)
+            mean_diff[k][mean_diff_aft].append(after_mean_diff)
+        mean_diff[k] = pd.DataFrame.from_dict(mean_diff[k], orient="index").T
+        mean_diff[k].columns = [str(k + "_slope_before"), str(k + "_slope_after")]
+        
+    return mean_diff
+
+def compute_metrics_delta_norm(metrics_dict, invalid_values=np.nan):
+    delta_norm = {}
+    delta_norm_bef = "slope_before_max"
+    delta_norm_aft = "slope_after_max"
+    for k,v in metrics_dict.items():
+        v.index = range(len(v))
+        delta_norm[k] = {}
+        delta_norm[k][delta_norm_bef] = []
+        delta_norm[k][delta_norm_aft] = []
+        for i, val in enumerate(v):
+            if len(val) < 3:
+                delta_norm[k][delta_norm_bef].append(invalid_values)
+                delta_norm[k][delta_norm_aft].append(invalid_values)
+                continue
+            if np.isnan(val).all():
+                delta_norm[k][delta_norm_bef].append(invalid_values)
+                delta_norm[k][delta_norm_aft].append(invalid_values)
+                continue
+            max_idx = np.nanargmax(metrics_dict["path_degree"][i])
+            
+            # take path with max included
+            before_max = val[:max_idx+1]
+            after_max = val[max_idx:]
+            
+            if len(before_max) < 2:
+                delta_norm[k][delta_norm_bef].append(invalid_values)
+                delta_norm[k][delta_norm_aft].append(invalid_values)
+                continue
+            if len(after_max) < 2:
+                delta_norm[k][delta_norm_bef].append(invalid_values)
+                delta_norm[k][delta_norm_aft].append(invalid_values)
+                continue
+            
+            before_delta = before_max[-1] - before_max[0]
+            after_delta = after_max[-1] - after_max[0]
+            
+            before_norm = before_delta / len(before_max)
+            after_norm = after_delta / len(after_max)
+            
+            delta_norm[k][delta_norm_bef].append(before_norm)
+            delta_norm[k][delta_norm_aft].append(after_norm)
+        delta_norm[k] = pd.DataFrame.from_dict(delta_norm[k], orient="index").T
+        delta_norm[k].columns = [str(k + "_slope_before"), str(k + "_slope_after")]
+        
+    return delta_norm
 
 if __name__ == "__main__":
     
