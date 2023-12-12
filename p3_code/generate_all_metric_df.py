@@ -1,7 +1,7 @@
 from feature_26_generation import DATA_FOLDER, PATHS_AND_GRAPH, PATHS_FINISHED, PATHS_UNFINISHED, SHORTEST_PATH_MATRIX , ARTICLES, load, load_articles, add_path_length, add_link_position
 from feature_13_generation import add_number_of_backtracks, add_number_of_paths_previously_played
 from feature_49_generation import add_time_per_edge, split_into_edges, add_sentence_similarity_metric
-from feature_78_generation import GRAPH_METRICS_PATH, get_paths_pairs_metrics, compute_metrics_slopes
+from feature_78_generation import GRAPH_METRICS_PATH, get_paths_pairs_metrics, compute_metrics_slopes, add_computed_graph_features
 from feature_5_generation import  add_average_time_on_page, add_paths_ratio
 import pandas as pd
 from pandas.errors import SettingWithCopyWarning
@@ -96,19 +96,14 @@ paths_finished_copy, paths_unfinished_copy = paths_finished.copy(), paths_unfini
 paths_finished_modif = add_computed_graph_features(
     paths_finished_raw,
     paths_finished_copy, 
-    metrics_pickle_path="../data/p3_extra_data/unfinished_path_metrics.pkl"
+    metrics_pickle_path="../data/p3_extra_data/finished_path_metrics.pkl"
 )
 paths_unfinished_modif = add_computed_graph_features(
     paths_unfinished_raw, 
     paths_unfinished_copy, 
-    metrics_pickle_path="../data/p3_extra_data/finished_path_metrics.pkl"
+    metrics_pickle_path="../data/p3_extra_data/unfinished_path_metrics.pkl"
 )
 paths_finished_modif = compute_metrics_slopes(paths_finished_modif)
-
-# paths_finished_modif = paths_finished_modif.drop(columns=['path_y'], errors='ignore')
-# paths_finished_modif = paths_finished_modif.rename(columns={'path_x': 'path'})
-# paths_unfinished_modif = paths_unfinished_modif.drop(columns=['path_y'], errors='ignore')
-# paths_unfinished_modif = paths_unfinished_modif.rename(columns={'path_x': 'path'})
 
 # Save
 paths_unfinished_modif.to_csv(DATA_FOLDER + 'combined_metrics_unfinished_paths.csv')
