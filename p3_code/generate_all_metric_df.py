@@ -88,12 +88,10 @@ unfinished_edge_df = split_into_edges(paths_unfinished)
 # 5: Player performance
 print('Feature 5')
 paths_finished_copy = paths_finished.copy()
-paths_finished = add_paths_ratio(paths_finished_copy)
+paths_finished = add_paths_ratio(paths_finished_copy,shortest_path_distance_matrix,articles)
+paths_finished_copy = paths_finished.copy()
 paths_finished = add_average_time_on_page(paths_finished_copy)
 
-paths_unfinished_copy = paths_unfinished.copy()
-paths_unfinished = add_paths_ratio(paths_unfinished_copy)
-paths_unfinished = add_average_time_on_page(paths_unfinished_copy)
 
 print(f"Shape of paths_finished: {paths_finished.shape} after adding feature 5")
 print(f"Shape of paths_unfinished: {paths_unfinished.shape} after adding feature 5")
