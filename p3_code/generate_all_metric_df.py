@@ -11,6 +11,7 @@ sys.path.append("../book")
 sys.path.append("book/") # Attend to more cases
 from graph_measures import *
 warnings.simplefilter(action='ignore', category=SettingWithCopyWarning) # Huge amounts of warnings generated in loops. Ignore them here.
+import numpy as np
 
 # Setup
 
@@ -89,8 +90,10 @@ unfinished_edge_df = split_into_edges(paths_unfinished)
 print('Feature 5')
 paths_finished_copy = paths_finished.copy()
 paths_finished = add_paths_ratio(paths_finished_copy,shortest_path_distance_matrix,articles)
+paths_unfinished['ratio'] = [np.nan] * len(paths_unfinished)
 paths_finished_copy = paths_finished.copy()
 paths_finished = add_average_time_on_page(paths_finished_copy)
+paths_unfinished['average_time_on_page'] = [np.nan] * len(paths_unfinished)
 
 
 print(f"Shape of paths_finished: {paths_finished.shape} after adding feature 5")

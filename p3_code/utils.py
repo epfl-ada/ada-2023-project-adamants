@@ -200,6 +200,8 @@ FEATURES_COLS_USED_FOR_CLUSTERING = [
     #  'optimal_path_length',
     "coarse_mean_time",
     "semantic_similarity",
+    "average_time_on_page",
+    "ratio",
     # "path_degree_slope_before",
     # "path_degree_slope_after",
     # "path_clustering_slope_before",
