@@ -14,3 +14,5 @@ data/wikispeedia_articles_plaintext.tar.gz
 !data/p3_extra_data/*.csv
 !data/p3_extra_data/unfinished_path_metrics.pkl
 !data/p3_extra_data/finished_path_metrics.pkl
+
+*.sbatch
