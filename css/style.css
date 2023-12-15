@@ -5,7 +5,7 @@
     transform: translateY(-50%);
     z-index: 2;
   }
-  
+
   .dot {
     display: block;
     height: 15px;
