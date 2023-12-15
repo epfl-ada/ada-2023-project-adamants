@@ -93,7 +93,14 @@ paths_finished = add_paths_ratio(paths_finished_copy,shortest_path_distance_matr
 paths_unfinished['ratio'] = [np.nan] * len(paths_unfinished)
 paths_finished_copy = paths_finished.copy()
 paths_finished = add_average_time_on_page(paths_finished_copy)
+<<<<<<< Updated upstream
 paths_unfinished['average_time_on_page'] = [np.nan] * len(paths_unfinished)
+=======
+paths_unfinished_copy = paths_unfinished.copy()
+paths_unfinished = add_paths_ratio(paths_unfinished_copy,shortest_path_distance_matrix,articles,finished=False)
+paths_unfinished_copy = paths_unfinished.copy()
+paths_unfinished = add_average_time_on_page(paths_unfinished_copy)
+>>>>>>> Stashed changes
 
 
 print(f"Shape of paths_finished: {paths_finished.shape} after adding feature 5")

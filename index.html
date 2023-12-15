@@ -3,11 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <title>Wikispeedia datastory</title>
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script src="js/home.js"></script>
 </head>
 <body>
-    <div class="Header">
+    <script>
+        AOS.init();
+      </script>
+    <div class="header">
         <h1>Wikispeedia datastory</h1>
     </div>
     
@@ -16,25 +21,30 @@
         <span class="dot" onclick="scrollToSection('section2')"></span>
         <span class="dot" onclick="scrollToSection('section3')"></span>
     </div>
+    <div class="content">
+        <section data-aos="fade-left"
+        data-aos-duration="1000" id="section1">
+            <h2>Section 1</h2>
+            <p>Section 1 content...</p>
+            <img src="src/gmm.png" alt="GMM">
+        </section>
 
-    <section id="section1">
-        <h2>Section 1</h2>
-        <p>Section 1 content...</p>
-        <img src="src/gmm.png" alt="GMM">
-    </section>
+        
+        <section data-aos="fade-left"
+        data-aos-duration="1000"  id="section2">
+            <h2>Section 2</h2>
+            <p>Section 2 content...</p>
+            <img src="src/optics.png" alt="optics">
+        </section>
 
-    <section id="section2">
-        <h2>Section 2</h2>
-        <p>Section 2 content...</p>
-        <img src="src/optics.png" alt="optics">
-    </section>
+        <section data-aos="fade-left"
+        data-aos-duration="1000"  id="section3">
+            <h2>Section 3</h2>
+            <p>Section 3 content...</p>
+            <img src="src/cluster.png" alt="cluster">
 
-    <section id="section3">
-        <h2>Section 3</h2>
-        <p>Section 3 content...</p>
-        <img src="src/cluster.png" alt="cluster">
-
-    </section>
+        </section>
+    </div>
 
 
 </body>

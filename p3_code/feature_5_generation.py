@@ -2,11 +2,12 @@ from urllib.parse import unquote
 import pandas as pd
 import numpy as np
 from pathlib import Path
+from feature_26_generation import remove_backclicks_and_split
+from tqdm import tqdm
 
 
 def compare_paths(user_path, shortest_path_distance_matrix,articles):
     """Looks up for the optimal path and compares it to the user path."""
-    user_path = user_path.split(";")
     start, end = user_path[0], user_path[-1]
     opt = 0 
     start_index = articles[articles["article name"] == start].index[0]
@@ -57,7 +58,7 @@ def compare_paths(user_path, shortest_path_distance_matrix,articles):
 
 
 
-def add_paths_ratio(df,short_matrix,articles,feature_name="paths_ratio",quiet=False):
+def add_paths_ratio(df,short_matrix,articles,feature_name="paths_ratio",quiet=False,finished=True):
     """Add a feature to the dataframe that show the ratio between the user paths and the shortest path
     --------------------
     Input:
@@ -72,6 +73,10 @@ def add_paths_ratio(df,short_matrix,articles,feature_name="paths_ratio",quiet=Fa
         if not quiet:
             print(f"Warning: the dataframe already contains a column named {feature_name}")
     else:
+        if finished == False:
+            df = df[df["target"].isin(articles["article name"])]
+        # Removing back clicks (<) and splitting paths
+        df = remove_backclicks_and_split(df).copy(deep=True)   
         df["ratio"] = df["path"].apply(lambda x: compare_paths(x, short_matrix,articles))
     return df
 
