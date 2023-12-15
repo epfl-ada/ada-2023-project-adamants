@@ -87,8 +87,6 @@ def add_link_position(df, finished):
     position_std = position_std.reshape(len(position_std),)
     df['position_std'] = pd.Series(position_std)
 
-    
-    # return pd.Series(next_link_position_series), average_position
     return df
    
 
@@ -105,51 +103,64 @@ def remove_backclicks_and_split(paths):
     """Removing back clicks (<) and splitting paths (;)"""
     for i in tqdm(range(len(paths)), file=sys.stdout):
         paths["path"].iloc[i] = paths["path"].iloc[i].split(";")
-        for item in paths["path"].iloc[i].copy():
-            if item == "<":
-                paths["path"].iloc[i].remove(item)
+        j = 1
+        while (j < len(paths["path"].iloc[i])):
+            if paths["path"].iloc[i][j] == "<":
+                del paths["path"].iloc[i][j]
+                del paths["path"].iloc[i][j-1]
+                j = j-2
+            j += 1
     return paths    
 
 
-def path_to_plaintext(article_name):
-    """Returns path to plaintext article"""
+def path_to_html(article_name):
+    """Returns path to article's html file"""
     article_name_undsc = article_name.replace(" ", "_")
-    ALL_PLAINTEXT = "../data/plaintext_articles/"
-    path = ALL_PLAINTEXT + article_name_undsc + ".txt"
+    ALL_HTML = "../data/wikispeedia_articles_html/wpcd/wp/"
+    path = ALL_HTML + article_name[0].lower() + '/' + article_name_undsc + ".htm"
     return path
 
 
-def find_word_position(successive_pair):
+def add_25_behind_percentage(input_string):
+    """Resolves html bug by adding 25 behind % in html links from html files"""
+    modified_string = ""
+    for char in input_string:
+        if char == '%':
+            modified_string += '%' + '25'
+        else:
+            modified_string += char
+    modified_string = modified_string.replace(" ", "_")
+    return modified_string
+
+
+def find_word_position_html(successive_pair):
     """Function returning character count before clicked link of a sucessive pair
     
     that is, position of second word in seccessive pair in first word in pair's article"""
     target_words = successive_pair[1].replace("_", " ")
-    article = path_to_plaintext(successive_pair[0])
+    article = path_to_html(successive_pair[0])
 
-    with open(article, encoding="utf8") as file:
-        content = file.read()
+    with open(article, 'r', encoding='utf-8') as html_file:
+        content = html_file.read()
         try:
             number_of_characters = len(content)
             return content.index(target_words)/number_of_characters
-        except:  # Mistake because sometimes word in is html file but not in text file. 
-                # To be treated later. Right now we don't consider these datapoints
-            # print(f"The group of words '{successive_pair[1]}' was not found in the file '{successive_pair[0]}'.")
-            return 0
+
+        except:  # For target words containing %
+            new_target_words = add_25_behind_percentage(target_words)
+            number_of_characters = len(content)
+            return content.index(new_target_words)/number_of_characters
+            
 
 
 def compute_position_for_all_pairs(successive_pairs, max_path_length):
-    """Applies find_word_position wholes dataframe"""
+    """Applies find_word_position whole dataframe"""
     next_link_position = np.zeros(
         (len(successive_pairs), max_path_length - 1)
     )
     for i in tqdm(range(len(successive_pairs)), file=sys.stdout):
         for j in range(len(successive_pairs[i])):
-            next_link_position[i, j] = find_word_position(successive_pairs[i][j])
-
-    # make it into a series
-    #position_series = []
-    #for i in tqdm(range(len(next_link_position)), file=sys.stdout):
-        #position_series = np.append(position_series,next_link_position[i,np.nonzero(next_link_position[i])][0])
+            next_link_position[i, j] = find_word_position_html(successive_pairs[i][j])
 
     # or compute mean position for each path
     position_mean = np.zeros((len(next_link_position), 1))
