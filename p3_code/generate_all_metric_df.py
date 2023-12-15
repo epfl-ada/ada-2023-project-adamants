@@ -90,21 +90,20 @@ unfinished_edge_df = split_into_edges(paths_unfinished)
 print('Feature 5')
 paths_finished_copy = paths_finished.copy()
 paths_finished = add_paths_ratio(paths_finished_copy,shortest_path_distance_matrix,articles)
-paths_unfinished['ratio'] = [np.nan] * len(paths_unfinished)
 paths_finished_copy = paths_finished.copy()
 paths_finished = add_average_time_on_page(paths_finished_copy)
-<<<<<<< Updated upstream
-paths_unfinished['average_time_on_page'] = [np.nan] * len(paths_unfinished)
-=======
 paths_unfinished_copy = paths_unfinished.copy()
 paths_unfinished = add_paths_ratio(paths_unfinished_copy,shortest_path_distance_matrix,articles,finished=False)
 paths_unfinished_copy = paths_unfinished.copy()
 paths_unfinished = add_average_time_on_page(paths_unfinished_copy)
->>>>>>> Stashed changes
 
 
 print(f"Shape of paths_finished: {paths_finished.shape} after adding feature 5")
 print(f"Shape of paths_unfinished: {paths_unfinished.shape} after adding feature 5")
+
+# For compatibility with next functions, this has to be done
+paths_finished['path'] = paths_finished['path'].map(lambda x: ';'.join(x))
+paths_unfinished['path'] = paths_unfinished['path'].map(lambda x: ';'.join(x))
 
 # 9: Sentence-transformers-based word-pair simililarity metric
 print("Feature 9")
