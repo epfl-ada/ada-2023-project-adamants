@@ -12,33 +12,34 @@
     <script>
         AOS.init();
       </script>
-    <div class="header">
-        <h1>Wikispeedia datastory</h1>
-    </div>
+    <section class="content active" id="home">
+        <div class="header">
+            <h1>Wikispeedia datastory</h1>
+        </div>
+    </section>
     
     <div id="dotSlider">
+        <span class="dot active" onclick="scrollToSection('home')"></span>
         <span class="dot" onclick="scrollToSection('section1')"></span>
         <span class="dot" onclick="scrollToSection('section2')"></span>
         <span class="dot" onclick="scrollToSection('section3')"></span>
     </div>
-    <div class="content">
-        <section data-aos="fade-left"
-        data-aos-duration="1000" id="section1">
+    <div class="content_container">
+
+        <section class="content" id="section1">
             <h2>Section 1</h2>
             <p>Section 1 content...</p>
             <img src="src/gmm.png" alt="GMM">
         </section>
 
         
-        <section data-aos="fade-left"
-        data-aos-duration="1000"  id="section2">
+        <section class="content" id="section2">
             <h2>Section 2</h2>
             <p>Section 2 content...</p>
             <img src="src/optics.png" alt="optics">
         </section>
 
-        <section data-aos="fade-left"
-        data-aos-duration="1000"  id="section3">
+        <section class="content" id="section3">
             <h2>Section 3</h2>
             <p>Section 3 content...</p>
             <img src="src/cluster.png" alt="cluster">

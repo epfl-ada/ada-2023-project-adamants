@@ -1,19 +1,31 @@
-function scrollToSection(sectionId) {
-    document.getElementById(sectionId).scrollIntoView({ behavior: 'smooth' });
+document.addEventListener('DOMContentLoaded', function() {
+  const sections = document.querySelectorAll('.content');
+  const dots = document.querySelectorAll('.dot');
+  const numSections = sections.length;
+  document.querySelector('.content_container').style.height = `${numSections * 100}vh`;
+
+  window.scrollToSection = function(sectionId) {
+    const section = document.getElementById(sectionId);
+    const index = Array.from(sections).indexOf(section);
+    window.scrollTo(0, index * window.innerHeight);
   }
-  
+
   window.addEventListener('scroll', function() {
-    let sections = document.querySelectorAll('section');
-    let dots = document.querySelectorAll('.dot');
-  
+    const currentSection = Math.floor(window.scrollY / window.innerHeight);
+
     sections.forEach((section, index) => {
-      let top = window.scrollY;
-      let offset = section.offsetTop;
-      let height = section.offsetHeight;
-  
-      if (top >= offset && top < offset + height) {
-        dots.forEach((dot) => { dot.classList.remove('active'); });
-        dots[index].classList.add('active');
+      if (index === currentSection) {
+        section.classList.add('active');
+      } else {
+        section.classList.remove('active');
+      }
+
+      if (index === currentSection) {
+        dots.forEach((dot) => dot.classList.remove('active'));
+        if (dots[index]) {
+          dots[index].classList.add('active');
+        }
       }
     });
   });
+});

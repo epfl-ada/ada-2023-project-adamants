@@ -3,6 +3,7 @@
     left: 10px;
     top: 50%;
     transform: translateY(-50%);
+    z-index: 2;
   }
   
   .dot {
@@ -13,15 +14,30 @@
     border-radius: 50%;
     margin: 10px 0;
     cursor: pointer;
+    position: anbsolute;
   }
   
   .dot.active {
     background-color: #4CAF50; /* Active dot color */
+    z-index: 2;
   }
+
+
+  .content {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    transform: scale(0.8);
+    opacity: 0;
+    transition: transform 0.5s ease, opacity 0.5s ease;
+    }
   
-  section {
-    margin-left: 100px; /* Adjust according to slider width */
-    /* Styling */
+  .active {
+    transform: scale(1);
+    opacity: 1;
+    z-index: 1;
   }
 
   .header {
@@ -31,11 +47,11 @@
     display: flex;
     justify-content:center;
     align-items:center;
+    z-index: 2;  
   }
 
-  .content {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+  .content_container {
+    position: relative;
+
   }
   
