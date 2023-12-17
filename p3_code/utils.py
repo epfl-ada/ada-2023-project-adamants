@@ -243,6 +243,7 @@ COLS_LOG = [ # cols to apply log transformation
     "numberOfPath",
     "path_length",
     "coarse_mean_time",
+    "average_time_on_page",
 ]
 
 def replace_nan_with_mean(df, cols):
