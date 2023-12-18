@@ -1,3 +1,9 @@
+body{
+  color: #000;
+  font-family: 'Open Sans', sans-serif;
+  background-color: #C2D8B9;
+}
+
 #dotSlider {
     position: fixed;
     left: 10px;
@@ -10,7 +16,7 @@
     display: block;
     height: 15px;
     width: 15px;
-    background-color: #bbb;
+    background-color: #95a58f;
     border-radius: 50%;
     margin: 10px 0;
     cursor: pointer;
@@ -18,10 +24,14 @@
   }
   
   .dot.active {
-    background-color: #4CAF50; /* Active dot color */
-    z-index: 2;
+    background-color: #216869; /* Active dot color */
+    z-index: 2;  
   }
 
+  b{
+    font-weight: 700;
+
+  }
 
   .content {
     position: fixed;
@@ -32,7 +42,44 @@
     transform: scale(0.8);
     opacity: 0;
     transition: transform 0.5s ease, opacity 0.5s ease;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
     }
+
+  .content .item{
+    width: 70%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .content .item h2{
+    font-size: 20px;
+    font-weight: 700;
+    text-transform: uppercase;
+  }
+  .content .item p{
+    font-size: 16px;
+    font-weight: 400;
+    text-align: center;
+    width: 70%;
+  }
+
+  .content .item .quote{
+    font-size: 16px;
+    font-weight: 400;
+    text-align: left;
+    font-style: italic;
+    width: 60%;
+    border: #216869;
+    border-style: solid;
+    border-width: 0 0 0 5px;
+    padding-left: 10px;
+  }
   
   .active {
     transform: scale(1);
@@ -42,16 +89,66 @@
 
   .header {
     padding: 10px 16px;
-    background: #555;
-    color: #f1f1f1;
+    background: #C2D8B9;
+    color: #000;
     display: flex;
+    flex-direction: column;
     justify-content:center;
     align-items:center;
     z-index: 2;  
   }
+  .heading{
+    display: flex;
+    flex-direction: column;
+    justify-content:space-between;
+    gap: 20px;
+  }
+  .heading h1{
+    font-size: 40px;
+  }
 
   .content_container {
     position: relative;
-
   }
   
+  .arrow,
+  .arrow:before{
+    position: absolute;
+    left: 50%;
+  }
+  .arrow{
+    width: 40px;
+    height: 40px;
+    top: 70%;
+    margin: -20px 0 0 -20px;
+    -webkit-transform: rotate(45deg);
+    border-left: none;
+    border-top: none;
+    border-right: 2px #fff solid;
+    border-bottom: 2px #fff solid;
+  }
+  
+  .arrow:before{
+    content: '';
+    width: 20px;
+    height: 20px;
+    top: 50%;
+    margin: -10px 0 0 -10px;
+    border-left: none;
+    border-top: none;
+    border-right: 1px #fff solid;
+    border-bottom: 1px #fff solid;
+    animation-duration: 2s;
+    animation-iteration-count: infinite;
+    animation-name: arrow;
+  }
+  @keyframes arrow{
+    0%{
+      opacity: 1;
+    }
+    100%{
+      opacity: 0;
+      transform: translate(-10px, -10px);
+    }
+   
+  }
