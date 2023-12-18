@@ -3,18 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <title>Wikispeedia datastory</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script src="js/home.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;700&display=swap');
+      </style>
 </head>
 <body>
     <script>
         AOS.init();
       </script>
-    <section class="content active" id="home">
-        <div class="header">
-            <h1>Wikispeedia datastory</h1>
+    <section class="content active header" id="home">
+        <div class="heading">
+            <h1>Have you ever gotten lost on Wikipedia ? This little game will ... </h1>
+            <p>A Wikispeedia datastory</p>
+            <div class="arrow" onclick="scrollToSection('section1')"></div>
         </div>
     </section>
     
@@ -27,23 +33,126 @@
     <div class="content_container">
 
         <section class="content" id="section1">
-            <h2>Section 1</h2>
-            <p>Section 1 content...</p>
-            <img src="src/gmm.png" alt="GMM">
+            <div class="item">
+                <h2>In the vast expanse of digital information, Wikipedia remains the greaetst collection of human knowledge</h2>
+                <p>This is the story of a regular guy named Bob.<br>
+                Bob is playing a little game called <b>Wikispeedia</b></p>
+                <div  class="quote">Wikispeedia is an online game where players have to reach a Wikipedia article from another, unrelated Wikipedia article, only by clicking links in the articles encountered.
+                    A condensed version of Wikipedia (4,604 articles) is used. Beyond mere entertainment, 
+                    Wikispeedia unveils a world where games meet semantics, and unravels the intricate web of connections that bind Wikipedia's articles together.</div>
+                <h3>But what makes Bob either good or bad at this game?</h3>
+                <p>What strategies does Bob intuitively use to play Wikispeedia successfully? All in all, is Bob a good player?</p>
+                <img src="src/strategy.jpg" alt="strategy" style="height: 25%;">
+                <p>Answering these questions leads to an exploration of gameplay patterns, through analysing human navigation paths.
+                    Analysing player strategies in the Wikispeedia game and assessing correlations with semantic content.
+                    Extracting features from player path data will allow for unravelling and analysing of the different strategies used by the players.
+                    We have quantitatively described in-game behaviours by newly derived features and assessed how these variables relate to semantic content. 
+                    understanding the intricate nuances of interconnected information.</p>
+                </div>
         </section>
 
         
         <section class="content" id="section2">
-            <h2>Section 2</h2>
-            <p>Section 2 content...</p>
-            <img src="src/optics.png" alt="optics">
+            <div class="item">
+            <h2>In-game behaviours</h2>
+                <ul>
+                    <li>
+                        <h4>
+                            Number of backtracks per path
+                        </h4>
+                        <p>
+                            This feature informs us on how players navigate through the depths of Wikipedia's articles. Is their path straightforward or more meandering ? 
+                            As intuitively expected, it is positively correlated with the rating given by the player and with the time taken to complete the path.
+                        </p>
+                    </li>
+                    <li>
+                        <h4>
+                            The path length and player persistence
+                        </h4>
+                        <p>
+                            This feature allows to investigate whether longer or more difficult paths are correlated with lower ratings and prompt players to abandon the game.
+                            It is in fact the case. 
+                        </p>
+                    </li>
+                    <li>
+                        <h4>
+                            The number of paths attempted by the player before the one played
+                        </h4>
+                        <p>
+                            This feature informs us how much training the player had before he played the path recorded.
+                            It is negatively correlated with the time taken to finish the path recorded, even though ~50% of the IP addresses appear only 1 time (heavily right-skewed distribution). 
+                        </p>
+                    </li>
+                    <li>
+                        <h4>
+                            The average time per edge 
+                        </h4>
+                        <p>
+                            Exploring the distribution of average time spent per edge during navigation could also bring some insight.
+                            The presence of outliers in this datapoints may give indicators of any trouble the players might have had.
+                        </p>
+                    </li>
+                    <li>
+                        <h4>
+                            The player performance
+                        </h4>
+                        <p>
+                            This feature integrates several key factors: the average ratio between the user's path and the shortest path to the target article,
+                            the proportion of completed versus incomplete paths, and the average time spent on a page. Additionally,
+                            it considers the average time taken before a player decides to abandon the path.
+                            This feature aims to determine which of these elements are most indicative of a player's skill and effectiveness.
+                        </p>
+                    </li>
+                </ul>
+        </div>
         </section>
 
         <section class="content" id="section3">
-            <h2>Section 3</h2>
-            <p>Section 3 content...</p>
-            <img src="src/cluster.png" alt="cluster">
+            <div class="item">
+            <h2>But one can also think of more clever and more sophisticated features!</h2>
+            <ul>
+                <li>
+                    <h4>
+                        The position of the following clicked link on the article
+                    </h4>
+                    <p>
+                        This feature could bring insight into whether players scroll to find a word that popped into their heads, or let their search be guided by the options under their sight,
+                        that is the first links visible on the article.
+                    </p>
+                </li>
+                <li>
+                    <h4>
+                        The graph properties of the articles within Wikipedia
+                    </h4>
+                    <p>
+                        Thanks to this feature, and using well-known measures such as degree, local clustering, and centrality,
+                        we can assess the properties of a given article within the graph. We can then relate these to player paths directly and use them as features for the clustering.
+                    </p>
+                </li>
+                <li>
+                    <h4>
+                        The path degree
+                    </h4>
+                    <p>
+                        In addition, in an attempt to quantify the strategy of the users, we can look at the degree distribution within a path,
+                        take the maximum and fit a line (max. not included) before and after said maximum to one of the graph measures mentioned previously within the path.
 
+                        This lets us see how much a player increases or decreases certain measures along the path;
+                        it would for example be expected that a good player would have a sharply positive slope in page degree before the maximum (finding a hub from the start)
+                        and then a sharply negative slope once they hone in to their target.
+                    </p>
+                </li>
+                <li>
+                    <h4>
+                        The semantic similarity metric
+                    </h4>
+                    <p>
+                        This feature could be applied to evaluate path difficulties and compare them to player ratings.
+                        What sort of link is there between two related or unrelated articles? Comparison of per-edge and per-path values may give different insights,
+                        although per path is likely more relevant.
+                </li>
+            </ul>
+        </div>
         </section>
     </div>
 
