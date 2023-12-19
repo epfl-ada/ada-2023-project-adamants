@@ -212,10 +212,6 @@ FEATURES_COLS_USED_FOR_CLUSTERING = [
     # "path_betweenness_slope_after",
     # "path_closeness_slope_before",
     # "path_closeness_slope_after",
-    "path_degree_abs_sum",
-    "path_clustering_abs_sum",
-    'path_degree_centrality_abs_sum',
-    'path_betweenness_abs_sum',
     'path_closeness_abs_sum'
 ]
 
@@ -230,10 +226,6 @@ COLS_REPLACE_NAN_WITH_MEAN = [ # cols where nan values are replaced with mean of
     # "path_betweenness_slope_after",
     # "path_closeness_slope_before",
     # "path_closeness_slope_after",
-    "path_degree_abs_sum",
-    "path_clustering_abs_sum",
-    'path_degree_centrality_abs_sum',
-    'path_betweenness_abs_sum',
     'path_closeness_abs_sum',
     "position_mean",
     "position_std",
