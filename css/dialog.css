@@ -1,0 +1,31 @@
+.scroll-dialog {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 500px;
+    background-color: white;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    padding: 15px;
+    border-radius: 10px;
+    z-index: 1000;
+    max-height: 400px; /* Or any appropriate height */
+    overflow-y: auto;
+}
+
+.avatar img {
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+}
+
+.no-scroll {
+    overflow: hidden; /* Hide scrollbars */
+}
+
+.hidden {
+    display: none;
+}

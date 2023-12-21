@@ -35,7 +35,8 @@ body{
   .interactive-plot{
     background-color: #476C9B;
     font-family: 'Open Sans', sans-serif;
-    border-radius: 50px;
+    border-radius: 20px;
+    border-color: none;
   }
 
   .content_container{

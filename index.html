@@ -6,8 +6,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/dialog.css">
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script src="js/home.js"></script>
+    <script src="js/dialog.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;700&display=swap');
       </style>
@@ -34,6 +36,18 @@
         <span class="dot" onclick="scrollToSection('section5')"></span>
         <span class="dot" onclick="scrollToSection('section6')"></span>
     </div>
+
+    <div id="scrollDialog" class="scroll-dialog hidden">
+        <div class="avatar">
+            <img src="/src/avatar_bob.png" alt="Avatar">
+        </div>
+        <div class="dialog-content" id="scrollDialogText">
+            <p>
+
+            </p>
+        </div>
+    </div>
+
     <div class="content_container">
 
         <section class="content" id="section1">
