@@ -1,7 +1,7 @@
 body{
   color: #000;
   font-family: 'Open Sans', sans-serif;
-  background-color: #C2D8B9;
+  background-color: #ADD9F4;
   font-size: 16px;
 }
 
@@ -24,7 +24,7 @@ body{
   }
   
   .dot.active {
-    background-color: #216869; /* Active dot color */
+    background-color: #476C9B; /* Active dot color */
     z-index: 2;  
   }
 
@@ -33,7 +33,7 @@ body{
   }
 
   .interactive-plot{
-    background-color: #576a50;
+    background-color: #476C9B;
     font-family: 'Open Sans', sans-serif;
     border-radius: 50px;
   }
@@ -76,9 +76,11 @@ body{
   .content .item p{
     font-size: 16px;
     font-weight: 400;
-    text-align: center;
-    width: 70%;
+    text-align: left;
+    width: auto;
   }
+
+
 
   .content .item .quote{
     font-size: 16px;
@@ -86,11 +88,21 @@ body{
     text-align: left;
     font-style: italic;
     width: 60%;
-    border: #216869;
+    border: #476C9B;
     border-style: solid;
     border-width: 0 0 0 5px;
     padding-left: 10px;
   } 
+
+  a.source{
+    font-size: 12px;
+    font-weight: 400;
+    text-align: left;
+    width: auto;
+    color: #101419;
+    text-decoration: none;
+    
+  }
 
   ul.features{
     list-style: none;
@@ -99,15 +111,33 @@ body{
     justify-content: center;
     align-items: left;
     gap: 10px;
+    width: 100%;
   }
 
   ul.features li{
     display: flex;
     flex-direction: row;
-    justify-content: space-between;
+    justify-content: space-evenly;
     align-items: center;
-    margin-left: 100px;
-    margin-right: 100px;
+    width: 40vw;
+    margin-left: calc(50% - 20vw);
+    gap: 10px;
+    border-radius: 20px;
+    border-style: solid;
+    border-color: #476C9B;
+    padding: 10px;
+  }
+
+  ul.features li div{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 2px;
+    background-color: #468C98;
+    border-radius: 20px;
+    padding: 10px;
+
   }
 
   ul.features img{
@@ -116,28 +146,47 @@ body{
   }
 
   .header {
-    padding: 10px 16px;
-    background: #C2D8B9;
-    height: 50%;
+    height: 100vh;
     color: #000;
     display: flex;
     flex-direction: column;
     justify-content:center;
     align-items:center;
-    margin-top: 20%;
-    margin-bottom: 20%;
-    z-index: 2;  
+    margin-bottom: 500px;
   }
 
-  .heading{
-    display: flex;
-    flex-direction: column;
-    justify-content:center;
-
-    gap: 20px;
+  .heading-image {
+    background-image: url("/src/adamant-1.jpg");
+    filter: blur(8px);
+    -webkit-filter: blur(8px);
+    top: 0;
+    height: 100%;
+    width: 100%;
+    background-position: top;
+    background-repeat: no-repeat;
+    background-size: cover;
+    overflow: hidden;
   }
-  .heading h1{
-    font-size: 40px;
+
+  .heading-text {
+    background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(0,0,0, 0.4); /* Black w/opacity/see-through */
+    color: white;
+    font-weight: bold;
+    border: 3px solid #f1f1f1;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 2;
+    width: 60%;
+    padding: 20px;
+    text-align: left;
+  }
+  .heading-text h1{
+    font-size: 35px;
+    text-transform: uppercase;
+    text-align: center;
   }
 
   
@@ -181,4 +230,67 @@ body{
       transform: translate(-10px, -10px);
     }
    
+  }
+
+  .cluster_container{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    margin-top: 20px;
+    padding: 10px;
+  }
+  
+  .cluster{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    width: 50%;
+    height: 35vh;
+    padding: 10px;
+    border-radius: 20px;
+    background-color: #468C98;
+  }
+
+  #cluster0{
+    background-color: steelblue;
+  }
+  #cluster1{
+    background-color: darkorange;
+  }
+  #cluster2{
+    background-color: forestgreen;
+  }
+  #cluster3{
+    background-color: firebrick;
+  }
+  #cluster4{
+    background-color: mediumpurple;
+  }
+
+
+  footer{
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    background-color: #ADD9F4;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    margin-top: 20px;
+    padding-bottom: 10px;
+  }
+  div.authors{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
   }

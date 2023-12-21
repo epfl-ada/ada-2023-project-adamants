@@ -2,6 +2,8 @@ document.addEventListener('DOMContentLoaded', function() {
   const sections = document.querySelectorAll('.content');
   const dots = document.querySelectorAll('.dot');
   const numSections = sections.length;
+  const footer = document.querySelector('footer');
+  const dotSlider = document.getElementById('dotSlider');
 
   function updateOpacityAndDots() {
     const middleOfScreen = window.innerHeight / 2 + window.scrollY;
@@ -20,6 +22,16 @@ document.addEventListener('DOMContentLoaded', function() {
         closestSectionIndex = index;
       }
     });
+
+    if (closestSectionIndex === 0) {
+      footer.style.opacity = 0;
+      dotSlider.style.opacity = 0;
+
+    }
+    else {
+      footer.style.opacity = 1;
+      dotSlider.style.opacity = 1;
+    }
 
     // Update dots
     dots.forEach((dot, index) => {

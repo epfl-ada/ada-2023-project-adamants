@@ -17,8 +17,9 @@
         AOS.init();
       </script>
     <section class="content header" id="home">
-        <div class="heading">
-            <h1>Have you ever gotten lost on Wikipedia ? This little game will ... </h1>
+        <div class="heading-image"></div>
+        <div class="heading-text">
+            <h1>Have you ever gotten lost on Wikipedia ? This little game will bring you back! </h1>
             <p>A Wikispeedia datastory</p>
             <div class="arrow" onclick="scrollToSection('section1')"></div>
         </div>
@@ -46,7 +47,7 @@
                     and unravels the intricate web of connections that bind Wikipedia's articles together.</div>
                 <h3>But what makes Bob either good or bad at this game?</h3>
                 <p>What strategies does Bob intuitively use to play Wikispeedia successfully? All in all, is Bob a good player?</p>
-                <img src="src/strategy.jpg" alt="strategy" style="height: 25%;">
+                <iframe src="src/strategy.gif" frameborder="0"></iframe>
                 <p>Answering these questions leads to an exploration of gameplay patterns, through analysing human navigation paths.
                     Analysing player strategies in the Wikispeedia game and assessing correlations with semantic content.
                     Extracting features from player path data will allow for unravelling and analysing of the different strategies used by the players.
@@ -189,7 +190,7 @@
                 </div>
                     <img src="src/figures/leiden/histogramms/path_closeness_abs_sum_histogram.png" alt="path_closeness_absolute_sum_histogram">                
                     <li>
-                    <div
+                    <div>
                     <h4>
                         The semantic similarity metric
                     </h4>
@@ -219,34 +220,98 @@
         </section>
         <section class="content" id="section4">
            <div class="item">
-                <h2>PCA and Correlation</h2>
-                <h4>PCA</h4>
-                <img src="src/figures/leiden/pca_explained_variance.png" alt="pca_explained_variance">
                 <p>
-                    We will keep only the 7 first dimensions as they explain most of the variance compared to further components.
+                    Once features have been extracted, it’s time for clustering. We performed clustering to validate that we achieve a meaningful set of latent variables for player paths,
+                    in addition to being able to classify each type of player. <br>
+                    We tested many clustering techniques and chose the Leiden clustering method, which works best for our data.
                 </p>
-                <h4>Correlation</h4>
-                <img src="src/figures/leiden/correlation.png" alt="correlation">
+                <p class="quote">
+                    The Leiden algorithm is a clustering method that is an improved version of the Louvain algorithm. It aims to identify cohesive groups or clusters within a larger network 
+                    by optimizing the network's modularity, which measures the strength of division into communities. 
+                    The Leiden algorithm computes a clustering on a KNN graph obtained from the PC reduced expression space. It starts by assigning each node in the network to its own cluster,
+                    which forms the initial partition. It then iterates through each node, considering moving it to a neighbouring cluster to see if it improves the network's modularity.
+                    This process continues until no further improvements can be made, resulting in a refined partition of the network where nodes in the same cluster are more connected to each
+                    other than to nodes in other clusters. 
+                    Leiden creates clusters by considering the number of links between nodes in a cluster versus the overall expected number of links in the dataset.
+                    <a class="source" href="https://www.nature.com/articles/s41598-019-41695-z">nature.com</a>
+                </p>
                 <p>
-                    From this plot, we may notice some noteworthy correlations:
-                    <ul>
-                    <li>Time-related features (duration, average_time_on_page, coarse_mean_time) are correlated with each other, which is expected.</li>
-                    <li>Path length and ratio are correlated with each other, which makes sense as the ratio is the path length divided by the number of pages in the path.</li>
-                    </ul>
+                    The following heatmap shows the clustering results, with columns representing features and rows for each of the 5  clusters. 
+                    The values and colours represent the variation from the mean for each feature of each cluster.
+                </p>
+                <img src="src/figures/leiden/heatmap_features_means_per_cluster.png" alt="histograms_features_colored_by_cluster">
+                <p>
+                    The semantic similarity feature doesn’t seem to vary too much across clusters. This can be interpreted in the following way: the performance and strategies of the players do
+                    not depend too much on the initial and target articles. 
+                    Simply put, the words and their meaning are more or less alike independently of their clusters.
+                </p>
+                <p>
+                    Right away we notice some clusters are very distinct. For others, it’s less clear. Let’s dive in cluster by cluster, shall we?!
+                </p>
                 </div>
         </section>
 
         <section class="content" id="section5">
             <div class="item">
-                <h2>Clustering</h2>
+                <h2>
+                    The clusters
+                </h2>
+                <div class="cluster_container">
+                    <div class="cluster" id="cluster0">
+                        <h4>The slow (naturally bad) ones</h4>
+                        <p>
+                            They are relatively slow, do not backtrack, click lower on the article, but this varies, stay a while on each page (the most amount),
+                            have a high ratio (one of the worst)
+                        </p>
+                    </div>
+                    <div class="cluster" id="cluster1">
+                        <h4>The short/fast ones</h4>
+                        <p>
+                            They are very quick, click early on the page most times, and ratio so good because they do not finish most of their games:
+                            ( so ratio = user path/ shortest path can be even greater than 1). Small ratio but bias, path length so short because they do not finish, 
+                            however they seem to reach hubs fast
+                        </p>
+                    </div>
+                    <div class="cluster" id="cluster2">
+                        <h4>The lucky (naturally good) ones</h4>
+                        <p>
+                            They are fast, do not backtrack, click on an early links most times, finish most times but do not with a perfect ratio, as they do not reach hubs fast.
+                        </p>
+                    </div>
+                    <div class="cluster" id="cluster3">
+                        <h4>The lost ones</h4>
+                        <p>
+                            They are slow, backtrack very frequently, have long paths, do not reach hubs easily (don’t play very well), and have an overall pretty bad ratio.
+                        </p>
+                    </div>
+                    <div class="cluster" id="cluster4">
+                        <h4>The experimented ones</h4>
+                        <p>
+                            They are fast, do not backtrack much, have done a lot of games before, and finish most of their games.
+                        </p>
+                    </div>
+                </div>
                 <p>
-                    Now we will find the differents clusters in our data in order to find in which cluster Bob is.<br>
-                    We use the leiden algorithm to find the clusters.<br>
+                    The figure below shows the number or paths or datapoints in each cluster.
                 </p>
-                <!-- HeatMap-->
-                <img src="src/figures/leiden/heatmap_features_means_per_cluster.png" alt="histograms_features_colored_by_cluster">
-                <!--Number path per cluster-->
                 <img src="src/figures/leiden/number_of_paths_per_cluster.png" alt="number_of_paths_per_cluster">
+                <p>
+                    Additionally, the two following figures show the distributions and boxplot of each feature coloured for each cluster.
+                    The information here is the same as discussed previously, but visualized in a different way.
+                </p>
+                <img src="src/figures/leiden/histograms_features_colored_by_cluster.png" alt="histograms_features_colored_by_cluster">
+                <img src="src/figures/leiden/boxplots_features_colored_by_cluster.png" alt="boxplot_features_colored_by_cluster">
+                
+                <p>
+                    In these results all timed-out games were removed. What happens if we leave them in? Well, as shown by the figure below, a 6th cluster is created.
+                </p>
+                <img src="src/figures/leiden_with_timeout/heatmap_features_means_per_cluster.png" alt="heatmap_features_means_per_cluster">
+                <p>
+                    By digging a little deeper, we notice that leaving them in simply created an additional cluster with nearly all timed-out games. 
+                    This makes sense many of our features depend on time, and so games with a time-out will be very different from other games in terms of time
+                    and will therefore form a separate cluster.
+                </p>
+                <img src="src/figures/leiden_with_timeout/number_of_timeouts_per_cluster.png" alt="number_of_timeouts_per_cluster">
                 <!--Umap-->
                 <iframe class="interactive-plot" src="src/figures/leiden/umap_leiden.html" height="600px" width="800px" frameborder="0"></iframe>
                 <!--Train set features-->
@@ -270,6 +335,28 @@
 
     </div>
 </body>
+<footer>
+    Datastory by:
+    <div class="authors">
+        <div class="author">
+            Cyril Achard
+        </div>
+        <div class="author">
+            David Revaz
+        </div>
+        <div class="author">
+            Laurent Brock
+
+        </div>
+        <div class="author">
+            Mathilde Morelli
+        </div>
+        <div class="author">
+            
+            Yves Paychère
+        </div>
+    </div>
+</footer>
 </html>
 
 <!-- <div class="item">
