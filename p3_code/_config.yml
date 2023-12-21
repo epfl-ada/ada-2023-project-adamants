@@ -4,7 +4,7 @@
 title: ADA - Milestone P2 - ADAmants
 author: Cyril, David, Laurent, Mathilde, Yves
 copyright: "2023"
-# logo: logo.png
+logo: res/logo_cropped.png
 
 # Force re-execution of notebooks on each build.
 # See https://jupyterbook.org/content/execute.html

@@ -7,6 +7,7 @@ import networkx as nx
 import matplotlib.pyplot as plt
 import seaborn as sns
 import pickle
+import re
 from functools import partial
 # from tqdm.notebook import tqdm
 from tqdm import tqdm
@@ -17,6 +18,8 @@ PATHS_FINISHED = (DATA_PATH / "paths_finished.tsv").resolve()
 PATHS_UNFINISHED = (DATA_PATH / "paths_unfinished.tsv").resolve()
 PATHS_PAIRS_FINISHED = (DATA_PATH / "../paths_finished_pairs.csv").resolve()
 PATHS_PAIRS_UNFINISHED = (DATA_PATH / "../paths_unfinished_pairs.csv").resolve()
+
+
 
 ##############
 # DATA UTILS #
@@ -236,6 +239,7 @@ COLS_LOG = [ # cols to apply log transformation
     "coarse_mean_time",
 ]
 
+
 def replace_nan_with_mean(df, cols):
     for col in cols:
         df[col] = df[col].fillna(df[col].mean())
@@ -255,3 +259,40 @@ def normalize_features(df, cols_log=COLS_LOG, cols_replace_nan_with_mean=COLS_RE
     # get the z-score of each features, to have them all on the same scale
     df = df.apply(lambda x: (x - x.mean()) / x.std())
     return df
+
+## PLOT UTILS ##
+
+def camel_to_snake(s):
+    """Goes from camelCase to snake_case"""
+    s = re.sub("(.)([A-Z][a-z]+)", r"\1_\2", s)
+    return re.sub("([a-z0-9])([A-Z])", r"\1_\2", s).lower()
+
+def get_feature_names_labels():
+    """Returns the feature names and labels for the clustering plots."""
+    feat_labels = FEATURES_COLS_USED_FOR_CLUSTERING
+    feat_labels = [camel_to_snake(x) for x in feat_labels]
+    # remove all underscores
+    feat_labels = [x.replace("_", " ") for x in feat_labels]
+    # cast letter in beginning to uppercase
+    feat_labels = [x[0].upper() + x[1:] for x in feat_labels]
+    return feat_labels
+
+def set_axis_style(axs, i, add_xlabel=True, add_ylabel=True):
+    feat_labels = get_feature_names_labels()
+    if add_xlabel:
+        axs[i].set_xlabel("Cluster", fontsize=12)
+    if add_ylabel:
+        try:
+            axs[i].set_ylabel(feat_labels[i], fontsize=12)
+        except:
+            pass
+    axs[i].patch.set_facecolor("#d3d3d3")
+    leg = axs[i].get_legend()
+    leg.get_frame().set_facecolor("#d3d3d3")
+    leg.set_title("Cluster")
+    leg_title = leg.get_title()
+    leg_title.set_color("black")
+    # change all legend text to black
+    [text.set_color("black") for text in leg.get_texts()]
+    
+    
