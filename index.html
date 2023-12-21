@@ -31,6 +31,7 @@
         <span class="dot" onclick="scrollToSection('section3')"></span>
         <span class="dot" onclick="scrollToSection('section4')"></span>
         <span class="dot" onclick="scrollToSection('section5')"></span>
+        <span class="dot" onclick="scrollToSection('section6')"></span>
     </div>
     <div class="content_container">
 
@@ -58,24 +59,32 @@
         <section class="content" id="section2">
             <div class="item">
             <h2>In-game behaviours</h2>
-                <ul>
+                <ul class="features">
                     <li>
-                        <h4>
-                            Duration of the path in seconds
-                        </h4>
-                        <p>
-                            This is the time taken by the player to complete the path.
-                        </p>
+                        <div>
+                            <h4>
+                                Duration of the path in seconds
+                            </h4>
+                            <p>
+                                This is the time taken by the player to complete the path.
+                            </p>
+                        </div>  
+                        <img  src="src/figures/leiden/histogramms/durationInSec_histogram.png" alt="durationInSec_histogram">
                     </li>
                     <li>
+                        <div>
                         <h4>
                             The number of backtracks
                         </h4>
                         <p>
                             This feature is the number of backtracks made by the player during the path.
                         </p>
+                    </div>
+                        <img src="src/figures/leiden/histogramms/backtrack_histogram.png" alt="backtrack_histogram">
+
                     </li>
                     <li>
+                        <div>
                         <h4>
                             The number of paths attempted by the player before the one played
                         </h4>
@@ -83,33 +92,44 @@
                             This feature informs us how much training the player had before he played the path recorded.
                             It is negatively correlated with the time taken to finish the path recorded, even though ~50% of the IP addresses appear only 1 time (heavily right-skewed distribution). 
                         </p>
+                    </div>
+                        <img src="src/figures/leiden/histogramms/numberOfPath_histogram.png" alt="numberOfPath_histogram">
                     </li>
                     <li>
+                        <div>
                         <h4>
-                            position mean
+                            Position mean
                         </h4>
                         <p>
-                           Lorem ipsum dolor sit amet consectetur adipisicing elit. Assumenda aut mollitia ipsa possimus a veniam vitae et modi, placeat impedit. Voluptatum dolorem tempore quam sint maxime, impedit ex blanditiis illum?
-                        </p>
+                            Character position of succeding clicked link on article page, averaged across all edges of path.</p>
+                        </div>
+                            <img src="src/figures/leiden/histogramms/position_mean_histogram.png" alt="position_mean_histogram">
                     </li>
                     <li>
+                        <div>
                         <h4>
-                            position std
+                            Position std
                         </h4>
                         <p>
-                           Lorem ipsum dolor sit amet consectetur, adipisicing elit. Incidunt, quas quo! Reiciendis ex suscipit necessitatibus pariatur repellendus laboriosam, nobis eum quae libero dolorum tenetur quo nam, amet facilis voluptas expedita?
-                        </p>
+                            Standard deviation of character position of succeding clicked link within a path.</p>
+                        </div>
+                            <img src="src/figures/leiden/histogramms/position_std_histogram.png" alt="position_std_histogram">
+                        
                     </li>
                     <li>
+                        <div>
                         <h4>
                             The path length
                         </h4>
                         <p>
                             Simple measure of number of edges in path (pages clicked on) from beginning to end. This also therefore contains player backtracks, which will increase the count of edges in path.
                         </p>
+                    </div>
+                        <img src="src/figures/leiden/histogramms/path_length_histogram.png" alt="path_length_histogram">
+                        
                     </li>  
                     <li>
-
+                        <div>
                         <h4>
                             The average time per edge 
                         </h4>
@@ -117,13 +137,21 @@
                             Exploring the distribution of average time spent per edge during navigation could also bring some insight.
                             The presence of outliers in this datapoints may give indicators of any trouble the players might have had.
                         </p>
+                    </div>
+                        <img src="src/figures/leiden/histogramms/average_time_on_page_histogram.png" alt="average_time_on_page_histogram">
+                        
                     </li>
                     <li>
+                        <div>
                         <h4>
                             The ratio between the user path length and the shortest path length
                         </h4>
                         <p>
                             This feature is the ratio between the length of the path taken by the player and the length of the shortest path between the start and end articles.
+                        </p>
+                    </div>
+                        <img src="src/figures/leiden/histogramms/ratio_histogram.png" alt="ratio_histogram">
+                        
                     </li>
                 </ul>
         </div>
@@ -132,8 +160,9 @@
         <section class="content" id="section3">
             <div class="item">
             <h2>But one can also think of more clever and more sophisticated features!</h2>
-            <ul>
+            <ul class="features">
                 <li>
+                    <div>
                     <h4>
                         The coarse mean time per edge
                     </h4>
@@ -141,8 +170,11 @@
                         Measure of amount of time, on average, that the player took to travel from one edge to another in the path. It is called "coarse" because it is a global measure, 
                         that does not take into account outlier edges like the median could. This is especially noticeable on paths where the player disconnected, for example.
                     </p>
+                </div>
+                    <img src="src/figures/leiden/histogramms/coarse_mean_time_histogram.png" alt="coarse_mean_time_histogram">
                 </li>
                 <li>
+                    <div>
                     <h4>
                         The path closeness absolute sum
                     </h4>
@@ -154,7 +186,10 @@
                         a specific page from there, i.e. the target page. Indeed, a good player is expected to have a strongly positive delta before the maximal degree page and a strongly
                         negative delta after it. We take the absolute value then sum them to have a single feature that aims at quantifying this behavior.
                     </p>
-                <li>
+                </div>
+                    <img src="src/figures/leiden/histogramms/path_closeness_abs_sum_histogram.png" alt="path_closeness_absolute_sum_histogram">                
+                    <li>
+                    <div
                     <h4>
                         The semantic similarity metric
                     </h4>
@@ -165,40 +200,24 @@
                          "semantically informative" relative positions. As such, the cosine similarity gives a measure of logical similarity of the words. 
                          A value of -1 represents opposite meanings / topics, around 0 means unrelated, and around 1 means highly similar meanings / topics. 
                          The mean of this is supposed to approximately capture how related topics globally were on a given path.
+                    </p>
+                </div>
+                    <img src="src/figures/leiden/histogramms/semantic_similarity_histogram.png" alt="semantic_similarity_histogram">
+
                 </li>
             </ul>
+            <p>
+                We can see that the features in the first column are very heavy tailed, for this reason we will apply a log transform to them.<br>
+                Taking the log of backtrack (2nd row first column) does not help (probably as it is discrete and has only a few different values).<br>
+                We will then normalize the features:
+                <ul>
+                    <li>We use z-score normalization</li>
+                    <li>NaN values in certain features are replaced by the mean</li>
+                </ul>
+            </p>
         </div>
         </section>
-
         <section class="content" id="section4">
-            <div class="item">
-                <h2>Let's have a look at the feature distribution</h2>
-                <div class="img-container">
-                    <img  src="src/figures/leiden/histogramms/durationInSec_histogram.png" alt="durationInSec_histogram">
-                    <img src="src/figures/leiden/histogramms/backtrack_histogram.png" alt="backtrack_histogram">
-                    <img src="src/figures/leiden/histogramms/numberOfPath_histogram.png" alt="numberOfPath_histogram">
-                    <img src="src/figures/leiden/histogramms/position_mean_histogram.png" alt="position_mean_histogram">
-                    <img src="src/figures/leiden/histogramms/position_std_histogram.png" alt="position_std_histogram">
-                    <img src="src/figures/leiden/histogramms/path_length_histogram.png" alt="path_length_histogram">
-                    <img src="src/figures/leiden/histogramms/average_time_on_page_histogram.png" alt="average_time_on_page_histogram">
-                    <img src="src/figures/leiden/histogramms/ratio_histogram.png" alt="ratio_histogram">
-                    <img src="src/figures/leiden/histogramms/coarse_mean_time_histogram.png" alt="coarse_mean_time_histogram">
-                    <img src="src/figures/leiden/histogramms/path_closeness_abs_sum_histogram.png" alt="path_closeness_absolute_sum_histogram">
-                    <img src="src/figures/leiden/histogramms/semantic_similarity_histogram.png" alt="semantic_similarity_histogram">
-                </div>
-                <p>
-                    We can see that the features in the first column are very heavy tailed, for this reason we will apply a log transform to them.<br>
-                    Taking the log of backtrack (2nd row first column) does not help (probably as it is discrete and has only a few different values).<br>
-                    We will then normalize the features:
-                    <ul>
-                        <li>We use z-score normalization</li>
-                        <li>NaN values in certain features are replaced by the mean</li>
-                    </ul>
-                </p>
-            </div>
-        </section>
-
-        <section class="content" id="section5">
            <div class="item">
                 <h2>PCA and Correlation</h2>
                 <h4>PCA</h4>
@@ -217,12 +236,38 @@
                 </div>
         </section>
 
-        <section class="content" id="section6">
+        <section class="content" id="section5">
             <div class="item">
                 <h2>Clustering</h2>
+                <p>
+                    Now we will find the differents clusters in our data in order to find in which cluster Bob is.<br>
+                    We use the leiden algorithm to find the clusters.<br>
+                </p>
+                <!-- HeatMap-->
+                <img src="src/figures/leiden/heatmap_features_means_per_cluster.png" alt="histograms_features_colored_by_cluster">
+                <!--Number path per cluster-->
+                <img src="src/figures/leiden/number_of_paths_per_cluster.png" alt="number_of_paths_per_cluster">
+                <!--Umap-->
+                <iframe class="interactive-plot" src="src/figures/leiden/umap_leiden.html" height="600px" width="800px" frameborder="0"></iframe>
+                <!--Train set features-->
 
             </div>
         </section>
+
+        <section class="content" id="section6">
+            <div class="item">
+                <!--Variability-->
+                <iframe src="src/figures/validation/clustroids_variability.html" frameborder="0" class="interactive-plot" height="600px" width="800px"></iframe>
+            </div>
+        </section>
+
+        <section class="content">
+            <div class="item">
+                <!--Features distributions across clusters-->
+
+            </div>
+        </section>
+
     </div>
 </body>
 </html>

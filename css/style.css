@@ -92,18 +92,27 @@ body{
     padding-left: 10px;
   } 
 
-  #section4 .img-container{
+  ul.features{
+    list-style: none;
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     justify-content: center;
-    align-items: center;
+    align-items: left;
     gap: 10px;
-    flex-wrap: wrap;
   }
 
-  #section4 .img-container img{
-    width: 400px;
-    height: 400px;
+  ul.features li{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    margin-left: 100px;
+    margin-right: 100px;
+  }
+
+  ul.features img{
+    width: 300px;
+    height: 300px;
   }
 
   .header {
