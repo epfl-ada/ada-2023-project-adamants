@@ -1,0 +1,5 @@
+format: jb-book
+root: README_p3
+chapters:
+- file: leiden_clustering
+- file: leiden_clustering_validation
