@@ -280,10 +280,10 @@ def get_feature_names_labels():
 def set_axis_style(axs, i, add_xlabel=True, add_ylabel=True):
     feat_labels = get_feature_names_labels()
     if add_xlabel:
-        axs[i].set_xlabel("Cluster", fontsize=12)
+        axs[i].set_xlabel("Cluster", fontsize=20)
     if add_ylabel:
         try:
-            axs[i].set_ylabel(feat_labels[i], fontsize=12)
+            axs[i].set_ylabel(feat_labels[i], fontsize=20)
         except:
             pass
     axs[i].patch.set_facecolor("#d3d3d3")
