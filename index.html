@@ -16,7 +16,7 @@
     <script>
         AOS.init();
       </script>
-    <section class="content active header" id="home">
+    <section class="content header" id="home">
         <div class="heading">
             <h1>Have you ever gotten lost on Wikipedia ? This little game will ... </h1>
             <p>A Wikispeedia datastory</p>
@@ -29,6 +29,8 @@
         <span class="dot" onclick="scrollToSection('section1')"></span>
         <span class="dot" onclick="scrollToSection('section2')"></span>
         <span class="dot" onclick="scrollToSection('section3')"></span>
+        <span class="dot" onclick="scrollToSection('section4')"></span>
+        <span class="dot" onclick="scrollToSection('section5')"></span>
     </div>
     <div class="content_container">
 
@@ -37,9 +39,10 @@
                 <h2>In the vast expanse of digital information, Wikipedia remains the greaetst collection of human knowledge</h2>
                 <p>This is the story of a regular guy named Bob.<br>
                 Bob is playing a little game called <b>Wikispeedia</b></p>
-                <div  class="quote">Wikispeedia is an online game where players have to reach a Wikipedia article from another, unrelated Wikipedia article, only by clicking links in the articles encountered.
-                    A condensed version of Wikipedia (4,604 articles) is used. Beyond mere entertainment, 
-                    Wikispeedia unveils a world where games meet semantics, and unravels the intricate web of connections that bind Wikipedia's articles together.</div>
+                <div  class="quote">Wikispeedia is an online game where players have to reach a Wikipedia article from another, unrelated Wikipedia article,
+                    only by clicking links in the articles encountered.
+                    A condensed version of Wikipedia (4,604 articles) is used. Beyond mere entertainment, Wikispeedia unveils a world where games meet semantics,
+                    and unravels the intricate web of connections that bind Wikipedia's articles together.</div>
                 <h3>But what makes Bob either good or bad at this game?</h3>
                 <p>What strategies does Bob intuitively use to play Wikispeedia successfully? All in all, is Bob a good player?</p>
                 <img src="src/strategy.jpg" alt="strategy" style="height: 25%;">
@@ -48,7 +51,7 @@
                     Extracting features from player path data will allow for unravelling and analysing of the different strategies used by the players.
                     We have quantitatively described in-game behaviours by newly derived features and assessed how these variables relate to semantic content. 
                     understanding the intricate nuances of interconnected information.</p>
-                </div>
+            </div>
         </section>
 
         
@@ -58,20 +61,18 @@
                 <ul>
                     <li>
                         <h4>
-                            Number of backtracks per path
+                            Duration of the path in seconds
                         </h4>
                         <p>
-                            This feature informs us on how players navigate through the depths of Wikipedia's articles. Is their path straightforward or more meandering ? 
-                            As intuitively expected, it is positively correlated with the rating given by the player and with the time taken to complete the path.
+                            This is the time taken by the player to complete the path.
                         </p>
                     </li>
                     <li>
                         <h4>
-                            The path length and player persistence
+                            The number of backtracks
                         </h4>
                         <p>
-                            This feature allows to investigate whether longer or more difficult paths are correlated with lower ratings and prompt players to abandon the game.
-                            It is in fact the case. 
+                            This feature is the number of backtracks made by the player during the path.
                         </p>
                     </li>
                     <li>
@@ -85,6 +86,31 @@
                     </li>
                     <li>
                         <h4>
+                            position mean
+                        </h4>
+                        <p>
+                           Lorem ipsum dolor sit amet consectetur adipisicing elit. Assumenda aut mollitia ipsa possimus a veniam vitae et modi, placeat impedit. Voluptatum dolorem tempore quam sint maxime, impedit ex blanditiis illum?
+                        </p>
+                    </li>
+                    <li>
+                        <h4>
+                            position std
+                        </h4>
+                        <p>
+                           Lorem ipsum dolor sit amet consectetur, adipisicing elit. Incidunt, quas quo! Reiciendis ex suscipit necessitatibus pariatur repellendus laboriosam, nobis eum quae libero dolorum tenetur quo nam, amet facilis voluptas expedita?
+                        </p>
+                    </li>
+                    <li>
+                        <h4>
+                            The path length
+                        </h4>
+                        <p>
+                            Simple measure of number of edges in path (pages clicked on) from beginning to end. This also therefore contains player backtracks, which will increase the count of edges in path.
+                        </p>
+                    </li>  
+                    <li>
+
+                        <h4>
                             The average time per edge 
                         </h4>
                         <p>
@@ -94,14 +120,10 @@
                     </li>
                     <li>
                         <h4>
-                            The player performance
+                            The ratio between the user path length and the shortest path length
                         </h4>
                         <p>
-                            This feature integrates several key factors: the average ratio between the user's path and the shortest path to the target article,
-                            the proportion of completed versus incomplete paths, and the average time spent on a page. Additionally,
-                            it considers the average time taken before a player decides to abandon the path.
-                            This feature aims to determine which of these elements are most indicative of a player's skill and effectiveness.
-                        </p>
+                            This feature is the ratio between the length of the path taken by the player and the length of the shortest path between the start and end articles.
                     </li>
                 </ul>
         </div>
@@ -113,49 +135,98 @@
             <ul>
                 <li>
                     <h4>
-                        The position of the following clicked link on the article
+                        The coarse mean time per edge
                     </h4>
                     <p>
-                        This feature could bring insight into whether players scroll to find a word that popped into their heads, or let their search be guided by the options under their sight,
-                        that is the first links visible on the article.
+                        Measure of amount of time, on average, that the player took to travel from one edge to another in the path. It is called "coarse" because it is a global measure, 
+                        that does not take into account outlier edges like the median could. This is especially noticeable on paths where the player disconnected, for example.
                     </p>
                 </li>
                 <li>
                     <h4>
-                        The graph properties of the articles within Wikipedia
+                        The path closeness absolute sum
                     </h4>
                     <p>
-                        Thanks to this feature, and using well-known measures such as degree, local clustering, and centrality,
-                        we can assess the properties of a given article within the graph. We can then relate these to player paths directly and use them as features for the clustering.
+                        As each page in the path has a closeness centrality associated to it from the full network of Wikipedia,
+                        this features is obtained by looking at the derivative of the closeness centrality of each page in the path (that is, the delta between the closeness centrality of a page
+                        and the previous one in the path) and summing the absolute value of these deltas before and after the maximal degree page in the path. 
+                        This is meant to quantify if the player is strongly looking for a hub page in the path, reaches it (as the maximal degree page is assumed to be a hub page) and then goesto 
+                        a specific page from there, i.e. the target page. Indeed, a good player is expected to have a strongly positive delta before the maximal degree page and a strongly
+                        negative delta after it. We take the absolute value then sum them to have a single feature that aims at quantifying this behavior.
                     </p>
-                </li>
-                <li>
-                    <h4>
-                        The path degree
-                    </h4>
-                    <p>
-                        In addition, in an attempt to quantify the strategy of the users, we can look at the degree distribution within a path,
-                        take the maximum and fit a line (max. not included) before and after said maximum to one of the graph measures mentioned previously within the path.
-
-                        This lets us see how much a player increases or decreases certain measures along the path;
-                        it would for example be expected that a good player would have a sharply positive slope in page degree before the maximum (finding a hub from the start)
-                        and then a sharply negative slope once they hone in to their target.
-                    </p>
-                </li>
                 <li>
                     <h4>
                         The semantic similarity metric
                     </h4>
                     <p>
-                        This feature could be applied to evaluate path difficulties and compare them to player ratings.
-                        What sort of link is there between two related or unrelated articles? Comparison of per-edge and per-path values may give different insights,
-                        although per path is likely more relevant.
+                        This is a measure of the average similarity between two successive terms in the given path. 
+                        The feature is calculated by computing the cosine similarity (normalised dot product) between embeddings (one-hot vectors projected to a lower dimensionality subspace)
+                         given by a sentence transformer, which is a model specifically trained in order to give embeddings which have "semantically relevant" / 
+                         "semantically informative" relative positions. As such, the cosine similarity gives a measure of logical similarity of the words. 
+                         A value of -1 represents opposite meanings / topics, around 0 means unrelated, and around 1 means highly similar meanings / topics. 
+                         The mean of this is supposed to approximately capture how related topics globally were on a given path.
                 </li>
             </ul>
         </div>
         </section>
+
+        <section class="content" id="section4">
+            <div class="item">
+                <h2>Let's have a look at the feature distribution</h2>
+                <div class="img-container">
+                    <img  src="src/figures/leiden/histogramms/durationInSec_histogram.png" alt="durationInSec_histogram">
+                    <img src="src/figures/leiden/histogramms/backtrack_histogram.png" alt="backtrack_histogram">
+                    <img src="src/figures/leiden/histogramms/numberOfPath_histogram.png" alt="numberOfPath_histogram">
+                    <img src="src/figures/leiden/histogramms/position_mean_histogram.png" alt="position_mean_histogram">
+                    <img src="src/figures/leiden/histogramms/position_std_histogram.png" alt="position_std_histogram">
+                    <img src="src/figures/leiden/histogramms/path_length_histogram.png" alt="path_length_histogram">
+                    <img src="src/figures/leiden/histogramms/average_time_on_page_histogram.png" alt="average_time_on_page_histogram">
+                    <img src="src/figures/leiden/histogramms/ratio_histogram.png" alt="ratio_histogram">
+                    <img src="src/figures/leiden/histogramms/coarse_mean_time_histogram.png" alt="coarse_mean_time_histogram">
+                    <img src="src/figures/leiden/histogramms/path_closeness_abs_sum_histogram.png" alt="path_closeness_absolute_sum_histogram">
+                    <img src="src/figures/leiden/histogramms/semantic_similarity_histogram.png" alt="semantic_similarity_histogram">
+                </div>
+                <p>
+                    We can see that the features in the first column are very heavy tailed, for this reason we will apply a log transform to them.<br>
+                    Taking the log of backtrack (2nd row first column) does not help (probably as it is discrete and has only a few different values).<br>
+                    We will then normalize the features:
+                    <ul>
+                        <li>We use z-score normalization</li>
+                        <li>NaN values in certain features are replaced by the mean</li>
+                    </ul>
+                </p>
+            </div>
+        </section>
+
+        <section class="content" id="section5">
+           <div class="item">
+                <h2>PCA and Correlation</h2>
+                <h4>PCA</h4>
+                <img src="src/figures/leiden/pca_explained_variance.png" alt="pca_explained_variance">
+                <p>
+                    We will keep only the 7 first dimensions as they explain most of the variance compared to further components.
+                </p>
+                <h4>Correlation</h4>
+                <img src="src/figures/leiden/correlation.png" alt="correlation">
+                <p>
+                    From this plot, we may notice some noteworthy correlations:
+                    <ul>
+                    <li>Time-related features (duration, average_time_on_page, coarse_mean_time) are correlated with each other, which is expected.</li>
+                    <li>Path length and ratio are correlated with each other, which makes sense as the ratio is the path length divided by the number of pages in the path.</li>
+                    </ul>
+                </div>
+        </section>
+
+        <section class="content" id="section6">
+            <div class="item">
+                <h2>Clustering</h2>
+
+            </div>
+        </section>
     </div>
-
-
 </body>
 </html>
+
+<!-- <div class="item">
+    <iframe class="interactive-plot" src="src/figures/validation/clustroids_variability.html" height="600px" width="800px"></iframe>
+</div> -->

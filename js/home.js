@@ -2,30 +2,42 @@ document.addEventListener('DOMContentLoaded', function() {
   const sections = document.querySelectorAll('.content');
   const dots = document.querySelectorAll('.dot');
   const numSections = sections.length;
-  document.querySelector('.content_container').style.height = `${numSections * 100}vh`;
 
-  window.scrollToSection = function(sectionId) {
-    const section = document.getElementById(sectionId);
-    const index = Array.from(sections).indexOf(section);
-    window.scrollTo(0, index * window.innerHeight);
-  }
-
-  window.addEventListener('scroll', function() {
-    const currentSection = Math.floor(window.scrollY / window.innerHeight);
+  function updateOpacityAndDots() {
+    const middleOfScreen = window.innerHeight / 2 + window.scrollY;
+    let closestSectionIndex = 0;
+    let minDistanceToMiddle = Number.MAX_VALUE;
 
     sections.forEach((section, index) => {
-      if (index === currentSection) {
-        section.classList.add('active');
-      } else {
-        section.classList.remove('active');
-      }
+      const sectionTop = section.offsetTop;
+      const sectionHeight = section.offsetHeight;
+      const sectionMid = sectionTop + sectionHeight / 2;
+      const distanceToMiddle = Math.abs(middleOfScreen - sectionMid);
 
-      if (index === currentSection) {
-        dots.forEach((dot) => dot.classList.remove('active'));
-        if (dots[index]) {
-          dots[index].classList.add('active');
-        }
+      // Check for closest section
+      if (distanceToMiddle < minDistanceToMiddle) {
+        minDistanceToMiddle = distanceToMiddle;
+        closestSectionIndex = index;
       }
     });
-  });
+
+    // Update dots
+    dots.forEach((dot, index) => {
+      if (index === closestSectionIndex) {
+        dot.classList.add('active');
+      } else {
+        dot.classList.remove('active');
+      }
+    });
+  }
+
+  window.addEventListener('scroll', updateOpacityAndDots);
+  updateOpacityAndDots(); // Initial update on page load
 });
+
+function scrollToSection(section) {
+  section = document.getElementById(section);
+  const sectionTop = section.offsetTop;
+  window.scrollTo(0, sectionTop);
+
+}
