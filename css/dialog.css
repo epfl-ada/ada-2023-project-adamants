@@ -16,6 +16,10 @@
     overflow-y: auto;
 }
 
+#section1{
+    height: 100vh;
+}
+
 .avatar img {
     width: 200px;
     height: 200px;

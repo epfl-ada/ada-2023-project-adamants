@@ -1,7 +1,10 @@
 body{
   color: #000;
   font-family: 'Open Sans', sans-serif;
-  background-color: #ADD9F4;
+  background-image:url("/src/background.jpeg");
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
   font-size: 16px;
 }
 
@@ -33,7 +36,6 @@ body{
   }
 
   .interactive-plot{
-    background-color: #476C9B;
     font-family: 'Open Sans', sans-serif;
     border-radius: 20px;
     border-color: none;
@@ -278,7 +280,6 @@ body{
     left: 0;
     bottom: 0;
     width: 100%;
-    background-color: #ADD9F4;
     text-align: center;
     display: flex;
     flex-direction: column;
