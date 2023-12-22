@@ -22,7 +22,7 @@
     <section class="content header" id="home">
         <div class="heading-image"></div>
         <div class="heading-text">
-            <h1>Have you ever gotten lost on Wikipedia ? This little game will bring you back! </h1>
+            <h1>Have you ever gotten lost on Wikipedia ? </h1>
             <p>A clustering datastory</p>
             <div class="arrow" onclick="scrollToSection('section1')"></div>
         </div>
@@ -53,12 +53,11 @@
 
         <!-- <section class="content" id="section1">
             <div class="item">
-                <h2>In the vast expanse of digital information, Wikipedia remains the greaetst collection of human knowledge</h2>
                 <p>This is the story of a regular guy named Bob.<br>
                 Bob is playing a little game called <b>Wikispeedia</b></p>
                 <div  class="quote">Wikispeedia is an online game where players have to reach a Wikipedia article from another, unrelated Wikipedia article,
                     only by clicking links in the articles encountered.
-                    A condensed version of Wikipedia (4,604 articles) is used. Beyond mere entertainment, Wikispeedia unveils a world where games meet semantics,
+                    Beyond mere entertainment, Wikispeedia unveils a world where games meet semantics,
                     and unravels the intricate web of connections that bind Wikipedia's articles together.</div>
                 <h3>But what makes Bob either good or bad at this game?</h3>
                 <p>What strategies does Bob intuitively use to play Wikispeedia successfully? All in all, is Bob a good player?</p>
@@ -74,15 +73,15 @@
         
         <section class="content" id="section1">
             <div class="item">
-            <h2>In-game behaviours</h2>
+            <h2>To describe in-game behaviours, we extracted several features. Let's start with the most intuitive ones!</h2>
                 <ul class="features">
                     <li>
                         <div>
                             <h4>
-                                Duration of the path in seconds
+                                The duration in seconds
                             </h4>
                             <p>
-                                This is the time taken by the player to complete the path.
+                                This is the time taken by the player to complete the path. This feature was directly provided by the dataset.
                             </p>
                         </div>  
                         <img  src="src/figures/leiden/histogramms/durationInSec_histogram.png" alt="durationInSec_histogram">
@@ -114,31 +113,11 @@
                     <li>
                         <div>
                         <h4>
-                            Position mean
-                        </h4>
-                        <p>
-                            Character position of succeding clicked link on article page, averaged across all edges of path.</p>
-                        </div>
-                            <img src="src/figures/leiden/histogramms/position_mean_histogram.png" alt="position_mean_histogram">
-                    </li>
-                    <li>
-                        <div>
-                        <h4>
-                            Position std
-                        </h4>
-                        <p>
-                            Standard deviation of character position of succeding clicked link within a path.</p>
-                        </div>
-                            <img src="src/figures/leiden/histogramms/position_std_histogram.png" alt="position_std_histogram">
-                        
-                    </li>
-                    <li>
-                        <div>
-                        <h4>
                             The path length
                         </h4>
                         <p>
-                            Simple measure of number of edges in path (pages clicked on) from beginning to end. This also therefore contains player backtracks, which will increase the count of edges in path.
+                            Simple measure of number of edges in path (pages clicked on) from beginning to end. 
+                            Does not contains player backtracks, and so counts the final version of player path.
                         </p>
                     </div>
                         <img src="src/figures/leiden/histogramms/path_length_histogram.png" alt="path_length_histogram">
@@ -150,20 +129,21 @@
                             The average time per edge 
                         </h4>
                         <p>
-                            Exploring the distribution of average time spent per edge during navigation could also bring some insight.
+                            Measure of amount of time, on average, that the player took to travel from one edge to another in the path. 
                             The presence of outliers in this datapoints may give indicators of any trouble the players might have had.
                         </p>
                     </div>
-                        <img src="src/figures/leiden/histogramms/average_time_on_page_histogram.png" alt="average_time_on_page_histogram">
-                        
+                        <img src="src/figures/leiden/histogramms/coarse_mean_time_histogram.png" alt="coarse_mean_time_histogram">
+
                     </li>
                     <li>
                         <div>
                         <h4>
-                            The ratio between the user path length and the shortest path length
+                            The ratio 
                         </h4>
                         <p>
                             This feature is the ratio between the length of the path taken by the player and the length of the shortest path between the start and end articles.
+                            This feature gives us a measure of how well the players perform.
                         </p>
                     </div>
                         <img src="src/figures/leiden/histogramms/ratio_histogram.png" alt="ratio_histogram">
@@ -180,14 +160,23 @@
                 <li>
                     <div>
                     <h4>
-                        The coarse mean time per edge
+                        Position mean
                     </h4>
                     <p>
-                        Measure of amount of time, on average, that the player took to travel from one edge to another in the path. It is called "coarse" because it is a global measure, 
-                        that does not take into account outlier edges like the median could. This is especially noticeable on paths where the player disconnected, for example.
-                    </p>
-                </div>
-                    <img src="src/figures/leiden/histogramms/coarse_mean_time_histogram.png" alt="coarse_mean_time_histogram">
+                        Character position of succeding clicked link on article page, averaged across all edges of path.</p>
+                    </div>
+                        <img src="src/figures/leiden/histogramms/position_mean_histogram.png" alt="position_mean_histogram">
+                </li>
+                <li>
+                    <div>
+                    <h4>
+                        Position std
+                    </h4>
+                    <p>
+                        Standard deviation of character position of succeding clicked link within a path.</p>
+                    </div>
+                        <img src="src/figures/leiden/histogramms/position_std_histogram.png" alt="position_std_histogram">
+                    
                 </li>
                 <li>
                     <div>
@@ -196,9 +185,9 @@
                     </h4>
                     <p>
                         As each page in the path has a closeness centrality associated to it from the full network of Wikipedia,
-                        this features is obtained by looking at the derivative of the closeness centrality of each page in the path (that is, the delta between the closeness centrality of a page
-                        and the previous one in the path) and summing the absolute value of these deltas before and after the maximal degree page in the path. 
-                        This is meant to quantify if the player is strongly looking for a hub page in the path, reaches it (as the maximal degree page is assumed to be a hub page) and then goesto 
+                        this features is obtained by looking at the derivative of the closeness centrality of each page in the path 
+                        and summing the absolute value of these deltas before and after the maximal degree page in the path. 
+                        This is meant to quantify if the player is strongly looking for a hub page in the path, reaches it (as the maximal degree page is assumed to be a hub page) and then goes to 
                         a specific page from there, i.e. the target page. Indeed, a good player is expected to have a strongly positive delta before the maximal degree page and a strongly
                         negative delta after it. We take the absolute value then sum them to have a single feature that aims at quantifying this behavior.
                     </p>
@@ -212,10 +201,10 @@
                     <p>
                         This is a measure of the average similarity between two successive terms in the given path. 
                         The feature is calculated by computing the cosine similarity (normalised dot product) between embeddings (one-hot vectors projected to a lower dimensionality subspace)
-                         given by a sentence transformer, which is a model specifically trained in order to give embeddings which have "semantically relevant" / 
-                         "semantically informative" relative positions. As such, the cosine similarity gives a measure of logical similarity of the words. 
-                         A value of -1 represents opposite meanings / topics, around 0 means unrelated, and around 1 means highly similar meanings / topics. 
-                         The mean of this is supposed to approximately capture how related topics globally were on a given path.
+                        given by a sentence transformer, which is a model specifically trained in order to give embeddings which have "semantically relevant" / 
+                        "semantically informative" relative positions. As such, the cosine similarity gives a measure of logical similarity of the words. 
+                        A value of -1 represents opposite meanings / topics, around 0 means unrelated, and around 1 means highly similar meanings / topics. 
+                        The mean of this is supposed to approximately capture how related topics globally were on a given path.
                     </p>
                 </div>
                     <img src="src/figures/leiden/histogramms/semantic_similarity_histogram.png" alt="semantic_similarity_histogram">
@@ -241,8 +230,10 @@
                     We tested many clustering techniques and chose the Leiden clustering method, which works best for our data.
                 </p>
                 <p class="quote">
-                    The Leiden algorithm is a clustering method that is an improved version of the Louvain algorithm. It aims to identify cohesive groups or clusters within a larger network 
+                    The Leiden algorithm is a clustering method that is an improved version of the Louvain algorithm. 
+                    It aims to identify cohesive groups or clusters within a larger network 
                     by optimizing the network's modularity, which measures the strength of division into communities. 
+                    <br>
                     The Leiden algorithm computes a clustering on a KNN graph obtained from the PC reduced expression space. It starts by assigning each node in the network to its own cluster,
                     which forms the initial partition. It then iterates through each node, considering moving it to a neighbouring cluster to see if it improves the network's modularity.
                     This process continues until no further improvements can be made, resulting in a refined partition of the network where nodes in the same cluster are more connected to each
@@ -256,12 +247,13 @@
                 </p>
                 <img src="src/figures/leiden/heatmap_features_means_per_cluster.png" alt="histograms_features_colored_by_cluster">
                 <p>
-                    The semantic similarity feature doesn’t seem to vary too much across clusters. This can be interpreted in the following way: the performance and strategies of the players do
-                    not depend too much on the initial and target articles. 
+                    The semantic similarity feature doesn’t seem to vary too much across clusters. 
+                    This can be interpreted in the following way: the performance and strategies of the players do
+                    not depend too much on the semantic meaning of the articles in their path. 
                     Simply put, the words and their meaning are more or less alike independently of their clusters.
                 </p>
                 <p>
-                    Right away we notice some clusters are very distinct. For others, it’s less clear. Let’s dive in cluster by cluster, shall we?!
+                    Right away we notice some clusters are very distinct. <br> For others, it’s less clear. <br> Let’s dive in cluster by cluster, shall we?!
                 </p>
                 </div>
         </section>
@@ -273,41 +265,59 @@
                 </h2>
                 <div class="cluster_container">
                     <div class="cluster" id="cluster0">
-                        <h4>The slow (naturally bad) ones</h4>
+                        <h4>The slow ones</h4>
                         <p>
-                            They are relatively slow, do not backtrack, click lower on the article, but this varies, stay a while on each page (the most amount),
-                            have a high ratio (one of the worst)
+                            The players contained in cluster 0 are very slow (with the second biggest durantionInSec value among all clusters, 0.4, and the worst coarse_mean_time value, 0.5).
+                            They do not backtrack, click links fairly down on the article (with the biggest position_mean feature mean across all clusters) but this varies (position_std = 0.5). 
+                            This habbit of searching for links further down on the article page might in part explain the slowness of these players.
+                            They also have a high ratio, one that is amongst the worst (ratio = 0.4).
                         </p>
                     </div>
                     <div class="cluster" id="cluster1">
-                        <h4>The short/fast ones</h4>
+                        <h4>The bosses</h4>
                         <p>
-                            They are very quick, click early on the page most times, and ratio so good because they do not finish most of their games:
-                            ( so ratio = user path/ shortest path can be even greater than 1). Small ratio but bias, path length so short because they do not finish, 
-                            however they seem to reach hubs fast
+                            The players contained in cluster 1 are very fast (durantionInSec = -0.8), they click on fairly high positionned links most times (position_mean = -0.3 and position_std = -0.8)
+                            Their path length and ratio are top of the list, with path_length = -1.1 and ratio = -1.2.  
+                            This seemed suspicious at first: we thought their low ratio was due to them not finishing most of their games and therefore creating unrealistically short paths.
+                            This however is not such a prominent bias, as the unfinished portion of games in this cluster actually only is of 1/3.
+                            Moreover, the path_closeness_abs_sum feature confirms that this cluster's players play very well: they reach hubs fast, with a path_closeness_abs_sum of 0.4, and the biggest one among clusters.
+                            Overall this cluster seems to contain either the boss players, or players that try one game quickly and don't finish it.
                         </p>
                     </div>
                     <div class="cluster" id="cluster2">
-                        <h4>The lucky (naturally good) ones</h4>
+                        <h4>The cautious ones</h4>
                         <p>
-                            They are fast, do not backtrack, click on an early links most times, finish most times but do not with a perfect ratio, as they do not reach hubs fast.
+                            The players contained in cluster 2 are fast (durantionInSec = -0.5, coarse_mean_time = -0.7), they do not backtrack, 
+                            and click on early links (position_mean = -0.5) most times (position_std = -0.4).
+                            They finish most times (finished_normalized = 0.3) but do not do so with a good ratio (ratio = 0.3), as they do not have a high path_closeness_abs_sum.
+                            When looking closer at samples from this cluster, the seem to at first reach hubs fast but then to slowly and cautiously go back down (which explains the low path_closeness_abs_sum), most likely to be sure to reach their target.
+                            Players from cluster 2 have a good intuition but are afraid to get lost.
                         </p>
                     </div>
                     <div class="cluster" id="cluster3">
                         <h4>The lost ones</h4>
                         <p>
-                            They are slow, backtrack very frequently, have long paths, do not reach hubs easily (don’t play very well), and have an overall pretty bad ratio.
+                            The players contained in cluster 3 are very slow overall (durationInSec = 0.9), but not so much on the average time they spend on a page (coarse_mean_time = 0.2). 
+                            This is explained by the fact that they backtrack VERY frequently (backtrack = 1.5).
+                            They also have the longest paths (path_length = 0.6), and this is not due to the backtrack as path _length is computed without considering backtracks. 
+                            This shows how backtracking isn't necessarly going to better player performance. 
+                            Players here also do not reach hubs easily, with the worst path_closeness_abs_sum value, 0.6; and they have an overall bad ratio (ratio = 0.4).
+                            Overall these players seem to have good intentious and to be meticoulous in their search of the next path, but without success. They just end up getting lost.
                         </p>
                     </div>
                     <div class="cluster" id="cluster4">
                         <h4>The experimented ones</h4>
                         <p>
-                            They are fast, do not backtrack much, have done a lot of games before, and finish most of their games.
+                            The players contained in cluster 4 are fairly fast (durationInSec = -0.2), and do not backtrack much (backtrack = -0.2).
+                            They have played a lot of games before (numberOfPath = 2.2), and finish a big portion of their games (with the biggest finished_normalized value across clusters, 0.4).
+                            They perform fairly, but not extraordinarily well (ratio = 0.2 and path_closeness_abs_sum = 0.1).
+                            They simply are experimented and easily able to finish their game.
                         </p>
                     </div>
                 </div>
                 <p>
-                    The figure below shows the number or paths or datapoints in each cluster.
+                    The figure below shows the number of paths or datapoints in each cluster. As we can see, there are few experimented players (cluster 4), and many slow players (cluster 1). 
+                    On an interesting note, the 'Boss' cluster (cluster 1) is quite large. However, this may again be explained by the fact this cluster might contain unfinished games of players who quickly tried Wkikspeedia.
                 </p>
                 <img src="src/figures/leiden/number_of_paths_per_cluster.png" alt="number_of_paths_per_cluster">
                 <p>
