@@ -1,5 +1,5 @@
 format: jb-book
-root: README_p3
+root: intro
 chapters:
 - file: data_loading
 - file: leiden_clustering
