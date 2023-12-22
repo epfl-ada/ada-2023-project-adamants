@@ -58,8 +58,8 @@ You will find our code in the following sections:
 
 ## Group contributions
 
-- Yves: backtrack et numberOfPath and clustering and stastical analysis
-- Mathilde: position et path length, site presentation and redaction
+- Yves: backtrack, numberOfPath, clustering and stastical analysis
+- Mathilde: position, path length, site presentation and redaction
 - Cyril: Graph measures features, initial data preprocessing, clustering validation, Jupyter book
 - David: ratio, site presentation and coding
 - Laurent: semantic similarity, coarse mean and clustering
