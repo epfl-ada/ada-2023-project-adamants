@@ -11,11 +11,17 @@
           border: 1px solid #dddddd;
           text-align: left;
           padding: 8px;
+          
         }
         
         tr:nth-child(even) {
           background-color: #dddddd;
+          opacity: 0.7;
         }
+        tr:nth-child(odd) {
+            background-color: #ffffff;
+            opacity: 0.7;
+          }
     </style>
     <meta charset="UTF-8">
     <title>Wikispeedia datastory</title>
@@ -99,7 +105,9 @@
                             The number of backtracks
                         </h4>
                         <p>
-                            This feature is the number of backtracks made by the player during the path.
+                            This feature is the number of backtracks made by the player during the path.  
+                            It can be used to inform us on how the player navigated its way from the starting page, and whether his path was straightforward or more meandering.
+
                         </p>
                     </div>
                         <img src="src/figures/leiden/histogramms/backtrack_histogram.png" alt="backtrack_histogram">
@@ -333,52 +341,18 @@
                 <img class="full-image" src="src/figures/leiden/histograms_features_colored_by_cluster.png" alt="histograms_features_colored_by_cluster">
                 <img class="full-image" src="src/figures/leiden/boxplots_features_colored_by_cluster.png" alt="boxplot_features_colored_by_cluster">
                 
-                <p>
-                    In these results all timed-out games were removed. What happens if we leave them in? Well, as shown by the figure below, a 6th cluster is created.
-                </p>
-                <img src="src/figures/leiden_with_timeout/heatmap_features_means_per_cluster.png" alt="heatmap_features_means_per_cluster">
-                <p>
-                    By digging a little deeper, we notice that leaving them in simply created an additional cluster with nearly all timed-out games. 
-                    This makes sense many of our features depend on time, and so games with a time-out will be very different from other games in terms of time
-                    and will therefore form a separate cluster.
-                </p>
-                <img src="src/figures/leiden_with_timeout/number_of_timeouts_per_cluster.png" alt="number_of_timeouts_per_cluster">
                 
-
-            </div>
-        </section>
-
-        <section class="content" id="section6">
-            <div class="item">
-                <h2>
-                    Validation
-                </h2>
                 <p>
-                    In order to check the Leiden clustering's robustness, we used 5-fold cross-validation.
-                    Due to the clusters not having a fixed ID across runs, we performed matching using the clustroids nearest
-                    to those in a given fold across other folds. Once this is done, we can plot the original clustroids and
-                    their nearest neighbors across folds, and see how close they are in the UMAP embedding space.
-                    From the following plot, we see they are quite close to each other !
-                </p>
-                <iframe src="src/figures/validation/clustroids_variability.html" frameborder="0" class="interactive-plot" height="600px" width="800px"></iframe>
-            </div>
-        </section>
-
-
-        <section class="content" id="section7">
-            <div class="item">
-                <h2>
-                    Conclusion
-                </h2>
-                <p>
-                    Overall, through this analysis of Wikispeedia data, we were able to cluster players into 5 groups. 
-                    Let's see how the differences between clusters affect the way players achieve the same goal.  
+                    Let's see, with a concrete example, how the differences between clusters affect the way players achieve the same goal.  
                     In the following table, players from different cluster are able to go from Google to God... but with very diverse <i>strategies</i>!
+                    As we can see, cluster 0 players indeed take fairly meandering paths, with very researched but not very efficient links. 
+                    Cluster 1 players are simply the best. Cluster 2 players finds a version of the right path very quickly but goes back down slowly.
+                    Finally, the cluster 3 players are completely lost, and constantly go back and forth; while cluster 4 players are visibly experimented.
                 </p>
                 <table>
                     <tr>
-                      <th>Path</th>
-                      <th>Cluster</th>
+                        <th>Path</th>
+                        <th>Cluster</th>
                     </tr>
                     <tr>
                         <td>Google > California > Arnold_Schwarzenegger > George_W._Bush > Religion > God </td>
@@ -424,16 +398,55 @@
                         <td>Google > United_States > Islam > God</td>
                         <td> 4 </td>
                     </tr>
-                                  
+                                    
                 </table>
+             
+
+
+
+
+
+
                 <p>
-                    <br>
-                    <br>
-                    <br>
-                    <br>
+                    In these results all timed-out games were removed. What happens if we leave them in? Well, as shown by the figure below, a 6th cluster is created.
                 </p>
+                <img src="src/figures/leiden_with_timeout/heatmap_features_means_per_cluster.png" alt="heatmap_features_means_per_cluster">
+                <p>
+                    By digging a little deeper, we notice that leaving them in simply created an additional cluster with nearly all timed-out games. 
+                    This makes sense many of our features depend on time, and so games with a time-out will be very different from other games in terms of time
+                    and will therefore form a separate cluster.
+                </p>
+                <img src="src/figures/leiden_with_timeout/number_of_timeouts_per_cluster.png" alt="number_of_timeouts_per_cluster">
+                
+
             </div>
         </section>
+
+        <section class="content" id="section6">
+            <div class="item">
+                <h2>
+                    Validation
+                </h2>
+                <p>
+                    In order to check the Leiden clustering's robustness, we used 5-fold cross-validation.
+                    Due to the clusters not having a fixed ID across runs, we performed matching using the clustroids nearest
+                    to those in a given fold across other folds. Once this is done, we can plot the original clustroids and
+                    their nearest neighbors across folds, and see how close they are in the UMAP embedding space.
+                    From the following plot, we see they are quite close to each other !
+                </p>
+                <iframe src="src/figures/validation/clustroids_variability.html" frameborder="0" class="interactive-plot" height="600px" width="800px"></iframe>
+            </div>
+        </section>
+
+        <p>
+            <br>
+            <br>
+            <br>
+            <br>
+        </p>
+
+
+        
 
     </div>
 </body>
