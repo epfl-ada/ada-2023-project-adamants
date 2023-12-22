@@ -6,7 +6,7 @@
 
 In this project milestone, we have completed an extended exploration and visualisation of our data based on the principles discussed in milestone 2.
 
-- From the features we previous gathered for milestone 2, we have tried multiple clustering methods, which we have visualised, compared, and then validated within [this Jupyter book](https://c-achard.github.io/ada-2023-project-adamants/README_p3.html) (which you might already be reading). All of the code used in order to perform our analysis, and its associated outputs / results can also be found within.
+- From the features we previous gathered for milestone 2, we have tried multiple clustering methods, which we have visualised, compared, and then validated within [this Jupyter book](https://c-achard.github.io/ada-2023-project-adamants/intro.html) (which you might already be reading). All of the code used in order to perform our analysis, and its associated outputs / results can also be found within.
 
 - We have created an interactive, story-based exploration of our findings in a [website-based](https://epfl-ada.github.io/ada-2023-project-adamants/) format. It summarises the essential components of our exploration and findings, in a fun and interesting way.
 
