@@ -95,16 +95,13 @@ body{
   }
 
   .content img{
-    max-width: 70%;
+    width: 50%;
   }
 
-  @media screen and (max-width: 1500px) {
-    .full-image{
-      max-width: 100% !important;
-      width: 100vw !important;
-    }
-    
+  .full-image{
+    width: 100vw !important;
   }
+
 
 
 
