@@ -55,3 +55,11 @@ You will find our code in the following sections:
 - {ref}`section:clustering-validation` : Assessement of the clustering robustness
 - {ref}`section:clustering-timeouts` : Leiden clustering with timeouts
 - {ref}`section:hierarchical-clustering` : Hierarchical clustering and other alternatives that were tested
+
+## Group contributions
+
+- Yves: backtrack et numberOfPath and clustering and stastical analysis
+- Mathilde: position et path length, site presentation and redaction
+- Cyril: Graph measures features, initial data preprocessing, clustering validation, Jupyter book
+- David: ratio, site presentation and coding
+- Laurent: semantic similarity, coarse mean and clustering
