@@ -251,56 +251,56 @@
                     <div class="cluster" id="cluster0">
                         <h4>The slow ones</h4>
                         <p>
-                            The players contained in cluster 0 are very slow (with the second biggest durantionInSec value among all clusters, 0.4, and the worst coarse_mean_time value, 0.5).
-                            They do not backtrack, click links fairly down on the article (with the biggest position_mean feature mean across all clusters) but this varies (position_std = 0.5). 
-                            This habbit of searching for links further down on the article page might in part explain the slowness of these players.
-                            They also have a high ratio, one that is amongst the worst (ratio = 0.4).
+                            The players contained in cluster 0 are very slow (with the second biggest durationInSec value among all clusters, 0.4, and the worst coarse_mean_time value, 0.5).<br>
+                            They do not backtrack, click links fairly low in the article (with the biggest position_mean feature mean across all clusters) but this varies (position_std = 0.5).<br>
+                            This habit of searching for links further down on the article page might in part explain the slowness of these players.<br>
+                            They also have a high ratio, one that is amongst the worst (ratio = 0.4).<br>
                         </p>
                     </div>
                     <div class="cluster" id="cluster1">
                         <h4>The bosses</h4>
                         <p>
-                            The players contained in cluster 1 are very fast (durantionInSec = -0.8), they click on fairly high positionned links most times (position_mean = -0.3 and position_std = -0.8)
-                            Their path length and ratio are top of the list, with path_length = -1.1 and ratio = -1.2.  
-                            This seemed suspicious at first: we thought their low ratio was due to them not finishing most of their games and therefore creating unrealistically short paths.
-                            This however is not such a prominent bias, as the unfinished portion of games in this cluster actually only is of 1/3.
-                            Moreover, the path_closeness_abs_sum feature confirms that this cluster's players play very well: they reach hubs fast, with a path_closeness_abs_sum of 0.4, and the biggest one among clusters.
-                            Overall this cluster seems to contain either the boss players, or players that try one game quickly and don't finish it.
+                            The players contained in cluster 1 are very fast (durantionInSec = -0.8), they click on fairly high-position links most times (position_mean = -0.3 and position_std = -0.8)<br>
+                            Their path length and ratio are top of the list, with path_length = -1.1 and ratio = -1.2.  <br>
+                            This seemed suspicious at first: we thought their low ratio was due to them not finishing most of their games and therefore creating unrealistically short paths.<br>
+                            This however is not such a prominent bias, as the unfinished portion of games in this cluster is actually only of 1/3.<br>
+                            Moreover, the path_closeness_abs_sum feature confirms that this cluster's players play very well: they reach hubs fast, with a path_closeness_abs_sum of 0.4, and the biggest one among clusters.<br>
+                            Overall this cluster seems to contain either the "boss" players, or players that try one game quickly and don't finish it.<br>
                         </p>
                     </div>
                     <div class="cluster" id="cluster2">
                         <h4>The cautious ones</h4>
                         <p>
-                            The players contained in cluster 2 are fast (durantionInSec = -0.5, coarse_mean_time = -0.7), they do not backtrack, 
-                            and click on early links (position_mean = -0.5) most times (position_std = -0.4).
-                            They finish most times (finished_normalized = 0.3) but do not do so with a good ratio (ratio = 0.3), as they do not have a high path_closeness_abs_sum.
-                            When looking closer at samples from this cluster, the seem to at first reach hubs fast but then to slowly and cautiously go back down (which explains the low path_closeness_abs_sum), most likely to be sure to reach their target.
-                            Players from cluster 2 have a good intuition but are afraid to get lost.
+                            The players contained in cluster 2 are fast (durationInSec = -0.5, coarse_mean_time = -0.7), they do not backtrack,
+                            and click on early links (position_mean = -0.5) most times (position_std = -0.4).<br>
+                            They finish most times (finished_normalized = 0.3) but do not do so with a good ratio (ratio = 0.3), and they do not have a high path_closeness_abs_sum.<br>
+                            When looking closer at samples from this cluster, they seem to at first reach hubs fast but then to slowly and cautiously go back down (which explains the low path_closeness_abs_sum), most likely to be sure to reach their target.<br>
+                            Players from cluster 2 have a good intuition but are afraid to get lost.<br>
                         </p>
                     </div>
                     <div class="cluster" id="cluster3">
                         <h4>The lost ones</h4>
                         <p>
-                            The players contained in cluster 3 are very slow overall (durationInSec = 0.9), but not so much on the average time they spend on a page (coarse_mean_time = 0.2). 
-                            This is explained by the fact that they backtrack VERY frequently (backtrack = 1.5).
-                            They also have the longest paths (path_length = 0.6), and this is not due to the backtrack as path _length is computed without considering backtracks. 
-                            This shows how backtracking isn't necessarly going to better player performance. 
-                            Players here also do not reach hubs easily, with the worst path_closeness_abs_sum value, 0.6; and they have an overall bad ratio (ratio = 0.4).
-                            Overall these players seem to have good intentious and to be meticoulous in their search of the next path, but without success. They just end up getting lost.
+                            The players contained in cluster 3 are very slow overall (durationInSec = 0.9), but not so much on the average time they spend on a page (coarse_mean_time = 0.2). <br>
+                            This is explained by the fact that they backtrack VERY frequently (backtrack = 1.5).<br>
+                            They also have the longest paths (path_length = 0.6), and this is not due to the backtrack as path _length is computed without considering backtracks. <br>
+                            This shows how backtracking isn't necessarly going to improve player performance. <br>
+                            Players here also do not reach hubs easily, with the worst path_closeness_abs_sum value, -0.6; and they have an overall poor ratio (ratio = 0.4).<br>
+                            All in all, these players seem to have good intentious and to be meticoulous in their search of the next path, but without success. They just end up getting lost.<br>
                         </p>
                     </div>
                     <div class="cluster" id="cluster4">
-                        <h4>The experimented ones</h4>
+                        <h4>The experienced ones</h4>
                         <p>
-                            The players contained in cluster 4 are fairly fast (durationInSec = -0.2), and do not backtrack much (backtrack = -0.2).
-                            They have played a lot of games before (numberOfPath = 2.2), and finish a big portion of their games (with the biggest finished_normalized value across clusters, 0.4).
-                            They perform fairly, but not extraordinarily well (ratio = 0.2 and path_closeness_abs_sum = 0.1).
-                            They simply are experimented and easily able to finish their game.
+                            The players contained in cluster 4 are fairly fast (durationInSec = -0.2), and do not backtrack much (backtrack = -0.2).<br>
+                            They have played a lot of games before (numberOfPath = 2.2), and finish a big portion of their games (with the biggest finished_normalized value across clusters, 0.4).<br>
+                            They perform fairly, but not extraordinarily well (ratio = 0.2 and path_closeness_abs_sum = 0.1).<br>
+                            They simply are experienced and able to easily finish their game.<br>
                         </p>
                     </div>
                 </div>
                 <p>
-                    The figure below shows the number of paths or datapoints in each cluster. As we can see, there are few experimented players (cluster 4), and many slow players (cluster 1). 
+                    The figure below shows the number of paths or datapoints in each cluster. As we can see, there are few experienced players (cluster 4), and many slow players (cluster 1). 
                     On an interesting note, the 'Boss' cluster (cluster 1) is quite large. However, this may again be explained by the fact this cluster might contain unfinished games of players who quickly tried Wkikspeedia.
                 </p>
                 <img src="src/figures/leiden/number_of_paths_per_cluster.png" alt="number_of_paths_per_cluster">
