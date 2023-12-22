@@ -1,3 +1,4 @@
+
 document.addEventListener('DOMContentLoaded', function() {
   const sections = document.querySelectorAll('.content');
   const dots = document.querySelectorAll('.dot');
@@ -53,3 +54,4 @@ function scrollToSection(section) {
   window.scrollTo(0, sectionTop);
 
 }
+

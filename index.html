@@ -7,6 +7,7 @@
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/dialog.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script src="js/home.js"></script>
     <script src="js/dialog.js"></script>
@@ -47,12 +48,12 @@
             </p>
         </div>
     </div>
+    <div id="dialogBackground" class="dialog-background hidden"></div>
+    <div class="content_container" id="content">
 
-    <div class="content_container">
-
-        <section class="content" id="section1">
+        <!-- <section class="content" id="section1">
             <div class="item">
-                <!-- <h2>In the vast expanse of digital information, Wikipedia remains the greaetst collection of human knowledge</h2>
+                <h2>In the vast expanse of digital information, Wikipedia remains the greaetst collection of human knowledge</h2>
                 <p>This is the story of a regular guy named Bob.<br>
                 Bob is playing a little game called <b>Wikispeedia</b></p>
                 <div  class="quote">Wikispeedia is an online game where players have to reach a Wikipedia article from another, unrelated Wikipedia article,
@@ -67,11 +68,11 @@
                     Extracting features from player path data will allow for unravelling and analysing of the different strategies used by the players.
                     We have quantitatively described in-game behaviours by newly derived features and assessed how these variables relate to semantic content. 
                     understanding the intricate nuances of interconnected information.</p>
-            </div> -->
-        </section>
+            </div> 
+        </section> -->
 
         
-        <section class="content" id="section2">
+        <section class="content" id="section1">
             <div class="item">
             <h2>In-game behaviours</h2>
                 <ul class="features">
@@ -172,7 +173,7 @@
         </div>
         </section>
 
-        <section class="content" id="section3">
+        <section class="content" id="section2">
             <div class="item">
             <h2>But one can also think of more clever and more sophisticated features!</h2>
             <ul class="features">
@@ -232,7 +233,7 @@
             </p>
         </div>
         </section>
-        <section class="content" id="section4">
+        <section class="content" id="section3">
            <div class="item">
                 <p>
                     Once features have been extracted, it’s time for clustering. We performed clustering to validate that we achieve a meaningful set of latent variables for player paths,
@@ -265,7 +266,7 @@
                 </div>
         </section>
 
-        <section class="content" id="section5">
+        <section class="content" id="section4">
             <div class="item">
                 <h2>
                     The clusters
