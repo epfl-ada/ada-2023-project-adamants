@@ -295,4 +295,27 @@ def set_axis_style(axs, i, add_xlabel=True, add_ylabel=True):
     # change all legend text to black
     [text.set_color("black") for text in leg.get_texts()]
     
-    
+def format_3d_plot(fig):
+    fig.update_layout({"plot_bgcolor": "#14181e", "paper_bgcolor": "#14181e"})
+    fig.update_layout(font_color="white")
+    fig.update_layout(scene=dict(xaxis=dict(showticklabels=False), yaxis=dict(showticklabels=False), zaxis=dict(showticklabels=False)))
+    fig.update_layout(legend_title_text="Cluster")
+    fig.update_layout(legend = dict(bgcolor = 'rgba(0,0,0,0)'))
+    fig.update_layout(scene=dict(xaxis_title="UMAP 1", yaxis_title="UMAP 2", zaxis_title="UMAP 3"))
+    fig.update_layout(scene = dict(
+        xaxis = dict(
+                backgroundcolor="rgba(0, 0, 0,0)",
+                # gridcolor="rgba(0, 0, 0,0)", # gridcolor is for logo
+                showbackground=True,
+                zerolinecolor="white",),
+        yaxis = dict(
+            backgroundcolor="rgba(0, 0, 0,0)",
+            # gridcolor="rgba(0, 0, 0,0)",
+            showbackground=True,
+            zerolinecolor="white"),
+        zaxis = dict(
+            backgroundcolor="rgba(0, 0, 0,0)",
+            # gridcolor="rgba(0, 0, 0,0)",
+            showbackground=True,
+            zerolinecolor="white",),),
+    )

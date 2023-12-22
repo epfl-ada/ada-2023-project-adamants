@@ -1,6 +1,7 @@
 format: jb-book
 root: README_p3
 chapters:
+- file: data_loading
 - file: leiden_clustering
 - file: leiden_clustering_validation
 - file: leiden_clustering_w_timeouts
