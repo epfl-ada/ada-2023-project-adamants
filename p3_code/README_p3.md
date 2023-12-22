@@ -4,6 +4,10 @@
 
 ## Deliverables
 
+- Data story website : [LINK](https://epfl-ada.github.io/ada-2023-project-adamants)
+- Jupyter Book for code and figures : *YOU ARE HERE*
+- Repository : [LINK](https://github.com/epfl-ada/ada-2023-project-adamants)
+
 <!-- TODO :
 - add deliverables link / repo structure
 - summarize the data story and explain what the code is for and where to find it
