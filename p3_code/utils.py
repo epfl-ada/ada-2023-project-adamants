@@ -11,6 +11,7 @@ import re
 from functools import partial
 # from tqdm.notebook import tqdm
 from tqdm import tqdm
+from scipy.stats import ttest_ind
 
 DATA_PATH = Path.cwd() / "../data/wikispeedia_paths-and-graph/"
 SHORTEST_PATH = (DATA_PATH / "shortest-path-distance-matrix.txt").resolve()
@@ -319,3 +320,48 @@ def format_3d_plot(fig):
             showbackground=True,
             zerolinecolor="white",),),
     )
+
+def print_test_means_differences(hypotheses, df, alpha=0.05, verbose=False):
+    """
+    Prints the results of a hypothesis test for mean differences between clusters.
+
+    Args:
+        hypotheses (list): A list of tuples containing cluster, feature, and if we want to test if the mean is greater (>) or lower (<) for each hypothesis.
+        df (pandas.DataFrame): The DataFrame containing the data.
+        alpha (float, optional): The significance level for the hypothesis test. Defaults to 0.05.
+        verbose (bool, optional): If True, prints detailed information about the hypothesis test. Defaults to False.
+    """
+    for cluster, feature, sign in hypotheses:
+        cluster_data = df[df["cluster"] == cluster]
+        other_clusters_data = df[df["cluster"] != cluster]
+        cluster_mean = cluster_data[feature].mean()
+        other_clusters_mean = other_clusters_data[feature].mean()
+        if sign == ">" and cluster_mean < other_clusters_mean:
+            print(f"The cluster {cluster} is not superior to the other clusters in the feature {feature}")
+            continue
+        if sign == "<" and cluster_mean > other_clusters_mean:
+            print(f"The cluster {cluster} is not inferior to the other clusters in the feature {feature}")
+            continue
+        cluster_std = cluster_data[feature].var()
+        other_clusters_std = other_clusters_data[feature].var()
+        # we will use the rule that the variance of the groups are  unequal if the ratio of the two variances is greater than 4 or smaller than 1/4
+        equal_var = cluster_std / other_clusters_std < 4 and other_clusters_std / cluster_std < 4
+        t, p = ttest_ind(cluster_data[feature], other_clusters_data[feature], equal_var=equal_var)
+        if p < alpha:
+            if sign == ">":
+                if verbose:
+                    print(f"We can reject the null hypothesis that the cluster {cluster} has the same mean of {feature} at {alpha*100}% significance level, p-value={p}, t={t}. The cluster {cluster} is statistically significantly superior to the other clusters in the feature {feature}")
+                else:
+                    print(f"Cluster {cluster} has a greater mean of {feature}, p-value={p}")
+            else:
+                if verbose:
+                    print(f"We can reject the null hypothesis that the cluster {cluster} has the same mean of {feature} at {alpha*100}% significance level, p-value={p}, t={t}. The cluster {cluster} is statistically significantly inferior to the other clusters in the feature {feature}")
+                else:
+                    print(f"Cluster {cluster} has a smaller mean of {feature}, p-value={p}")
+        else:
+            if not verbose:
+                print(f"cluster {cluster} is not different to the other clusters in the feature {feature}, p-value={p}")
+            elif sign == ">":
+                print(f"We cannot reject the null hypothesis that the cluster {cluster} is not superior to the other clusters in the feature {feature} at {alpha*100}% significance level, p-value={p}")
+            else:
+                print(f"We cannot reject the null hypothesis that the cluster {cluster} is not inferior to the other clusters in the feature {feature} at {alpha*100}% significance level, p-value={p}")
