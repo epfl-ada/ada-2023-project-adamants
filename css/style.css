@@ -40,6 +40,16 @@ body{
     font-family: 'Open Sans', sans-serif;
     border-radius: 20px;
     border-color: none;
+    max-width: 80%;
+    height: 70vh;
+  }
+
+  @media screen and (max-width: 768px) {
+    .interactive-plot{
+      max-width: 100%;
+      height: 50vh;
+    }
+    
   }
 
   .content_container{
@@ -47,7 +57,7 @@ body{
     flex-direction: column;
     justify-content: space-between;
     align-items: center;
-    gap: 1200px;
+    gap: 200px  ;
 
   }
 
@@ -75,13 +85,16 @@ body{
   .content .item h2{
     font-size: 18px;
     font-weight: 700;
-    text-transform: uppercase;
-  }
+    }
   .content .item p{
     font-size: 16px;
     font-weight: 400;
     text-align: left;
     width: auto;
+  }
+
+  .content img{
+    max-width: 70%;
   }
 
 
@@ -123,13 +136,34 @@ body{
     flex-direction: row;
     justify-content: space-evenly;
     align-items: center;
-    width: 40vw;
-    margin-left: calc(50% - 20vw);
+    width: 60vw;
+    margin-left: calc(50% - 30vw);
     gap: 10px;
     border-radius: 20px;
-    border-style: solid;
-    border-color: #476C9B;
+    background-color: #d4f3ff;
     padding: 10px;
+  }
+
+  @media screen and (max-width: 1500px) {
+    ul.features li{
+      flex-direction: row;
+      justify-content: center;
+      align-items: center;
+      width: 80vw;
+      margin-left: calc(50% - 40vw);
+    }
+    
+  }
+
+  @media screen and (max-width: 768px) {
+    ul.features li{
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      width: 80vw;
+      margin-left: calc(50% - 40vw);
+    }
+    
   }
 
   ul.features li div{
@@ -138,7 +172,6 @@ body{
     justify-content: center;
     align-items: center;
     gap: 2px;
-    background-color: #468C98;
     border-radius: 20px;
     padding: 10px;
 
@@ -170,6 +203,7 @@ body{
     background-repeat: no-repeat;
     background-size: cover;
     overflow: hidden;
+
   }
 
   .heading-text {
@@ -239,7 +273,8 @@ body{
   .cluster_container{
     display: flex;
     flex-direction: row;
-    justify-content: space-between;
+    justify-content: center;
+    flex-wrap: wrap;
     align-items: center;
     gap: 10px;
     width: 100%;
@@ -253,10 +288,23 @@ body{
     align-items: center;
     gap: 10px;
     width: 50%;
-    height: 35vh;
     padding: 10px;
     border-radius: 20px;
     background-color: #468C98;
+  }
+
+  @media screen and (max-width: 1100px) {
+    .cluster{
+      width: 75%;
+    }
+    
+  }
+
+  @media screen and (max-width: 768px) {
+    .cluster{
+      width: 100%;
+    }
+    
   }
 
   #cluster0{

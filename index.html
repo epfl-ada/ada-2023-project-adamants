@@ -200,15 +200,6 @@
 
                 </li>
             </ul>
-            <p>
-                We can see that the features in the first column are very heavy tailed, for this reason we will apply a log transform to them.<br>
-                Taking the log of backtrack (2nd row first column) does not help (probably as it is discrete and has only a few different values).<br>
-                We will then normalize the features:
-                <ul>
-                    <li>We use z-score normalization</li>
-                    <li>NaN values in certain features are replaced by the mean</li>
-                </ul>
-            </p>
             <div class="breakpoint" ></div>
         </div>
         </section>
@@ -231,6 +222,9 @@
                     Leiden creates clusters by considering the number of links between nodes in a cluster versus the overall expected number of links in the dataset.
                     <a class="source" href="https://www.nature.com/articles/s41598-019-41695-z">nature.com</a>
                 </p>
+                    <!--Umap-->
+                <iframe class="interactive-plot" src="src/figures/leiden/umap_leiden.html" height="600px" width="800px" frameborder="0"></iframe>
+                
                 <p>
                     The following heatmap shows the clustering results, with columns representing features and rows for each of the 5  clusters. 
                     The values and colours represent the variation from the mean for each feature of each cluster.
@@ -327,9 +321,7 @@
                     and will therefore form a separate cluster.
                 </p>
                 <img src="src/figures/leiden_with_timeout/number_of_timeouts_per_cluster.png" alt="number_of_timeouts_per_cluster">
-                <!--Umap-->
-                <iframe class="interactive-plot" src="src/figures/leiden/umap_leiden.html" height="600px" width="800px" frameborder="0"></iframe>
-                <!--Train set features-->
+                
 
             </div>
         </section>
