@@ -6,3 +6,4 @@ chapters:
 - file: leiden_clustering_validation
 - file: leiden_clustering_w_timeouts
 - file: hierarchical_and_gmm_clustering
+- file: optics_DBSCAN
