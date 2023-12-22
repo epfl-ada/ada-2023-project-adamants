@@ -1,7 +1,7 @@
 body{
   color: #000;
   font-family: 'Open Sans', sans-serif;
-  background-image:url("src/background.jpeg");
+  background-image:url("../src/background.jpeg");
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center;
@@ -159,7 +159,7 @@ body{
   }
 
   .heading-image {
-    background-image: url("src/adamant-1.jpg");
+    background-image: url("../src/adamant-1.jpg");
     filter: blur(8px);
     -webkit-filter: blur(8px);
     top: 0;
