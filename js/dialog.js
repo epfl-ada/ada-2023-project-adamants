@@ -80,7 +80,7 @@ function scrollToSection(section) {
 
 function dialogActivate(index,peoples) {
     
-    content.classList.add("hidden");
+    //content.classList.add("hidden");
     if(peoples == "B" || peoples == "AB"){
         dialogBoxBob.classList.remove("hidden");
     }
@@ -96,7 +96,7 @@ function dialogActivate(index,peoples) {
         }
     });
     
-    dialogBg.style.height = max_length * 500 + "px";
+    //dialogBg.style.height = max_length * 500 + "px";
     
 }
 
@@ -112,10 +112,10 @@ function writeDialog(text,people) {
 }
 
 function dialogDeactivate() {
-    content.classList.remove("hidden");
+    //content.classList.remove("hidden");
     dialogBoxBob.classList.add("hidden");
     dialogBoxAda.classList.add("hidden");
-    dialogBg.classList.add("hidden");
+    //dialogBg.classList.add("hidden");
 }
 
 function dialogScroll(index, dialogs,current_dialog_index) {
