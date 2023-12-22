@@ -121,17 +121,14 @@ function dialogDeactivate() {
 function dialogScroll(index, dialogs,current_dialog_index) {
     // use the scroll to show the list of dialog inside the dialogTextBob
     //if the index is less than the length of the array, then add the next dialog
-    console.log(current_dialog_index);
-    console.log(dialogs.length);
+
     if(current_dialog_index < dialogs.length){
         if (index < dialogs[current_dialog_index][1].length) {
             writeDialog(dialogs[current_dialog_index][1][index],dialogs[current_dialog_index][0]);
-            console.log("write");
+
             return [current_dialog_index, index];
         } else {
-            console.log("end monolog");
-            console.log(current_dialog_index);
-            console.log("---")
+
             c = current_dialog_index + 1;
             return [c, 0];
         }
@@ -140,27 +137,28 @@ function dialogScroll(index, dialogs,current_dialog_index) {
         dialog = false;
         //if the index is greater than the length of the array, then remove the dialog box
         dialogDeactivate();
-        scrollToSection(sections[breakpoints_section_after[breakpoint_index]].id);
+        // scrollToSection(sections[breakpoints_section_after[breakpoint_index]].id);
         breakpoint_index = breakpoint_index + 1;
         setTimeout(function(){dialog = false;}, 50);
         return [current_dialog_index, 0];
     }
 }
 
-function parallax() {
-    var s = document.getElementById("content");
-    var yPos = 0 - window.offsetY/2;
-    s.style.top = 50 + yPos + "%"; }
+function parallax(element,pos,speed) {
+    let offSet = window.scrollY-pos/2;
+    element.style.transform = `translateY(${offSet * speed}px)`;
+}
 
 window.addEventListener("scroll", function() {
     //if the window reach the section1, then activate the dialog box
     offSet = breakpoint[breakpoint_index].offsetTop + breakpoint[breakpoint_index].offsetHeight;
     if(window.scrollY >= offSet && window.scrollY <= offSet+150 && !dialog){
+        console.log("dialog");
         dialog = true;
         index = 0;
         current_dialog_index = 0;
         dialogActivate(breakpoint_index, dialogs_people[breakpoint_index][0]);
-        window.scrollTo(0,dialogBg.offsetTop)
+        // window.scrollToSection(sections[breakpoints_section_after[breakpoint_index]].id);
         pos = window.scrollY;
 
     }
@@ -184,12 +182,11 @@ window.addEventListener("scroll", function() {
             pos = window.scrollY;
         }
         
-        parallax();
+        parallax(content,pos,0.7);
         
-        console.log("index before:"+index);
         
         if (index <= -1) {
-            scrollToSection(sections[(breakpoints_section_after[breakpoint_index])-1].id);
+            // scrollToSection(sections[(breakpoints_section_after[breakpoint_index])-1].id);
             dialogDeactivate();
             dialog = false;
             index = 0;
@@ -198,8 +195,7 @@ window.addEventListener("scroll", function() {
             r = dialogScroll(index, dialogs_people[breakpoint_index][1],current_dialog_index);
             current_dialog_index = r[0];
             index = r[1];
-            console.log("current_dialog_index:"+current_dialog_index);
-            console.log("index:"+index);
+
         }
     }
     
