@@ -20,3 +20,6 @@ data/wikispeedia_articles_plaintext.tar.gz
 /p3_code/_build
 p3_code/res/logo_no_bg.pptx
 p3_code/res/background.pptx
+
+# VERY IMPORTANT: ALWAYS IGNORE THIS FILE
+bad_reviews_on_our_code.txt
