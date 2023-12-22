@@ -18,74 +18,177 @@ const bobMonolog = [
     "Are you ready? Let the adventure begin!"
 ];
 
+const bobMonolog2 = [
+    "And now, as we delve deeper into the mysteries of data and its transformations, I pass the torch to a figure who stands as a beacon in the world of computation and analysis.",
+    "Fellow explorers, I introduce to you Ada Lovelace, a pioneer in our field, who will guide us through the next phase of our journey."
+];
+
+const adaMonolog = [
+    "Thank you, Bob. Hello, curious minds and brave navigators of this vast digital expanse! I am Ada Lovelace, and it is my pleasure to lead you through the intricate ballet of data analysis.",
+    "As we examine our dataset, we encounter features in the first column that are akin to wild, untamed rivers - heavy-tailed and overflowing with information.",
+    "To channel these waters into a more navigable course, we shall employ a technique from our analytical armory - the logarithmic transformation.",
+    "However, our journey encounters an intriguing obstacle with the 'backtrack' feature, situated in the second row, first column.",
+    "This feature, discrete and steadfast in its few values, eludes the smoothing grace of our logarithmic bridge.",
+    "Our next step in this odyssey is normalization, specifically z-score normalization.",
+    "Imagine this as a way to equalize the heights of mountains and depths of valleys in our data landscape.",
+    "In addressing the voids represented by NaN values, we shall not leave them as unknown territories.",
+    "Instead, we fill these gaps with the mean - a kind of cartographic estimation, ensuring that no piece of our data map remains uncharted.",
+    "Through this process, we do more than just manipulate numbers.",
+    "We engage in a dance with data, leading it gracefully to reveal its hidden patterns and secrets.",
+    "So, join me, as we continue to weave through the tapestry of information, each step a discovery, each transformation a revelation.",
+    "Together, we will uncover the stories hidden within the numbers, exploring the vast landscapes of knowledge that await us.",
+    "Let us embark on this enlightening journey, unraveling the mysteries of data with every analysis we perform.",
+    "The adventure beckons!"
+];
+
+const bobMonolog3 = [
+    "With Ada's wisdom and our collective curiosity, there's no limit to the insights we can uncover.",
+    "Let's venture forth!"
+];
+
+
+dialogs_people = [
+    ["B",[["B",bobMonolog]]],
+    ["AB",[["B",bobMonolog2],["A",adaMonolog],["B",bobMonolog3]]]
+];
+
+breakpoints_section_after = [1,3,4,5];
 
 document.addEventListener("DOMContentLoaded", function() {
-const dialogBox = document.getElementById("scrollDialog");
-const dialogText = document.getElementById("scrollDialogText");
+const dialogBoxBob = document.getElementById("scrollDialogBob");
+const dialogTextBob = document.getElementById("scrollDialogTextBob");
+const dialogBoxAda = document.getElementById("scrollDialogAda");
+const dialogTextAda = document.getElementById("scrollDialogTextAda");
 const dialogBg = document.getElementById("dialogBackground");
 const content = document.getElementById("content");
-const section0 = document.getElementById("home");
+const breakpoint = document.querySelectorAll('.breakpoint');
 const sections = document.querySelectorAll('.content');
 let dialog = false;
-let section_index = 0;
+let breakpoint_index = 0;
 
 function scrollToSection(section) {
     section = document.getElementById(section);
     const sectionTop = section.offsetTop;
-    window.scrollTo(0, sectionTop);
+    window.scrollTo(0, sectionTop-10);
 }  
 
-function dialogActivate() {
-    // Hide content
+function dialogActivate(index,peoples) {
+    
     content.classList.add("hidden");
-    dialogBox.classList.remove("hidden");
+    if(peoples == "B" || peoples == "AB"){
+        dialogBoxBob.classList.remove("hidden");
+    }
+    if(peoples == "A" || peoples == "AB"){
+        dialogBoxAda.classList.remove("hidden");
+    }
     dialogBg.classList.remove("hidden");
-    dialogBg.style.height = bobMonolog.length * 300 + "px";
+    max_length = dialogs_people[index][1][0][1].length;
+    dialogs_people[index][1].forEach(element => {
+        length = element[1].length;
+        if(length > max_length){
+            max_length = length;
+        }
+    });
+    
+    dialogBg.style.height = max_length * 500 + "px";
     
 }
 
+function writeDialog(text,people) {
+    if(people == "B"){
+        dialogTextBob.textContent = text;
+        dialogTextAda.textContent = "";
+    }
+    if(people == "A"){
+        dialogTextAda.textContent = text;
+        dialogTextBob.textContent = "";
+    }
+}
+
 function dialogDeactivate() {
-    // 
     content.classList.remove("hidden");
-    dialogBox.classList.add("hidden");
+    dialogBoxBob.classList.add("hidden");
+    dialogBoxAda.classList.add("hidden");
     dialogBg.classList.add("hidden");
 }
 
-function dialogScroll(index) {
-    // use the scroll to show the list of dialog inside the dialogText
+function dialogScroll(index, dialogs,current_dialog_index) {
+    // use the scroll to show the list of dialog inside the dialogTextBob
     //if the index is less than the length of the array, then add the next dialog
-    if (index < bobMonolog.length) {
-        dialogText.textContent = bobMonolog[index];
-    } else {
-        //if the index is greater than the length of the array, then remove the dialog box
-        section_index += 1;
+    console.log(current_dialog_index);
+    console.log(dialogs.length);
+    if(current_dialog_index < dialogs.length){
+        if (index < dialogs[current_dialog_index][1].length) {
+            writeDialog(dialogs[current_dialog_index][1][index],dialogs[current_dialog_index][0]);
+            console.log("write");
+            return [current_dialog_index, index];
+        } else {
+            console.log("end monolog");
+            console.log(current_dialog_index);
+            console.log("---")
+            c = current_dialog_index + 1;
+            return [c, 0];
+        }
+    }
+    else{
         dialog = false;
+        //if the index is greater than the length of the array, then remove the dialog box
         dialogDeactivate();
-        scrollToSection(sections[section_index].id);
-        
+        scrollToSection(sections[breakpoints_section_after[breakpoint_index]].id);
+        breakpoint_index = breakpoint_index + 1;
+        setTimeout(function(){dialog = false;}, 50);
+        return [current_dialog_index, 0];
     }
 }
 
 window.addEventListener("scroll", function() {
     //if the window reach the section1, then activate the dialog box
-    offSet = section0.offsetHeight+section0.offsetTop
-    if(window.scrollY >= offSet && window.scrollY <= offSet+50){
+    offSet = breakpoint[breakpoint_index].offsetTop + breakpoint[breakpoint_index].offsetHeight;
+    if(window.scrollY >= offSet && window.scrollY <= offSet+150 && !dialog){
         dialog = true;
-        section_index = 0;
+        index = 0;
+        current_dialog_index = 0;
+        dialogActivate(breakpoint_index, dialogs_people[breakpoint_index][0]);
+        window.scrollTo(0,dialogBg.offsetTop)
+        pos = window.scrollY;
+
     }
+
     else if(!dialog){
         dialogDeactivate();
     }
+    
     // scroll through the dialog
     if (dialog) {
-        //console.log(window.scrollY-dialogBg.offsetTop);
-        let index = Math.floor((window.scrollY-dialogBg.offsetTop)/200);
-        //console.log(index);
-        if (index >= 0){
-            console.log(index);
-            dialogActivate();
-            dialogScroll(index);
+        if(index == 0 && this.scrollY < pos){
+            pos = window.scrollY;
+            index = 0;
         }
+        if (this.scrollY-pos > 100 ) {
+            index = index + 1;
+            pos = window.scrollY;
+        }
+        if (this.scrollY-pos < -100) {
+            index = index - 1;
+            pos = window.scrollY;
+        }
+            
+
+        console.log("index before:"+index);
+
+            if (index <= -1) {
+                scrollToSection(sections[(breakpoints_section_after[breakpoint_index])-1].id);
+                dialogDeactivate();
+                dialog = false;
+                index = 0;
+            }
+            else{
+                r = dialogScroll(index, dialogs_people[breakpoint_index][1],current_dialog_index);
+                current_dialog_index = r[0];
+                index = r[1];
+                console.log("current_dialog_index:"+current_dialog_index);
+                console.log("index:"+index);
+            }
     }
     
 }
