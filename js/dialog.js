@@ -147,6 +147,11 @@ function dialogScroll(index, dialogs,current_dialog_index) {
     }
 }
 
+function parallax() {
+    var s = document.getElementById("content");
+    var yPos = 0 - window.offsetY/2;
+    s.style.top = 50 + yPos + "%"; }
+
 window.addEventListener("scroll", function() {
     //if the window reach the section1, then activate the dialog box
     offSet = breakpoint[breakpoint_index].offsetTop + breakpoint[breakpoint_index].offsetHeight;
@@ -170,31 +175,32 @@ window.addEventListener("scroll", function() {
             pos = window.scrollY;
             index = 0;
         }
-        if (this.scrollY-pos > 100 ) {
+        if (this.scrollY-pos > 200) {
             index = index + 1;
             pos = window.scrollY;
         }
-        if (this.scrollY-pos < -100) {
+        if (this.scrollY-pos < -200) {
             index = index - 1;
             pos = window.scrollY;
         }
-            
-
+        
+        parallax();
+        
         console.log("index before:"+index);
-
-            if (index <= -1) {
-                scrollToSection(sections[(breakpoints_section_after[breakpoint_index])-1].id);
-                dialogDeactivate();
-                dialog = false;
-                index = 0;
-            }
-            else{
-                r = dialogScroll(index, dialogs_people[breakpoint_index][1],current_dialog_index);
-                current_dialog_index = r[0];
-                index = r[1];
-                console.log("current_dialog_index:"+current_dialog_index);
-                console.log("index:"+index);
-            }
+        
+        if (index <= -1) {
+            scrollToSection(sections[(breakpoints_section_after[breakpoint_index])-1].id);
+            dialogDeactivate();
+            dialog = false;
+            index = 0;
+        }
+        else{
+            r = dialogScroll(index, dialogs_people[breakpoint_index][1],current_dialog_index);
+            current_dialog_index = r[0];
+            index = r[1];
+            console.log("current_dialog_index:"+current_dialog_index);
+            console.log("index:"+index);
+        }
     }
     
 }
