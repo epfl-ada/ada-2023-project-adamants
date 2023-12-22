@@ -19,3 +19,4 @@ data/wikispeedia_articles_plaintext.tar.gz
 *.sbatch
 /p3_code/_build
 p3_code/res/logo_no_bg.pptx
+p3_code/res/background.pptx

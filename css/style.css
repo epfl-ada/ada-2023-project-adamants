@@ -1,7 +1,7 @@
 body{
   color: #000;
   font-family: 'Open Sans', sans-serif;
-  background-image:url("../src/background.jpeg");
+  background-image:url("../src/background.svg");
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center;
