@@ -36,7 +36,9 @@
         AOS.init();
       </script>
     <section class="content header breakpoint" id="home">
-        <div class="heading-image"></div>
+        <div class="heading-image">
+            <!-- <img src="src/adamant-1.jpg" alt="Adamant"> -->
+        </div>
         <div class="heading-text">
             <h1>Have you ever gotten lost on Wikipedia ? </h1>
             <p>A clustering datastory</p>
@@ -160,7 +162,7 @@
         <section class="content" id="section2">
             <div class="item">
             <h2>But one can also think of more clever and more sophisticated features!</h2>
-            <ul class="features">
+            <ul class="features breakpoint">
                 <li>
                     <div>
                     <h4>
@@ -223,7 +225,7 @@
             
         </div>
         </section>
-        <section class="content breakpoint" id="section3">
+        <section class="content" id="section3">
            <div class="item">
                 <p>
                     Once features have been extracted, it’s time for clustering. We performed clustering to validate that we achieve a meaningful set of latent variables for player paths,
@@ -328,8 +330,8 @@
                     Additionally, the two following figures show the distributions and boxplot of each feature coloured for each cluster.
                     The information here is the same as discussed previously, but visualized in a different way.
                 </p>
-                <img src="src/figures/leiden/histograms_features_colored_by_cluster.png" alt="histograms_features_colored_by_cluster">
-                <img src="src/figures/leiden/boxplots_features_colored_by_cluster.png" alt="boxplot_features_colored_by_cluster">
+                <img class="full-image" src="src/figures/leiden/histograms_features_colored_by_cluster.png" alt="histograms_features_colored_by_cluster">
+                <img class="full-image" src="src/figures/leiden/boxplots_features_colored_by_cluster.png" alt="boxplot_features_colored_by_cluster">
                 
                 <p>
                     In these results all timed-out games were removed. What happens if we leave them in? Well, as shown by the figure below, a 6th cluster is created.

@@ -98,6 +98,14 @@ body{
     max-width: 70%;
   }
 
+  @media screen and (max-width: 1500px) {
+    .full-image{
+      max-width: 100% !important;
+      width: 100vw !important;
+    }
+    
+  }
+
 
 
   .content .item .quote{
@@ -340,6 +348,11 @@ body{
     gap: 10px;
     margin-top: 20px;
     padding-bottom: 10px;
+    background-image: url("../src/background.jpeg");
+    background-attachment: fixed;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
   }
   div.authors{
     display: flex;

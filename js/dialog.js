@@ -108,6 +108,7 @@ function writeDialog(text,people) {
     if(people == "A"){
         dialogTextAda.textContent = text;
         dialogTextBob.textContent = "";
+        parallax(content,pos,0.1)
     }
 }
 
@@ -152,50 +153,54 @@ function parallax(element,pos,speed) {
 window.addEventListener("scroll", function() {
     //if the window reach the section1, then activate the dialog box
     offSet = breakpoint[breakpoint_index].offsetTop + breakpoint[breakpoint_index].offsetHeight;
-    if(window.scrollY >= offSet && window.scrollY <= offSet+150 && !dialog){
-        console.log("dialog");
-        dialog = true;
-        index = 0;
-        current_dialog_index = 0;
-        dialogActivate(breakpoint_index, dialogs_people[breakpoint_index][0]);
-        // window.scrollToSection(sections[breakpoints_section_after[breakpoint_index]].id);
-        pos = window.scrollY;
-
-    }
-
-    else if(!dialog){
-        dialogDeactivate();
-    }
-    
-    // scroll through the dialog
-    if (dialog) {
-        if(index == 0 && this.scrollY < pos){
-            pos = window.scrollY;
+    if (breakpoint_index < dialogs_people.length){
+        if(window.scrollY >= offSet && window.scrollY <= offSet+150 && !dialog){
+            console.log("dialog");
+            dialog = true;
             index = 0;
-        }
-        if (this.scrollY-pos > 200) {
-            index = index + 1;
+            current_dialog_index = 0;
+            
+            dialogActivate(breakpoint_index, dialogs_people[breakpoint_index][0]);
+            
+            // window.scrollToSection(sections[breakpoints_section_after[breakpoint_index]].id);
             pos = window.scrollY;
+
         }
-        if (this.scrollY-pos < -200) {
-            index = index - 1;
-            pos = window.scrollY;
-        }
-        
-        parallax(content,pos,0.7);
-        
-        
-        if (index <= -1) {
-            // scrollToSection(sections[(breakpoints_section_after[breakpoint_index])-1].id);
+
+        else if(!dialog){
             dialogDeactivate();
-            dialog = false;
-            index = 0;
         }
-        else{
-            r = dialogScroll(index, dialogs_people[breakpoint_index][1],current_dialog_index);
-            current_dialog_index = r[0];
-            index = r[1];
+        
+        // scroll through the dialog
+        if (dialog) {
+            if(index == 0 && this.scrollY < pos){
+                pos = window.scrollY;
+                index = 0;
+            }
+            if (this.scrollY-pos > 200) {
+                index = index + 1;
+                pos = window.scrollY;
+            }
+            if (this.scrollY-pos < -200) {
+                index = index - 1;
+                pos = window.scrollY;
+            }
+            
+            parallax(content,pos,0.9);
+            
+            
+            if (index <= -1) {
+                // scrollToSection(sections[(breakpoints_section_after[breakpoint_index])-1].id);
+                dialogDeactivate();
+                dialog = false;
+                index = 0;
+            }
+            else{
+                r = dialogScroll(index, dialogs_people[breakpoint_index][1],current_dialog_index);
+                current_dialog_index = r[0];
+                index = r[1];
 
+            }
         }
     }
     
