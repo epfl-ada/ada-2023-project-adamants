@@ -156,7 +156,6 @@ window.addEventListener("scroll", function() {
     offSet = breakpoint[breakpoint_index].offsetTop + breakpoint[breakpoint_index].offsetHeight;
     if (breakpoint_index < dialogs_people.length){
         if(window.scrollY >= offSet && window.scrollY <= offSet+150 && !dialog){
-            console.log("dialog");
             dialog = true;
             index = 0;
             current_dialog_index = 0;

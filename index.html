@@ -1,28 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <style>
-        table {
-          border-collapse: collapse;
-          width: 100%;
-        }
-        
-        td, th {
-          border: 1px solid #dddddd;
-          text-align: left;
-          padding: 8px;
-          
-        }
-        
-        tr:nth-child(even) {
-          background-color: #dddddd;
-          opacity: 0.7;
-        }
-        tr:nth-child(odd) {
-            background-color: #ffffff;
-            opacity: 0.7;
-          }
-    </style>
     <meta charset="UTF-8">
     <title>Wikispeedia datastory</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -34,7 +12,7 @@
     <script src="js/home.js"></script>
     <script src="js/dialog.js"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Lora:wght@400;700&display=swap');
       </style>
 </head>
 <body>
@@ -42,13 +20,14 @@
         AOS.init();
       </script>
     <section class="content header breakpoint" id="home">
-        <div class="heading-image">
-            <!-- <img src="src/adamant-1.jpg" alt="Adamant"> -->
-        </div>
-        <div class="heading-text">
-            <h1>Have you ever gotten lost on Wikipedia ? </h1>
-            <p>A clustering datastory</p>
-            <div class="arrow" onclick="scrollStart()"></div>
+        <div class="heading"></div>
+            <div class="heading-image">
+                <img src="src/logo_white__no_bg copy.svg" alt="logo">
+            </div>
+            <div class="heading-text">
+                <h1>Analyzing players strategies in Wikispeedia </h1>
+                <div class="arrow" onclick="scrollStart()"></div>
+            </div>
         </div>
     </section>
     
@@ -170,7 +149,7 @@
         <section class="content" id="section2">
             <div class="item">
             <h2>But one can also think of more clever and more sophisticated features!</h2>
-            <ul class="features breakpoint">
+            <ul class="features">
                 <li>
                     <div>
                     <h4>
@@ -233,7 +212,7 @@
             
         </div>
         </section>
-        <section class="content" id="section3">
+        <section class="content breakpoint" id="section3">
            <div class="item">
                 <p>
                     Once features have been extracted, it’s time for clustering. We performed clustering to validate that we achieve a meaningful set of latent variables for player paths,
@@ -438,12 +417,11 @@
             </div>
         </section>
 
-        <p>
-            <br>
-            <br>
-            <br>
-            <br>
+        <p id="ending">
+            Thank you for reading our datastory! <br>
+            <img src="src/adamant-1.jpg" alt="adamant-1">
         </p>
+        
 
 
         
