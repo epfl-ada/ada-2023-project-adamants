@@ -1,6 +1,22 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <style>
+        table {
+          border-collapse: collapse;
+          width: 100%;
+        }
+        
+        td, th {
+          border: 1px solid #dddddd;
+          text-align: left;
+          padding: 8px;
+        }
+        
+        tr:nth-child(even) {
+          background-color: #dddddd;
+        }
+    </style>
     <meta charset="UTF-8">
     <title>Wikispeedia datastory</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -62,7 +78,7 @@
     <div class="content_container" id="content">
         <section class="content" id="section1">
             <div class="item">
-            <h2>To describe in-game behaviours, we extracted several features. Let's start with the most intuitive ones!</h2>
+            <h2>To describe in-game behaviours, we extracted several features. <br>Let's start with the most intuitive ones!</h2>
                 <ul class="features">
                     <li>
                         <div>
@@ -149,20 +165,25 @@
                 <li>
                     <div>
                     <h4>
-                        Position mean
+                        The mean position of following clicked link
                     </h4>
                     <p>
-                        Character position of succeding clicked link on article page, averaged across all edges of path.</p>
+                        Character position of succeding clicked link on article page, averaged across all edges of path.
+                        This feature brings insight into whether players scroll to find a word that popped into their heads, 
+                        or let their search be guided by the options under their sight, that is the first links visible on the article. 
+                    </p>
                     </div>
                         <img src="src/figures/leiden/histogramms/position_mean_histogram.png" alt="position_mean_histogram">
                 </li>
                 <li>
                     <div>
                     <h4>
-                        Position std
+                        The standard deviation of the position of following clicked link
                     </h4>
                     <p>
-                        Standard deviation of character position of succeding clicked link within a path.</p>
+                        This feature is the standard deviation of character position of succeding clicked link within a path. 
+                        It allows to measure how much players change their position mean within paths.
+                    </p>
                     </div>
                         <img src="src/figures/leiden/histogramms/position_std_histogram.png" alt="position_std_histogram">
                     
@@ -329,7 +350,7 @@
         <section class="content" id="section6">
             <div class="item">
                 <h2>
-                    validation
+                    Validation
                 </h2>
                 <p>
                     In order to check the Leiden clustering's robustness, we used 5-fold cross-validation.
@@ -337,10 +358,81 @@
                     to those in a given fold across other folds. Once this is done, we can plot the original clustroids and
                     their nearest neighbors across folds, and see how close they are in the UMAP embedding space.
                     From the following plot, we see they are quite close to each other !
-                </p>s
+                </p>
                 <iframe src="src/figures/validation/clustroids_variability.html" frameborder="0" class="interactive-plot" height="600px" width="800px"></iframe>
             </div>
+        </section>
 
+
+        <section class="content" id="section7">
+            <div class="item">
+                <h2>
+                    Conclusion
+                </h2>
+                <p>
+                    Overall, through this analysis of Wikispeedia data, we were able to cluster players into 5 groups. 
+                    Let's see how the differences between clusters affect the way players achieve the same goal.  
+                    In the following table, players from different cluster are able to go from Google to God... but with very diverse <i>strategies</i>!
+                </p>
+                <table>
+                    <tr>
+                      <th>Path</th>
+                      <th>Cluster</th>
+                    </tr>
+                    <tr>
+                        <td>Google > California > Arnold_Schwarzenegger > George_W._Bush > Religion > God </td>
+                        <td> 0 </td>
+                    </tr>
+                    <tr>
+                        <td>Google > Fiction > Greek_mythology > Deity > God</td>
+                        <td> 0 </td>
+                    </tr>
+                    <tr>
+                        <td>Google > Internet > Tim_Berners-Lee > Elizabeth_II_of_the_United_Kingdom > British_monarchy > Roman_Catholic_Church > God</td>
+                        <td> 0 </td>
+                    </tr>
+                    <tr>
+                        <td>Google > United_States > Judaism > Names_of_God_in_Judaism > God</td>
+                        <td> 0 </td>
+                    </tr>
+                    <tr>
+                        <td>Google > United_States > Judaism > Christianity > Jesus > God</td>
+                        <td> 0 </td>
+                    </tr>
+                    <tr>
+                        <td>Google > Germany > Atheism > God</td>
+                        <td> 1 </td>
+                    </tr>
+                    <tr>
+                        <td>Google > Fiction > Religion > God</td>
+                        <td> 1 </td>
+                    </tr>
+                    <tr>
+                        <td>Google > Fiction > Religion > Christianity > Jesus > Bible > Names_of_God_in_Judaism > God</td>
+                        <td> 2 </td>
+                    </tr>
+                    <tr>
+                        <td>Google > United_States > <i>backtrack</i> > United_States > Manifest_Destiny > <i>backtrack</i> > United_States_Declaration_of_Independence > <i>backtrack</i> > Latin > Rome > <i>backtrack</i> > Roman_Catholic_Church > God</td>
+                        <td> 3 </td>
+                    </tr>
+                    <tr>
+                        <td>Google > United_States > Judaism > Names_of_God_in_Judaism > God</td>
+                        <td> 4 </td>
+                    </tr>
+                    <tr>
+                        <td>Google > United_States > Islam > God</td>
+                        <td> 4 </td>
+                    </tr>
+                                  
+                </table>
+                <p>
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                </p>
+            </div>
+        </section>
 
     </div>
 </body>
@@ -361,7 +453,6 @@
             Mathilde Morelli
         </div>
         <div class="author">
-            
             Yves Paychère
         </div>
     </div>
