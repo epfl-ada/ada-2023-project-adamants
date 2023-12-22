@@ -6,6 +6,8 @@ document.addEventListener('DOMContentLoaded', function() {
   const footer = document.querySelector('footer');
   const dotSlider = document.getElementById('dotSlider');
 
+ 
+
   function updateOpacityAndDots() {
     const middleOfScreen = window.innerHeight / 2 + window.scrollY;
     let closestSectionIndex = 0;
@@ -51,7 +53,13 @@ document.addEventListener('DOMContentLoaded', function() {
 function scrollToSection(section) {
   section = document.getElementById(section);
   const sectionTop = section.offsetTop;
-  window.scrollTo(0, sectionTop);
+  window.scrollTo(0, sectionTop-10);
 
 }
+
+function scrollStart(){
+  home = document.getElementById("home");
+  scrollTo(0,home.offsetHeight+10);
+}
+
 

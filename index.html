@@ -19,12 +19,12 @@
     <script>
         AOS.init();
       </script>
-    <section class="content header" id="home">
+    <section class="content header breakpoint" id="home">
         <div class="heading-image"></div>
         <div class="heading-text">
             <h1>Have you ever gotten lost on Wikipedia ? </h1>
             <p>A clustering datastory</p>
-            <div class="arrow" onclick="scrollToSection('section1')"></div>
+            <div class="arrow" onclick="scrollStart()"></div>
         </div>
     </section>
     
@@ -38,11 +38,21 @@
         <span class="dot" onclick="scrollToSection('section6')"></span>
     </div>
 
-    <div id="scrollDialog" class="scroll-dialog hidden">
+    <div id="scrollDialogBob" class="scroll-dialog hidden Bob">
         <div class="avatar">
             <img src="src/avatar_bob.png" alt="Avatar">
         </div>
-        <div class="dialog-content" id="scrollDialogText">
+        <div class="dialog-content" id="scrollDialogTextBob">
+            <p>
+
+            </p>
+        </div>
+    </div>
+    <div id="scrollDialogAda" class="scroll-dialog hidden Ada">
+        <div class="avatar">
+            <img src="src/ada_lovelace.png" alt="Avatar">
+        </div>
+        <div class="dialog-content" id="scrollDialogTextAda">
             <p>
 
             </p>
@@ -50,6 +60,7 @@
     </div>
     <div id="dialogBackground" class="dialog-background hidden"></div>
     <div class="content_container" id="content">
+<<<<<<< HEAD
 
         <!-- <section class="content" id="section1">
             <div class="item">
@@ -70,6 +81,8 @@
             </div> 
         </section> -->
 
+=======
+>>>>>>> 5747c75c73043b04366c840471ab0d797a90b8ee
         
         <section class="content" id="section1">
             <div class="item">
@@ -126,6 +139,7 @@
                     <li>
                         <div>
                         <h4>
+<<<<<<< HEAD
                             The average time per edge 
                         </h4>
                         <p>
@@ -140,6 +154,9 @@
                         <div>
                         <h4>
                             The ratio 
+=======
+                            The ratio between the user path length and the shortest path length
+>>>>>>> 5747c75c73043b04366c840471ab0d797a90b8ee
                         </h4>
                         <p>
                             This feature is the ratio between the length of the path taken by the player and the length of the shortest path between the start and end articles.
@@ -220,6 +237,7 @@
                     <li>NaN values in certain features are replaced by the mean</li>
                 </ul>
             </p>
+            <div class="breakpoint" ></div>
         </div>
         </section>
         <section class="content" id="section3">
@@ -346,17 +364,20 @@
 
         <section class="content" id="section6">
             <div class="item">
-                <!--Variability-->
+                <h2>
+                    validation
+                </h2>
+                <p>
+                    In order to check the Leiden clustering's robustness, we used 5-fold cross-validation.
+                    Due to the clusters not having a fixed ID across runs, we performed matching using the clustroids nearest
+                    to those in a given fold across other folds. Once this is done, we can plot the original clustroids and
+                    coarse_mean_time_histogram nearest neighbors across folds, and see how close they are in the UMAP
+                    embedding space.
+                    From the following plot, we see they are quite close to each other !
+                </p>s
                 <iframe src="src/figures/validation/clustroids_variability.html" frameborder="0" class="interactive-plot" height="600px" width="800px"></iframe>
             </div>
-        </section>
 
-        <section class="content">
-            <div class="item">
-                <!--Features distributions across clusters-->
-
-            </div>
-        </section>
 
     </div>
 </body>

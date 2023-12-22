@@ -5,15 +5,22 @@
     align-items: center;
     position: fixed;
     bottom: 20px;
-    right: 20px;
     width: 500px;
-    background-color: white;
+    background-color: #d4f3ff;
     box-shadow: 0 4px 8px rgba(0,0,0,0.1);
     padding: 15px;
     border-radius: 10px;
     z-index: 1000;
     max-height: 400px; /* Or any appropriate height */
     overflow-y: auto;
+}
+
+.Bob{
+    right: 20px;
+}
+
+.Ada{
+    left: 20px;
 }
 
 .avatar img {
