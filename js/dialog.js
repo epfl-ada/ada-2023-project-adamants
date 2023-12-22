@@ -104,11 +104,12 @@ function writeDialog(text,people) {
     if(people == "B"){
         dialogTextBob.textContent = text;
         dialogTextAda.textContent = "";
+        parallax(content,pos,0.9)
     }
     if(people == "A"){
         dialogTextAda.textContent = text;
         dialogTextBob.textContent = "";
-        parallax(content,pos,0.1)
+        parallax(content,pos,0.9)
     }
 }
 
@@ -186,7 +187,6 @@ window.addEventListener("scroll", function() {
                 pos = window.scrollY;
             }
             
-            parallax(content,pos,0.9);
             
             
             if (index <= -1) {
