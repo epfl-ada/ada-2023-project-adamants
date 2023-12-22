@@ -334,30 +334,29 @@ def print_test_means_differences(hypotheses, df, alpha=0.05, verbose=False):
     for cluster, feature, sign in hypotheses:
         cluster_data = df[df["cluster"] == cluster]
         other_clusters_data = df[df["cluster"] != cluster]
-        cluster_mean = cluster_data[feature].mean()
-        other_clusters_mean = other_clusters_data[feature].mean()
-        if sign == ">" and cluster_mean < other_clusters_mean:
+        if sign == ">" and cluster_data[feature].mean() < cluster_data[feature].mean():
             print(f"The cluster {cluster} is not superior to the other clusters in the feature {feature}")
             continue
-        if sign == "<" and cluster_mean > other_clusters_mean:
+        if sign == "<" and cluster_data[feature].mean() > other_clusters_data[feature].mean():
             print(f"The cluster {cluster} is not inferior to the other clusters in the feature {feature}")
             continue
         cluster_std = cluster_data[feature].var()
         other_clusters_std = other_clusters_data[feature].var()
         # we will use the rule that the variance of the groups are  unequal if the ratio of the two variances is greater than 4 or smaller than 1/4
         equal_var = cluster_std / other_clusters_std < 4 and other_clusters_std / cluster_std < 4
-        t, p = ttest_ind(cluster_data[feature], other_clusters_data[feature], equal_var=equal_var)
+        t, p = ttest_ind(cluster_data[feature].values, other_clusters_data[feature].values, equal_var=equal_var)
+        d= t/np.sqrt(len(cluster_data[feature]) + len(other_clusters_data[feature]))
         if p < alpha:
             if sign == ">":
                 if verbose:
                     print(f"We can reject the null hypothesis that the cluster {cluster} has the same mean of {feature} at {alpha*100}% significance level, p-value={p}, t={t}. The cluster {cluster} is statistically significantly superior to the other clusters in the feature {feature}")
                 else:
-                    print(f"Cluster {cluster} has a greater mean of {feature}, p-value={p}")
+                    print(f"Cluster {cluster} has a greater mean of {feature.ljust(25)}, p-value={round(p, 3)},\t effect size={round(d,3)}")
             else:
                 if verbose:
                     print(f"We can reject the null hypothesis that the cluster {cluster} has the same mean of {feature} at {alpha*100}% significance level, p-value={p}, t={t}. The cluster {cluster} is statistically significantly inferior to the other clusters in the feature {feature}")
                 else:
-                    print(f"Cluster {cluster} has a smaller mean of {feature}, p-value={p}")
+                    print(f"Cluster {cluster} has a smaller mean of {feature.ljust(25)}, p-value={round(p, 3)},\t effect size={round(d,3)}")
         else:
             if not verbose:
                 print(f"cluster {cluster} is not different to the other clusters in the feature {feature}, p-value={p}")
