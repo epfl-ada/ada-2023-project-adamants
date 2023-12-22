@@ -19,12 +19,12 @@
     <script>
         AOS.init();
       </script>
-    <section class="content header" id="home">
+    <section class="content header breakpoint" id="home">
         <div class="heading-image"></div>
         <div class="heading-text">
             <h1>Have you ever gotten lost on Wikipedia ? This little game will bring you back! </h1>
             <p>A clustering datastory</p>
-            <div class="arrow" onclick="scrollToSection('section1')"></div>
+            <div class="arrow" onclick="scrollStart()"></div>
         </div>
     </section>
     
@@ -38,11 +38,21 @@
         <span class="dot" onclick="scrollToSection('section6')"></span>
     </div>
 
-    <div id="scrollDialog" class="scroll-dialog hidden">
+    <div id="scrollDialogBob" class="scroll-dialog hidden Bob">
         <div class="avatar">
             <img src="src/avatar_bob.png" alt="Avatar">
         </div>
-        <div class="dialog-content" id="scrollDialogText">
+        <div class="dialog-content" id="scrollDialogTextBob">
+            <p>
+
+            </p>
+        </div>
+    </div>
+    <div id="scrollDialogAda" class="scroll-dialog hidden Ada">
+        <div class="avatar">
+            <img src="src/ada_lovelace.png" alt="Avatar">
+        </div>
+        <div class="dialog-content" id="scrollDialogTextAda">
             <p>
 
             </p>
@@ -50,27 +60,6 @@
     </div>
     <div id="dialogBackground" class="dialog-background hidden"></div>
     <div class="content_container" id="content">
-
-        <!-- <section class="content" id="section1">
-            <div class="item">
-                <h2>In the vast expanse of digital information, Wikipedia remains the greaetst collection of human knowledge</h2>
-                <p>This is the story of a regular guy named Bob.<br>
-                Bob is playing a little game called <b>Wikispeedia</b></p>
-                <div  class="quote">Wikispeedia is an online game where players have to reach a Wikipedia article from another, unrelated Wikipedia article,
-                    only by clicking links in the articles encountered.
-                    A condensed version of Wikipedia (4,604 articles) is used. Beyond mere entertainment, Wikispeedia unveils a world where games meet semantics,
-                    and unravels the intricate web of connections that bind Wikipedia's articles together.</div>
-                <h3>But what makes Bob either good or bad at this game?</h3>
-                <p>What strategies does Bob intuitively use to play Wikispeedia successfully? All in all, is Bob a good player?</p>
-                <iframe src="src/strategy.gif" frameborder="0"></iframe>
-                <p>Answering these questions leads to an exploration of gameplay patterns, through analysing human navigation paths.
-                    Analysing player strategies in the Wikispeedia game and assessing correlations with semantic content.
-                    Extracting features from player path data will allow for unravelling and analysing of the different strategies used by the players.
-                    We have quantitatively described in-game behaviours by newly derived features and assessed how these variables relate to semantic content. 
-                    understanding the intricate nuances of interconnected information.</p>
-            </div> 
-        </section> -->
-
         
         <section class="content" id="section1">
             <div class="item">
@@ -147,19 +136,6 @@
                     <li>
                         <div>
                         <h4>
-                            The average time per edge 
-                        </h4>
-                        <p>
-                            Exploring the distribution of average time spent per edge during navigation could also bring some insight.
-                            The presence of outliers in this datapoints may give indicators of any trouble the players might have had.
-                        </p>
-                    </div>
-                        <img src="src/figures/leiden/histogramms/average_time_on_page_histogram.png" alt="average_time_on_page_histogram">
-                        
-                    </li>
-                    <li>
-                        <div>
-                        <h4>
                             The ratio between the user path length and the shortest path length
                         </h4>
                         <p>
@@ -231,6 +207,7 @@
                     <li>NaN values in certain features are replaced by the mean</li>
                 </ul>
             </p>
+            <div class="breakpoint" ></div>
         </div>
         </section>
         <section class="content" id="section3">
@@ -336,17 +313,20 @@
 
         <section class="content" id="section6">
             <div class="item">
-                <!--Variability-->
+                <h2>
+                    validation
+                </h2>
+                <p>
+                    In order to check the Leiden clustering's robustness, we used 5-fold cross-validation.
+                    Due to the clusters not having a fixed ID across runs, we performed matching using the clustroids nearest
+                    to those in a given fold across other folds. Once this is done, we can plot the original clustroids and
+                    coarse_mean_time_histogram nearest neighbors across folds, and see how close they are in the UMAP
+                    embedding space.
+                    From the following plot, we see they are quite close to each other !
+                </p>s
                 <iframe src="src/figures/validation/clustroids_variability.html" frameborder="0" class="interactive-plot" height="600px" width="800px"></iframe>
             </div>
-        </section>
 
-        <section class="content">
-            <div class="item">
-                <!--Features distributions across clusters-->
-
-            </div>
-        </section>
 
     </div>
 </body>
