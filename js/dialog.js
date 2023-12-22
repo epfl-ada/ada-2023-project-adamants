@@ -18,81 +18,88 @@ const bobMonolog = [
     "Are you ready? Let the adventure begin!"
 ];
 
-var currentIndex = 0;
-var isDialogActive = false; // Flag to track if dialog is active
 
-window.addEventListener('scroll', handleScroll);
+document.addEventListener("DOMContentLoaded", function() {
+const dialogBox = document.getElementById("scrollDialog");
+const dialogText = document.getElementById("scrollDialogText");
+const dialogBg = document.getElementById("dialogBackground");
+const content = document.getElementById("content");
+const section0 = document.getElementById("home");
+const sections = document.querySelectorAll('.content');
+let dialog = false;
+let section_index = 0;
 
-function handleScroll() {
-    if (isDialogActive) {
-        event.preventDefault(); // Prevents default scrolling if dialog is active
-        return;
-    }
+function scrollToSection(section) {
+    section = document.getElementById(section);
+    const sectionTop = section.offsetTop;
+    window.scrollTo(0, sectionTop);
+}  
 
-    // Check if any breakpoint is in view
-    br1 = document.getElementById('section1');
-    if (isInViewport(br1)) {
-        showAndLockDialog();
-    }
+function dialogActivate() {
+    // Hide content
+    content.classList.add("hidden");
+    dialogBox.classList.remove("hidden");
+    dialogBg.classList.remove("hidden");
+    dialogBg.style.height = bobMonolog.length * 300 + "px";
+    
 }
 
-function isInViewport(element) {
-    var rect = element.getBoundingClientRect();
-    return rect.top >= 0 && rect.top <= window.innerHeight;
+function dialogDeactivate() {
+    // 
+    content.classList.remove("hidden");
+    dialogBox.classList.add("hidden");
+    dialogBg.classList.add("hidden");
 }
 
-function showAndLockDialog() {
-    document.getElementById('scrollDialog').classList.remove('hidden');
-    isDialogActive = true;
-    currentIndex = 0;
-    updateDialogText();
-}
-
-function updateDialogText() {
-    if (currentIndex < bobMonolog.length) {
-        document.getElementById('scrollDialogText').textContent = bobMonolog[currentIndex];
+function dialogScroll(index) {
+    // use the scroll to show the list of dialog inside the dialogText
+    //if the index is less than the length of the array, then add the next dialog
+    if (index < bobMonolog.length) {
+        dialogText.textContent = bobMonolog[index];
     } else {
-        unlockScrollAndHideDialog();
+        //if the index is greater than the length of the array, then remove the dialog box
+        section_index += 1;
+        dialog = false;
+        dialogDeactivate();
+        scrollToSection(sections[section_index].id);
+        
     }
 }
 
-window.addEventListener('wheel', changeTextInDialog);
-window.addEventListener('touchstart', handleTouchStart, false);
-window.addEventListener('touchend', handleTouchEnd, false);
-
-function changeTextInDialog(event) {
-    if (!isDialogActive) return;
-
-    event.preventDefault();
-    if (event.deltaY > 0) {
-        currentIndex++; // Next text
-    } else if (event.deltaY < 0 && currentIndex > 0) {
-        currentIndex--; // Previous text
+window.addEventListener("scroll", function() {
+    //if the window reach the section1, then activate the dialog box
+    offSet = section0.offsetHeight+section0.offsetTop
+    if(window.scrollY >= offSet && window.scrollY <= offSet+50){
+        dialog = true;
+        section_index = 0;
     }
-    updateDialogText();
-}
-
-function handleTouchStart(event) {
-    if (!isDialogActive) return;
-
-    touchStartY = event.touches[0].clientY;
-}
-
-function handleTouchEnd(event) {
-    if (!isDialogActive) return;
-
-    touchEndY = event.changedTouches[0].clientY;
-    if (touchEndY > touchStartY) {
-        currentIndex--; // Previous text
-    } else if (touchEndY < touchStartY) {
-        currentIndex++; // Next text
+    else if(!dialog){
+        dialogDeactivate();
     }
-    updateDialogText();
+    // scroll through the dialog
+    if (dialog) {
+        console.log(window.scrollY-dialogBg.offsetTop);
+        let index = Math.floor((window.scrollY-dialogBg.offsetTop)/200);
+        console.log(index);
+        if (index >= 0){
+            console.log(index);
+            dialogActivate();
+            dialogScroll(index);
+        }
+    }
+    
 }
 
-function unlockScrollAndHideDialog() {
-    isDialogActive = false;
-    document.getElementById('scrollDialog').classList.add('hidden');
-}
+
+);
+
+
+
+});
+
+
+
+
+
 
 
