@@ -78,9 +78,9 @@ window.addEventListener("scroll", function() {
     }
     // scroll through the dialog
     if (dialog) {
-        console.log(window.scrollY-dialogBg.offsetTop);
+        //console.log(window.scrollY-dialogBg.offsetTop);
         let index = Math.floor((window.scrollY-dialogBg.offsetTop)/200);
-        console.log(index);
+        //console.log(index);
         if (index >= 0){
             console.log(index);
             dialogActivate();
